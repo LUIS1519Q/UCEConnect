@@ -1,0 +1,17 @@
+name: CI UCEConnect
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: echo "✅ CI Pipeline UCEConnect configurado"
+      - run: echo "🔍 Semana 2 se agrega lint, tests y build automático"
