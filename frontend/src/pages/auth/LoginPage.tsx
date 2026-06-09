@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Link } from "react-router-dom";
 
 import logo from "../../assets/uceconnect-logo.png";
 import { useAuth } from "../../hooks/useAuth";
@@ -120,6 +121,28 @@ function LoginPage() {
                 Login failed. Please try again.
               </p>
             )}
+            
+            <div className="mt-4 text-center">
+              <Link
+                to="/forgot-password"
+                className="text-sm text-blue-600 hover:underline"
+              >
+                Forgot Password?
+              </Link>
+            </div>
+
+            <div className="mt-3 text-center">
+              <span className="text-gray-600">
+                Don't have an account?{" "}
+              </span>
+
+              <Link
+                to="/register"
+                className="font-semibold text-blue-600 hover:underline"
+              >
+                Create Account
+              </Link>
+            </div>
           </form>
         </div>
       </div>
