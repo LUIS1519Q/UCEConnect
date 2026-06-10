@@ -8,6 +8,10 @@ import StudentDashboard from "../pages/dashboard/StudentDashboard";
 import ManagerDashboard from "../pages/dashboard/ManagerDashboard";
 import AdminDashboard from "../pages/dashboard/AdminDashboard";
 import ProtectedRoute from "./ProtectedRoute";
+import ResetPasswordPage from "../pages/auth/ResetPasswordPage";
+import MyIncidentsPage from "../pages/student/MyIncidentsPage";
+import CreateIncidentPage from "../pages/incidents/CreateIncidentPage";
+import IncidentDetailPage from "../pages/student/IncidentDetailPage";
 
 function AppRouter() {
   return (
@@ -39,10 +43,42 @@ function AppRouter() {
         />
 
         <Route
+          path="/reset-password"
+          element={<ResetPasswordPage />}
+        />
+
+        <Route
           path="/dashboard/estudiante"
           element={
             <ProtectedRoute>
               <StudentDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/incidents/create"
+          element={
+            <ProtectedRoute>
+              <CreateIncidentPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/incidents"
+          element={
+            <ProtectedRoute>
+              <MyIncidentsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/incidents/:id"
+          element={
+            <ProtectedRoute>
+              <IncidentDetailPage />
             </ProtectedRoute>
           }
         />
