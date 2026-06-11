@@ -46,6 +46,12 @@ services:
       # Monta el código fuente para recargar automáticamente con nodemon
       - .:/app
       - /app/node_modules
+      - ./logs:/app/logs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     command: node src/index.js
     networks:
       - uceconnect_local

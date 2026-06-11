@@ -3,6 +3,7 @@
 // Este módulo pertenece a la capa de infraestructura: el dominio nunca lo importa directamente.
 
 const { Pool } = require('pg');
+const logger = require('../logger/logger');
 
 // El pool gestiona y reutiliza conexiones en lugar de abrir una por cada consulta
 const pool = new Pool({
@@ -13,11 +14,11 @@ const pool = new Pool({
 });
 
 pool.on('connect', () => {
-  console.log('✅ Conexión a PostgreSQL establecida correctamente');
+  logger.info('✅ Conectado a PostgreSQL');
 });
 
-pool.on('error', (error) => {
-  console.error('❌ Error inesperado en el pool de PostgreSQL:', error);
+pool.on('error', (err) => {
+  logger.error('❌ Error en PostgreSQL:', err);
   process.exit(1);
 });
 

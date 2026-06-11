@@ -5,6 +5,7 @@ require('dotenv').config();
 
 const app = require('./infrastructure/http/server');
 const { pool } = require('./infrastructure/db/connection');
+const logger = require('./infrastructure/logger/logger');
 
 const PORT = process.env.PORT || 3000;
 
@@ -12,18 +13,13 @@ async function startServer() {
   try {
     // Verificamos la conexión a la base de datos antes de aceptar tráfico HTTP
     await pool.query('SELECT NOW()');
-    console.log('✅ Base de datos conectada');
+    logger.info('✅ Base de datos conectada');
 
     app.listen(PORT, () => {
-      console.log('--------------------------------------------------');
-      console.log('🚀 UCEConnect Backend');
-      console.log(`   Puerto:   ${PORT}`);
-      console.log(`   Entorno:  ${process.env.NODE_ENV || 'development'}`);
-      console.log(`   Health:   http://localhost:${PORT}/health`);
-      console.log('--------------------------------------------------');
+      logger.info(`🚀 UCEConnect Backend | Puerto: ${PORT} | Entorno: ${process.env.NODE_ENV || 'development'} | Health: http://localhost:${PORT}/health`);
     });
   } catch (error) {
-    console.error('❌ No se pudo conectar a la base de datos. Deteniendo el servidor.', error);
+    logger.error(`❌ No se pudo conectar a la base de datos: ${error.message}`);
     process.exit(1);
   }
 }

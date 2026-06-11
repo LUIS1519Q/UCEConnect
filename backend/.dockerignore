@@ -18,5 +18,5 @@ docker-compose*
 .idea
 .DS_Store
 Thumbs.db
-logs
+logs/
 *.log

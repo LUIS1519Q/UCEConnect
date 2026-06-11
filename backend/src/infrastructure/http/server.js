@@ -5,6 +5,7 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const logger = require('../logger/logger');
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.use('/api/v1/auth', require('./routes/authRoutes'));
 
 // --- Manejo de rutas no encontradas ---
 app.use((req, res) => {
+  logger.warn(`Ruta no encontrada: ${req.method} ${req.path}`);
   res.status(404).json({
     status: 'error',
     message: 'Ruta no encontrada',
@@ -49,7 +51,7 @@ app.use((req, res) => {
 // --- Manejador de errores global ---
 // En producción se oculta el detalle del error para no exponer información sensible.
 app.use((err, req, res, next) => {
-  console.error('❌ Error no controlado:', err);
+  logger.error(`Error en ${req.method} ${req.path}: ${err.message}`, { stack: err.stack });
 
   const isProduction = process.env.NODE_ENV === 'production';
   const message = isProduction ? 'Error interno del servidor' : err.message;
