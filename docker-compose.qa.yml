@@ -1,0 +1,35 @@
+# docker-compose.qa.yml — entorno QA para UCEConnect
+# Uso en EC2 QA: docker compose -f docker-compose.qa.yml up -d
+# Imágenes desde Docker Hub, base de datos en Supabase (externa)
+
+version: '3.8'
+
+services:
+  backend:
+    image: ${DOCKERHUB_USERNAME:-uceconnect}/backend:qa
+    container_name: uceconnect_backend_qa
+    restart: unless-stopped
+    env_file:
+      - .env.qa
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+    ports:
+      - "3000:3000"
+    networks:
+      - uceconnect_qa
+
+  frontend:
+    image: ${DOCKERHUB_USERNAME:-uceconnect}/frontend:qa
+    container_name: uceconnect_frontend_qa
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - uceconnect_qa
+
+networks:
+  uceconnect_qa:
+    name: uceconnect_qa
