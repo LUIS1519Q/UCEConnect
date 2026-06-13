@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  backend:
+    image: wadri/uceconnect-backend:qa
+    container_name: uceconnect_backend_qa
+    restart: unless-stopped
+    env_file:
+      - .env.qa
+    ports:
+      - "3000:3000"
+
+networks:
+  default:
+    name: uceconnect_qa
