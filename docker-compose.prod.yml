@@ -1,0 +1,17 @@
+# docker-compose.prod.yml
+version: '3.8'
+
+services:
+  backend:
+    image: uceconnect/backend:latest
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.prod
+
+  frontend:
+    image: uceconnect/frontend:latest
+    restart: always
+    ports:
+      - "8080:80"
