@@ -21,15 +21,15 @@ export function useAuth() {
       );
 
       switch (response.user.role) {
-        case "STUDENT":
+        case "student":
           navigate("/dashboard/estudiante");
           break;
 
-        case "MANAGER":
+        case "manager":
           navigate("/dashboard/gestor");
           break;
 
-        case "ADMIN":
+        case "admin":
           navigate("/dashboard/admin");
           break;
       }
