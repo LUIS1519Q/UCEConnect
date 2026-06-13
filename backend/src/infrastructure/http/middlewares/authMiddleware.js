@@ -1,7 +1,3 @@
-// authMiddleware.js — Middleware HTTP que protege rutas exigiendo un JWT válido
-// Extrae el token del header Authorization, lo verifica y expone el payload
-// decodificado en req.user para que los siguientes handlers lo usen.
-
 const jwt = require('jsonwebtoken');
 const logger = require('../../logger/logger');
 

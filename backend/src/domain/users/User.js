@@ -1,7 +1,3 @@
-// User.js — Entidad de dominio
-// Representa a un usuario de la plataforma. No depende de ninguna librería externa
-// ni de las capas de aplicación/infraestructura (dominio puro).
-
 class User {
   constructor({ id, name, email, passwordHash, roleId, isActive, isVerified, createdAt }) {
     this.id = id;
@@ -14,7 +10,6 @@ class User {
     this.createdAt = createdAt;
   }
 
-  // Crea un nuevo usuario con los valores por defecto de un registro recién creado
   static create({ name, email, passwordHash, roleId }) {
     return new User({
       name,
@@ -26,7 +21,6 @@ class User {
     });
   }
 
-  // Representación segura del usuario: nunca expone el hash de la contraseña
   toJSON() {
     return {
       id: this.id,

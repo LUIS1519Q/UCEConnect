@@ -1,10 +1,5 @@
-// PostgresUserRepo.js — Adaptador de infraestructura: implementación de IUserRepo con PostgreSQL
-// Traduce entre las filas de la base de datos y la entidad de dominio User,
-// de modo que las capas de aplicación y dominio nunca ven SQL ni filas crudas.
-
 const User = require('../../domain/users/User');
 
-// Convierte una fila de la tabla `users` (junto al join con `roles`) en una entidad User
 function rowToUser(row) {
   if (!row) return null;
 
@@ -32,7 +27,6 @@ class PostgresUserRepo {
        WHERE u.email = $1`,
       [email]
     );
-
     return rowToUser(result.rows[0]);
   }
 
@@ -43,7 +37,6 @@ class PostgresUserRepo {
        WHERE u.id = $1`,
       [id]
     );
-
     return rowToUser(result.rows[0]);
   }
 
@@ -54,12 +47,9 @@ class PostgresUserRepo {
        RETURNING *`,
       [user.name, user.email, user.passwordHash, user.roleId, user.isActive, user.isVerified]
     );
-
     return rowToUser(result.rows[0]);
   }
 
-  // Igual que save(), pero ejecuta el INSERT con un cliente de transacción
-  // (obtenido vía db.getClient()) en lugar de tomar una conexión del pool.
   async saveWithTransaction(client, user) {
     const result = await client.query(
       `INSERT INTO users (name, email, password_hash, role_id, is_active, is_verified)
@@ -67,11 +57,9 @@ class PostgresUserRepo {
        RETURNING *`,
       [user.name, user.email, user.passwordHash, user.roleId, user.isActive, user.isVerified]
     );
-
     return rowToUser(result.rows[0]);
   }
 
-  // Igual que saveVerifyCode(), pero ejecuta el INSERT dentro de una transacción
   async saveVerifyCodeWithTransaction(client, userId, code, expiresAt) {
     await client.query(
       'INSERT INTO verify_codes (user_id, code, expires_at) VALUES ($1, $2, $3)',
@@ -79,8 +67,6 @@ class PostgresUserRepo {
     );
   }
 
-  // Elimina un usuario por correo — se usa para limpiar registros sin verificar
-  // cuando el envío del correo de verificación falla a mitad del registro.
   async deleteByEmail(email) {
     await this.db.query('DELETE FROM users WHERE email = $1', [email]);
   }

@@ -1,7 +1,3 @@
-// authRoutes.js — Adaptador de infraestructura: rutas HTTP de autenticación
-// Define los endpoints públicos de auth, validando el cuerpo de cada petición
-// con Zod antes de delegar en el controlador.
-
 const { Router } = require('express');
 const { z } = require('zod');
 
@@ -9,8 +5,6 @@ const authController = require('../controllers/authController');
 const authMiddleware = require('../middlewares/authMiddleware');
 
 const router = Router();
-
-// --- Esquemas de validación ---
 
 const registerSchema = z.object({
   name: z.string().min(2).max(100),
@@ -34,8 +28,6 @@ const loginSchema = z.object({
   password: z.string().min(1),
 });
 
-// --- Middleware de validación genérico ---
-// Recibe un esquema de Zod y valida req.body antes de continuar al controlador.
 function validate(schema) {
   return (req, res, next) => {
     const result = schema.safeParse(req.body);
@@ -52,13 +44,10 @@ function validate(schema) {
   };
 }
 
-// --- Rutas ---
-
 router.post('/register', validate(registerSchema), authController.register);
 router.post('/verify-code', validate(verifySchema), authController.verifyCode);
 router.post('/login', validate(loginSchema), authController.login);
 
-// Ruta protegida de prueba — confirma que el JWT se valida y expone req.user
 router.get('/me', authMiddleware, (req, res) => {
   res.json({ user: req.user });
 });

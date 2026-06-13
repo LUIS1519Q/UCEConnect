@@ -1,6 +1,3 @@
-// index.js — Punto de entrada de la aplicación UCEConnect Backend
-// Carga la configuración, verifica la conexión a la base de datos y levanta el servidor HTTP.
-
 require('dotenv').config();
 
 const app = require('./infrastructure/http/server');
@@ -11,7 +8,6 @@ const PORT = process.env.PORT || 3000;
 
 async function startServer() {
   try {
-    // Verificamos la conexión a la base de datos antes de aceptar tráfico HTTP
     await pool.query('SELECT NOW()');
     logger.info('✅ Base de datos conectada');
 

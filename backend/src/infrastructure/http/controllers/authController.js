@@ -1,7 +1,3 @@
-// authController.js — Adaptador de infraestructura: controlador HTTP de autenticación
-// Conecta las rutas de Express con los casos de uso de aplicación, traduciendo
-// peticiones/respuestas HTTP hacia/desde el dominio. No contiene lógica de negocio.
-
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -14,7 +10,6 @@ const PostgresUserRepo = require('../../repositories/PostgresUserRepo');
 const NodemailerEmailNotifier = require('../../services/NodemailerEmailNotifier');
 const db = require('../../db/connection');
 
-// Adaptadores y casos de uso se instancian una sola vez y se reutilizan entre peticiones
 const userRepo = new PostgresUserRepo(db);
 const emailNotifier = new NodemailerEmailNotifier(process.env.EMAIL_USER, process.env.EMAIL_PASS);
 
@@ -22,7 +17,6 @@ const registerUser = new RegisterUser(userRepo, emailNotifier, bcrypt);
 const verifyCode = new VerifyCode(userRepo);
 const loginUser = new LoginUser(userRepo, bcrypt, jwt, process.env.JWT_SECRET, process.env.JWT_REFRESH_SECRET);
 
-// Mensajes de negoción que corresponden a errores de validación del cliente (400)
 const VALIDATION_ERRORS = [
   'Solo se permiten correos institucionales @uce.edu.ec',
   'El correo ya está registrado',
