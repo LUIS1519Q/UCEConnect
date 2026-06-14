@@ -24,7 +24,7 @@ services:
     container_name: uceconnect_frontend_qa
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "8080:80"
     depends_on:
       - backend
     networks:
