@@ -1,0 +1,32 @@
+# manual-cleanup-qa.yml — Limpieza manual de imágenes viejas en EC2 QA
+# Trigger: manual desde GitHub Actions (workflow_dispatch)
+# Uso: elimina imágenes Docker sin uso en EC2 QA para liberar espacio
+
+name: Cleanup QA
+
+on:
+  workflow_dispatch:
+
+jobs:
+  cleanup-qa:
+    name: Limpiar imágenes en EC2 QA
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Limpiar imágenes viejas en EC2 QA
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.QA_EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.QA_EC2_KEY }}
+          script: |
+            echo "=== Espacio antes de limpieza ==="
+            df -h /
+            echo "=== Eliminando imágenes no usadas ==="
+            docker image prune -a -f
+            echo "=== Eliminando volúmenes no usados ==="
+            docker volume prune -f
+            echo "=== Eliminando contenedores detenidos ==="
+            docker container prune -f
+            echo "=== Espacio después de limpieza ==="
+            df -h /
