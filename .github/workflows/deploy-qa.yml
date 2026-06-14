@@ -5,7 +5,7 @@
 name: Deploy QA
 
 on:
-  workflow_dispatch:  # trigger manual desde GitHub
+  workflow_dispatch:
   push:
     branches:
       - QA
@@ -19,6 +19,11 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v4
 
+      - name: Generar tag con fecha y commit
+        id: tag
+        run: |
+          echo "IMAGE_TAG=qa-$(date +'%Y%m%d')-$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_OUTPUT
+
       - name: Login a Docker Hub
         uses: docker/login-action@v3
         with:
@@ -31,7 +36,9 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile.backend
           push: true
-          tags: uceconnect/backend:qa
+          tags: |
+            uceconnect/backend:qa
+            uceconnect/backend:${{ steps.tag.outputs.IMAGE_TAG }}
 
       - name: Build y push Frontend
         uses: docker/build-push-action@v5
@@ -39,7 +46,9 @@ jobs:
           context: ./frontend
           file: ./frontend/Dockerfile
           push: true
-          tags: uceconnect/frontend:qa
+          tags: |
+            uceconnect/frontend:qa
+            uceconnect/frontend:${{ steps.tag.outputs.IMAGE_TAG }}
 
   deploy-qa:
     name: Deploy en EC2 QA
