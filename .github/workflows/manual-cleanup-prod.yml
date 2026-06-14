@@ -1,0 +1,32 @@
+# manual-cleanup-prod.yml — Limpieza manual de imágenes viejas en EC2 PROD
+# Trigger: manual desde GitHub Actions (workflow_dispatch)
+# Uso: elimina imágenes Docker sin uso en EC2 PROD para liberar espacio
+
+name: Cleanup PROD
+
+on:
+  workflow_dispatch:
+
+jobs:
+  cleanup-prod:
+    name: Limpiar imágenes en EC2 PROD
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Limpiar imágenes viejas en EC2 PROD
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.PROD_EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.PROD_EC2_KEY }}
+          script: |
+            echo "=== Espacio antes de limpieza ==="
+            df -h /
+            echo "=== Eliminando imágenes no usadas ==="
+            docker image prune -a -f
+            echo "=== Eliminando volúmenes no usados ==="
+            docker volume prune -f
+            echo "=== Eliminando contenedores detenidos ==="
+            docker container prune -f
+            echo "=== Espacio después de limpieza ==="
+            df -h /

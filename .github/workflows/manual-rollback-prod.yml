@@ -1,0 +1,48 @@
+# manual-rollback-prod.yml — Rollback manual en PROD para UCEConnect
+# Trigger: manual desde GitHub Actions (workflow_dispatch)
+# Uso: ingresar el tag a restaurar (ej: prod-20260613-abc1234)
+
+name: Rollback PROD
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Tag a restaurar (ej: prod-20260613-abc1234)'
+        required: true
+        type: string
+
+jobs:
+  rollback-prod:
+    name: Rollback en EC2 PROD
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Copiar docker-compose.prod.yml al EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.PROD_EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.PROD_EC2_KEY }}
+          source: "docker-compose.prod.yml"
+          target: "/home/ubuntu/uceconnect"
+
+      - name: Ejecutar rollback en EC2 PROD
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.PROD_EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.PROD_EC2_KEY }}
+          script: |
+            cd /home/ubuntu/uceconnect
+            export BACKEND_TAG=${{ github.event.inputs.image_tag }}
+            export FRONTEND_TAG=${{ github.event.inputs.image_tag }}
+            docker pull uceconnect/backend:${BACKEND_TAG}
+            docker pull uceconnect/frontend:${FRONTEND_TAG}
+            BACKEND_IMAGE=uceconnect/backend:${BACKEND_TAG} \
+            FRONTEND_IMAGE=uceconnect/frontend:${FRONTEND_TAG} \
+            docker compose -f docker-compose.prod.yml up -d
+            echo "Rollback completado a tag: ${BACKEND_TAG}"
