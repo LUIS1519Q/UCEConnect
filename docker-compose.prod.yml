@@ -1,17 +1,29 @@
-# docker-compose.prod.yml
-version: '3.8'
-
 services:
   backend:
-    image: uceconnect/backend:latest
-    restart: always
-    ports:
-      - "3000:3000"
+    image: ${DOCKERHUB_USERNAME:-uceconnect}/backend:prod
+    container_name: uceconnect_backend_prod
+    restart: unless-stopped
     env_file:
       - .env.prod
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+    ports:
+      - "3000:3000"
+    networks:
+      - uceconnect_prod
 
   frontend:
-    image: uceconnect/frontend:latest
-    restart: always
+    image: ${DOCKERHUB_USERNAME:-uceconnect}/frontend:prod
+    container_name: uceconnect_frontend_prod
+    restart: unless-stopped
     ports:
       - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - uceconnect_prod
+
+networks:
+  uceconnect_prod:
+    name: uceconnect_prod
