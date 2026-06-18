@@ -16,6 +16,8 @@ import CreateIncidentPage from "../pages/incidents/CreateIncidentPage";
 import EditIncidentPage from "../pages/student/EditIncidentPage";
 import IncidentDetailPage from "../pages/student/IncidentDetailPage";
 import AISuggestionPage from "../pages/student/AISuggestionPage";
+import ManagerIncidentsPage from "../pages/manager/ManagerIncidentsPage";
+import ManagerIncidentDetailPage from "../pages/manager/ManagerIncidentDetailPage";
 
 function AppRouter() {
   return (
@@ -128,6 +130,24 @@ function AppRouter() {
           element={
             <ProtectedRoute>
               <ManagerDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/manager/incidents"
+          element={
+            <ProtectedRoute>
+              <ManagerIncidentsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/manager/incidents/:id"
+          element={
+            <ProtectedRoute>
+              <ManagerIncidentDetailPage />
             </ProtectedRoute>
           }
         />
