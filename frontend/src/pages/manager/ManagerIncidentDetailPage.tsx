@@ -36,7 +36,61 @@ function ManagerIncidentDetailPage() {
           </p>
 
         </div>
+        
+        {/* Internal Notes */}
+        <div className="rounded-xl bg-white p-6 shadow">
 
+          <h2 className="text-xl font-bold">
+            Internal Notes
+          </h2>
+
+          <textarea
+            rows={4}
+            placeholder="Write internal notes..."
+            className="mt-4 w-full rounded-lg border p-3"
+          />
+
+          <button
+            className="mt-4 rounded-lg bg-blue-600 px-4 py-2 text-white"
+          >
+            Save Note
+          </button>
+
+        </div>
+
+        {/* Feedback Request */}
+        <div className="rounded-xl bg-white p-6 shadow">
+
+          <h2 className="text-xl font-bold">
+            Feedback Request
+          </h2>
+
+          <textarea
+            rows={4}
+            placeholder="Request additional information..."
+            className="mt-4 w-full rounded-lg border p-3"
+          />
+
+          <button
+            className="mt-4 rounded-lg bg-green-600 px-4 py-2 text-white"
+          >
+            Send Request
+          </button>
+
+        </div>
+
+        {/* Student Response */}
+        <div className="rounded-xl bg-white p-6 shadow">
+
+          <h2 className="text-xl font-bold">
+            Student Response
+          </h2>
+
+          <p className="mt-3 text-gray-600">
+            I have attached the requested enrollment document.
+          </p>
+
+        </div>
       </div>
 
     </DashboardLayout>
