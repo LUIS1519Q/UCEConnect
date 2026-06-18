@@ -13,6 +13,7 @@ import ProfilePage from "../pages/profile/ProfilePage";
 import EditProfilePage from "../pages/profile/EditProfilePage";
 import MyIncidentsPage from "../pages/student/MyIncidentsPage";
 import CreateIncidentPage from "../pages/incidents/CreateIncidentPage";
+import EditIncidentPage from "../pages/student/EditIncidentPage";
 import IncidentDetailPage from "../pages/student/IncidentDetailPage";
 
 function AppRouter() {
@@ -99,6 +100,15 @@ function AppRouter() {
           element={
             <ProtectedRoute>
               <IncidentDetailPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/incidents/edit"
+          element={
+            <ProtectedRoute>
+              <EditIncidentPage />
             </ProtectedRoute>
           }
         />

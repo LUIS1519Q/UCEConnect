@@ -78,17 +78,52 @@ function MyIncidentsPage() {
                 {incident.category}
               </p>
 
-              <div className="mt-4 flex items-center justify-between">
+        <div className="mt-4 flex items-center justify-between">
 
-                <span className="rounded-full bg-gray-100 px-3 py-1 text-sm">
-                  {incident.status}
-                </span>
+          <span className="rounded-full bg-gray-100 px-3 py-1 text-sm">
+            {incident.status}
+          </span>
 
-                <span className="text-sm text-gray-500">
-                  {incident.date}
-                </span>
+          <div className="flex items-center gap-3">
 
-              </div>
+            <span className="text-sm text-gray-500">
+              {incident.date}
+            </span>
+
+          {incident.status === "Open" && (
+            <Link
+              to="/incidents/edit"
+              className="rounded-lg bg-yellow-500 px-3 py-2 text-white"
+              onClick={(e) => e.stopPropagation()}
+            >
+              Edit
+            </Link>
+          )}
+
+          {incident.status === "Open" && (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+
+                const confirmed = window.confirm(
+                  "Are you sure you want to cancel this incident?"
+                );
+
+                if (confirmed) {
+                  alert(
+                    "Incident cancelled successfully."
+                  );
+                }
+              }}
+              className="rounded-lg bg-red-600 px-3 py-2 text-white"
+            >
+              Cancel
+            </button>
+          )}
+
+          </div>
+
+        </div>
             </Link>
           ))}
 
