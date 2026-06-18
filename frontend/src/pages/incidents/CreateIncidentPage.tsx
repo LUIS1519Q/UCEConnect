@@ -97,44 +97,57 @@ function CreateIncidentPage() {
 
           </div>
 
-          <div>
+        <div>
 
-            <label className="mb-1 block">
-              Evidence Attachment
-            </label>
+          <label className="mb-1 block">
+            Evidence Attachment
+          </label>
 
-            <input
-              type="file"
-              accept=".pdf,.png,.jpg,.jpeg"
-              onChange={handleFileChange}
-              className="w-full rounded-lg border p-3"
-            />
+          <input
+            type="file"
+            accept=".pdf,.png,.jpg,.jpeg"
+            onChange={handleFileChange}
+            className="w-full rounded-lg border p-3"
+          />
 
-            {selectedFile && (
+          {selectedFile && (
 
-              <div className="mt-3 rounded-lg bg-gray-100 p-3">
+            <div className="mt-3 rounded-lg bg-gray-100 p-3">
 
-                <p>
-                  Selected File:
-                  {" "}
-                  {selectedFile.name}
-                </p>
+              <p>
+                Selected File:
+                {" "}
+                {selectedFile.name}
+              </p>
 
-                <button
-                  type="button"
-                  onClick={() =>
-                    setSelectedFile(null)
-                  }
-                  className="mt-2 rounded-lg bg-red-500 px-3 py-1 text-white"
-                >
-                  Remove File
-                </button>
+              <button
+                type="button"
+                onClick={() =>
+                  setSelectedFile(null)
+                }
+                className="mt-2 rounded-lg bg-red-500 px-3 py-1 text-white"
+              >
+                Remove File
+              </button>
 
-              </div>
+            </div>
 
-            )}
+          )}
 
-          </div>
+        </div>
+
+        <div className="flex gap-3">
+
+          <button
+            type="button"
+            onClick={() =>
+              window.location.href =
+                "/incidents/ai-suggestion"
+            }
+            className="rounded-lg bg-purple-600 px-5 py-3 text-white"
+          >
+            Analyze with AI
+          </button>
 
           <button
             type="submit"
@@ -142,6 +155,8 @@ function CreateIncidentPage() {
           >
             Submit Incident
           </button>
+
+        </div>
 
         </form>
 

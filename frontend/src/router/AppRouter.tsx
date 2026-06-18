@@ -15,6 +15,7 @@ import MyIncidentsPage from "../pages/student/MyIncidentsPage";
 import CreateIncidentPage from "../pages/incidents/CreateIncidentPage";
 import EditIncidentPage from "../pages/student/EditIncidentPage";
 import IncidentDetailPage from "../pages/student/IncidentDetailPage";
+import AISuggestionPage from "../pages/student/AISuggestionPage";
 
 function AppRouter() {
   return (
@@ -109,6 +110,15 @@ function AppRouter() {
           element={
             <ProtectedRoute>
               <EditIncidentPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/incidents/ai-suggestion"
+          element={
+            <ProtectedRoute>
+              <AISuggestionPage />
             </ProtectedRoute>
           }
         />
