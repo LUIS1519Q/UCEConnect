@@ -12,7 +12,10 @@ module.exports = function authMiddleware(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
+    req.user = {
+      ...decoded,
+      role: decoded.role.toLowerCase()
+    };
     logger.debug(`Token válido — user: ${decoded.email} en ${req.path}`);
     next();
   } catch (error) {

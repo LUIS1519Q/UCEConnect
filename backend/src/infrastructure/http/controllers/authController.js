@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const RegisterUser = require('../../../application/users/RegisterUser');
 const VerifyCode = require('../../../application/users/VerifyCode');
 const LoginUser = require('../../../application/users/LoginUser');
+const ResendVerifyCode = require('../../../application/users/ResendVerifyCode');
 
 const PostgresUserRepo = require('../../repositories/PostgresUserRepo');
 const NodemailerEmailNotifier = require('../../services/NodemailerEmailNotifier');
@@ -16,6 +17,7 @@ const emailNotifier = new NodemailerEmailNotifier(process.env.EMAIL_USER, proces
 const registerUser = new RegisterUser(userRepo, emailNotifier, bcrypt);
 const verifyCode = new VerifyCode(userRepo);
 const loginUser = new LoginUser(userRepo, bcrypt, jwt, process.env.JWT_SECRET, process.env.JWT_REFRESH_SECRET);
+const resendVerifyCode = new ResendVerifyCode(userRepo, emailNotifier);
 
 const VALIDATION_ERRORS = [
   'Solo se permiten correos institucionales @uce.edu.ec',
@@ -51,8 +53,18 @@ async function login(req, res) {
   }
 }
 
+async function resendCode(req, res) {
+  try {
+    const result = await resendVerifyCode.execute(req.body);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
 module.exports = {
   register,
   verifyCode: verifyCodeHandler,
   login,
+  resendCode,
 };
