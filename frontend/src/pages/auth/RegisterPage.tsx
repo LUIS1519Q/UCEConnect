@@ -1,14 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 
-import {
-  registerSchema,
-  type RegisterFormData,
-} from "./registerSchema";
+import { registerSchema, type RegisterFormData } from "./registerSchema";
+import { authService } from "../../api/authService";
 
 export default function RegisterPage() {
+  const navigate = useNavigate();
 
   const {
     register,
@@ -18,14 +17,20 @@ export default function RegisterPage() {
     resolver: zodResolver(registerSchema),
   });
 
-  const navigate = useNavigate();
+  const { mutate, isPending, error } = useMutation({
+    mutationFn: (data: RegisterFormData) =>
+      authService.register({
+        name: `${data.firstName} ${data.lastName}`,
+        email: data.email,
+        password: data.password,
+        role: "student",
+      }),
+    onSuccess: (_, variables) => {
+      navigate("/verify-email", { state: { email: variables.email } });
+    },
+  });
 
-  const onSubmit = (data: RegisterFormData) => {
-    console.log(data);
-
-    navigate("/verify-email");
-
-  };
+  const onSubmit = (data: RegisterFormData) => mutate(data);
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -137,10 +142,17 @@ export default function RegisterPage() {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-3 rounded-lg"
+            disabled={isPending}
+            className="w-full bg-blue-600 text-white py-3 rounded-lg disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            Create Account
+            {isPending ? "Creating Account..." : "Create Account"}
           </button>
+
+          {error && (
+            <p className="text-center text-sm text-red-500">
+              {(error as any)?.response?.data?.message ?? "Registration failed. Please try again."}
+            </p>
+          )}
         </form>
 
         <p className="text-center mt-4">

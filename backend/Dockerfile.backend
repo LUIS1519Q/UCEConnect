@@ -1,0 +1,26 @@
+# Dockerfile.backend — imagen Docker para UCEConnect Backend
+# Imagen Docker Hub: wadri/uceconnect-backend
+# Build multistage: separa la instalación de dependencias de la imagen final
+
+# --- Etapa 1: deps — instala únicamente las dependencias de producción ---
+FROM node:18-alpine AS deps
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+
+# --- Etapa 2: runner — copia dependencias y código fuente ---
+FROM node:18-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+ENV PORT=3000
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+EXPOSE 3000
+
+# Verifica periódicamente que el endpoint /health responda
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD wget -qO- http://localhost:3000/health || exit 1
+
+CMD ["node", "src/index.js"]
