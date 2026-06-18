@@ -34,6 +34,23 @@ export function useAuth() {
           break;
       }
     },
+
+    onError: (error: any, variables) => {
+      const message =
+        error?.response?.data?.message || "";
+
+      if (
+        message.includes(
+          "Debes verificar tu correo"
+        )
+      ) {
+        navigate("/verify-email", {
+          state: {
+            email: variables.email,
+          },
+        });
+      }
+    },
   });
 
   return {
