@@ -57,7 +57,7 @@ function ManagerIncidentDetailPage() {
 
             <button
               onClick={() =>
-                updateStatus("In Progress")
+                updateStatus("in_progress")
               }
               className="rounded-lg bg-yellow-500 px-4 py-2 text-white"
             >
@@ -66,7 +66,7 @@ function ManagerIncidentDetailPage() {
 
             <button
               onClick={() =>
-                updateStatus("Resolved")
+                updateStatus("resolved")
               }
               className="rounded-lg bg-green-600 px-4 py-2 text-white"
             >
@@ -75,7 +75,7 @@ function ManagerIncidentDetailPage() {
 
             <button
               onClick={() =>
-                updateStatus("Rejected")
+                updateStatus("rejected")
               }
               className="rounded-lg bg-red-600 px-4 py-2 text-white"
             >

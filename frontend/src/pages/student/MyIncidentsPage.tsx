@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { incidentService } from "../../api/incidentService";
 import DashboardLayout from "../../components/DashboardLayout";
 
@@ -13,15 +14,44 @@ type Incident = {
   date?: string;
 };
 
+const STATUS_OPTIONS: { label: string; value: string | undefined }[] = [
+  { label: "All", value: undefined },
+  { label: "Open", value: "open" },
+  { label: "In Progress", value: "in_progress" },
+  { label: "Resolved", value: "resolved" },
+  { label: "Rejected", value: "rejected" },
+];
+
 function MyIncidentsPage() {
-  
+
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
+
   const {
     data: incidents = [],
     isLoading,
   } = useQuery<Incident[]>({
-    queryKey: ["incidents"],
+    queryKey: ["incidents", statusFilter],
     queryFn: () =>
-      incidentService.getIncidents(),
+      incidentService.getIncidents({ status: statusFilter }),
+  });
+
+  const { mutate: cancelIncident } = useMutation({
+    mutationFn: (incidentId: number) =>
+      incidentService.cancelIncident(incidentId),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["incidents"] });
+      alert("Incident cancelled successfully.");
+    },
+
+    onError: (error: any) => {
+      alert(
+        error?.response?.data?.message ?? "Failed to cancel incident."
+      );
+    },
   });
 
   if (isLoading) {
@@ -46,34 +76,28 @@ function MyIncidentsPage() {
         </div>
 
         <div className="flex flex-wrap gap-3">
-          <button className="rounded-full bg-blue-600 px-4 py-2 text-white">
-            All
-          </button>
-
-          <button className="rounded-full border px-4 py-2">
-            Open
-          </button>
-
-          <button className="rounded-full border px-4 py-2">
-            In Progress
-          </button>
-
-          <button className="rounded-full border px-4 py-2">
-            Resolved
-          </button>
-
-          <button className="rounded-full border px-4 py-2">
-            Rejected
-          </button>
+          {STATUS_OPTIONS.map((opt) => (
+            <button
+              key={opt.label}
+              onClick={() => setStatusFilter(opt.value)}
+              className={
+                statusFilter === opt.value
+                  ? "rounded-full bg-blue-600 px-4 py-2 text-white"
+                  : "rounded-full border px-4 py-2"
+              }
+            >
+              {opt.label}
+            </button>
+          ))}
         </div>
 
         <div className="space-y-4">
 
           {incidents.map((incident) => (
-            <Link
+            <div
               key={incident.id}
-              to={`/incidents/${incident.id}`}
-              className="block rounded-xl bg-white p-5 shadow hover:shadow-md"
+              onClick={() => navigate(`/incidents/${incident.id}`)}
+              className="block rounded-xl bg-white p-5 shadow hover:shadow-md cursor-pointer"
             >
               <h3 className="text-xl font-semibold">
                 {incident.title}
@@ -95,9 +119,9 @@ function MyIncidentsPage() {
               {incident.createdAt ?? incident.date}
             </span>
 
-          {incident.status === "Open" && (
+          {incident.status === "open" && (
             <Link
-              to="/incidents/edit"
+              to={`/incidents/${incident.id}/edit`}
               className="rounded-lg bg-yellow-500 px-3 py-2 text-white"
               onClick={(e) => e.stopPropagation()}
             >
@@ -105,19 +129,18 @@ function MyIncidentsPage() {
             </Link>
           )}
 
-          {incident.status === "Open" && (
+          {incident.status === "open" && (
             <button
               onClick={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
 
                 const confirmed = window.confirm(
                   "Are you sure you want to cancel this incident?"
                 );
 
                 if (confirmed) {
-                  alert(
-                    "Incident cancelled successfully."
-                  );
+                  cancelIncident(incident.id);
                 }
               }}
               className="rounded-lg bg-red-600 px-3 py-2 text-white"
@@ -129,7 +152,7 @@ function MyIncidentsPage() {
           </div>
 
         </div>
-            </Link>
+            </div>
           ))}
 
         </div>

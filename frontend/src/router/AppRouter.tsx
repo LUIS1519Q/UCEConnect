@@ -108,7 +108,7 @@ function AppRouter() {
         />
 
         <Route
-          path="/incidents/edit"
+          path="/incidents/:id/edit"
           element={
             <ProtectedRoute>
               <EditIncidentPage />

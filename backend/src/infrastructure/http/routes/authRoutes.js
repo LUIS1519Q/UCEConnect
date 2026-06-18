@@ -28,6 +28,10 @@ const loginSchema = z.object({
   password: z.string().min(1),
 });
 
+const resendSchema = z.object({
+  email: z.string().email(),
+});
+
 function validate(schema) {
   return (req, res, next) => {
     const result = schema.safeParse(req.body);
@@ -47,7 +51,7 @@ function validate(schema) {
 router.post('/register', validate(registerSchema), authController.register);
 router.post('/verify-code', validate(verifySchema), authController.verifyCode);
 router.post('/login', validate(loginSchema), authController.login);
-router.post('/resend-code', validate(verifySchema), authController.resendCode);
+router.post('/resend-code', validate(resendSchema), authController.resendCode);
 
 router.get('/me', authMiddleware, (req, res) => {
   res.json({ user: req.user });

@@ -13,12 +13,12 @@ class ResendVerifyCode {
       const user = await this.userRepo.findByEmail(email);
       if (!user) {
         logger.warn(`Reenvío fallido — usuario no encontrado: ${email}`);
-        throw new Error('El usuario no existe');
+        throw new Error('Correo no encontrado');
       }
 
       if (user.isVerified) {
         logger.warn(`Reenvío fallido — usuario ya verificado: ${email}`);
-        throw new Error('El usuario ya está verificado');
+        throw new Error('Esta cuenta ya está verificada');
       }
 
       await this.userRepo.deleteVerifyCodesByUserId(user.id);

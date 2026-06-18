@@ -13,6 +13,13 @@ function CreateIncidentPage() {
   const [description, setDescription] =
     useState("");
 
+  const [errors, setErrors] = useState<{
+    title?: string;
+    description?: string;
+  }>({});
+
+  const [mutationError, setMutationError] = useState("");
+
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -44,11 +51,20 @@ function CreateIncidentPage() {
   };
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (data: FormData) =>
-      incidentService.createIncident(data),
+    mutationFn: (data: {
+      title: string;
+      description: string;
+      categoryId: number;
+    }) => incidentService.createIncident(data),
 
     onSuccess: () => {
       alert("Incident created successfully.");
+    },
+
+    onError: (error: any) => {
+      setMutationError(
+        error?.response?.data?.message ?? "Failed to create incident."
+      );
     },
   });
 
@@ -57,19 +73,25 @@ function CreateIncidentPage() {
   ) => {
     e.preventDefault();
 
-    const formData = new FormData();
+    const newErrors: { title?: string; description?: string } = {};
 
-    formData.append("title", title);
-    formData.append(
-      "description",
-      description
-    );
-    formData.append(
-      "categoryId",
-      categoryId
-    );
+    if (!title || title.trim().length < 5) {
+      newErrors.title = "El título debe tener al menos 5 caracteres";
+    }
+    if (!description || description.trim().length < 10) {
+      newErrors.description = "La descripción debe tener al menos 10 caracteres";
+    }
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    setErrors({});
 
-    mutate(formData);
+    mutate({
+      title,
+      description,
+      categoryId: Number(categoryId),
+    });
   };
 
   return (
@@ -91,11 +113,17 @@ function CreateIncidentPage() {
             <input
               type="text"
               value={title}
-              onChange={(e) =>
-                setTitle(e.target.value)
-              }
+              onChange={(e) => {
+                setTitle(e.target.value);
+                if (errors.title)
+                  setErrors((prev) => ({ ...prev, title: undefined }));
+              }}
               className="w-full rounded-lg border p-3"
             />
+
+            {errors.title && (
+              <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+            )}
 
           </div>
 
@@ -140,11 +168,17 @@ function CreateIncidentPage() {
             <textarea
               rows={5}
               value={description}
-              onChange={(e) =>
-                setDescription(e.target.value)
-              }
+              onChange={(e) => {
+                setDescription(e.target.value);
+                if (errors.description)
+                  setErrors((prev) => ({ ...prev, description: undefined }));
+              }}
               className="w-full rounded-lg border p-3"
             />
+
+            {errors.description && (
+              <p className="text-red-500 text-sm mt-1">{errors.description}</p>
+            )}
 
           </div>
 
@@ -186,6 +220,10 @@ function CreateIncidentPage() {
           )}
 
         </div>
+
+        {mutationError && (
+          <p className="text-red-500 text-sm">{mutationError}</p>
+        )}
 
         <div className="flex gap-3">
 

@@ -58,7 +58,13 @@ async function resendCode(req, res) {
     const result = await resendVerifyCode.execute(req.body);
     res.status(200).json(result);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    if (error.message.includes('no encontrado')) {
+      return res.status(404).json({ message: error.message });
+    }
+    if (error.message.includes('ya está verificada')) {
+      return res.status(400).json({ message: error.message });
+    }
+    res.status(500).json({ message: error.message });
   }
 }
 

@@ -74,22 +74,6 @@ function IncidentDetailPage() {
         </div>
 
         <div className="rounded-xl bg-white p-6 shadow">
-          <h3 className="mb-3 text-xl font-semibold">
-            Responses
-          </h3>
-
-          <div className="rounded-lg bg-gray-100 p-4">
-            <p className="font-semibold">
-              Manager
-            </p>
-
-            <p className="mt-2">
-              We are reviewing your request.
-            </p>
-          </div>
-        </div>
-
-        <div className="rounded-xl bg-white p-6 shadow">
 
           <h3 className="mb-3 text-xl font-semibold">
             Case Timeline
@@ -97,35 +81,28 @@ function IncidentDetailPage() {
 
           <div className="space-y-4">
 
-            <div className="border-l-4 border-blue-600 pl-4">
-              <p className="font-semibold">
-                Incident Created
-              </p>
+            {incident.timeline?.map((event: any, index: number) => (
+              <div
+                key={index}
+                className={
+                  event.type === "status_change"
+                    ? "border-l-4 border-blue-600 pl-4"
+                    : "border-l-4 border-green-500 pl-4"
+                }
+              >
+                <p className="font-semibold">
+                  {event.type === "status_change"
+                    ? `Status: ${event.content}`
+                    : event.content}
+                </p>
 
-              <p className="text-sm text-gray-500">
-                2026-06-10 08:30
-              </p>
-            </div>
-
-            <div className="border-l-4 border-yellow-500 pl-4">
-              <p className="font-semibold">
-                Assigned to Manager
-              </p>
-
-              <p className="text-sm text-gray-500">
-                2026-06-10 10:15
-              </p>
-            </div>
-
-            <div className="border-l-4 border-green-500 pl-4">
-              <p className="font-semibold">
-                Under Review
-              </p>
-
-              <p className="text-sm text-gray-500">
-                2026-06-10 11:00
-              </p>
-            </div>
+                <p className="text-sm text-gray-500">
+                  {event.actor}
+                  {event.actorRole ? ` (${event.actorRole})` : ""} —{" "}
+                  {event.timestamp}
+                </p>
+              </div>
+            ))}
 
           </div>
 

@@ -2,6 +2,8 @@ const CreateIncident = require('../../../application/incidents/CreateIncident');
 const ListIncidents = require('../../../application/incidents/ListIncidents');
 const GetIncidentById = require('../../../application/incidents/GetIncidentById');
 const UpdateStatus = require('../../../application/incidents/UpdateStatus');
+const UpdateIncident = require('../../../application/incidents/UpdateIncident');
+const CancelIncident = require('../../../application/incidents/CancelIncident');
 const ClassifyIncident = require('../../../application/incidents/ClassifyIncident');
 const DetectDuplicates = require('../../../application/incidents/DetectDuplicates');
 const PostgresIncidentRepo = require('../../repositories/PostgresIncidentRepo');
@@ -77,4 +79,39 @@ async function updateStatus(req, res) {
   }
 }
 
-module.exports = { create, list, getById, updateStatus };
+async function update(req, res) {
+  try {
+    const incident = await new UpdateIncident(incidentRepo).execute({
+      id: Number(req.params.id),
+      title: req.body.title,
+      description: req.body.description,
+      categoryId: req.body.categoryId,
+      userId: req.user.id,
+    });
+    return res.status(200).json({ message: 'Incidencia actualizada exitosamente', incident });
+  } catch (err) {
+    logger.warn(`Error al editar incidencia ${req.params.id}: ${err.message}`);
+    if (err.message.includes('no encontrada')) return res.status(404).json({ message: err.message });
+    if (err.message.includes('permiso')) return res.status(403).json({ message: err.message });
+    if (err.message.includes('estado open')) return res.status(400).json({ message: err.message });
+    return res.status(500).json({ message: err.message });
+  }
+}
+
+async function cancel(req, res) {
+  try {
+    const incident = await new CancelIncident(incidentRepo).execute({
+      id: Number(req.params.id),
+      userId: req.user.id,
+    });
+    return res.status(200).json({ message: 'Incidencia cancelada exitosamente', incident });
+  } catch (err) {
+    logger.warn(`Error al cancelar incidencia ${req.params.id}: ${err.message}`);
+    if (err.message.includes('no encontrada')) return res.status(404).json({ message: err.message });
+    if (err.message.includes('permiso')) return res.status(403).json({ message: err.message });
+    if (err.message.includes('estado open')) return res.status(400).json({ message: err.message });
+    return res.status(500).json({ message: err.message });
+  }
+}
+
+module.exports = { create, list, getById, updateStatus, update, cancel };
