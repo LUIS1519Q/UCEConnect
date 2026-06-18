@@ -9,6 +9,8 @@ import ManagerDashboard from "../pages/dashboard/ManagerDashboard";
 import AdminDashboard from "../pages/dashboard/AdminDashboard";
 import ProtectedRoute from "./ProtectedRoute";
 import ResetPasswordPage from "../pages/auth/ResetPasswordPage";
+import ProfilePage from "../pages/profile/ProfilePage";
+import EditProfilePage from "../pages/profile/EditProfilePage";
 import MyIncidentsPage from "../pages/student/MyIncidentsPage";
 import CreateIncidentPage from "../pages/incidents/CreateIncidentPage";
 import IncidentDetailPage from "../pages/student/IncidentDetailPage";
@@ -52,6 +54,24 @@ function AppRouter() {
           element={
             <ProtectedRoute>
               <StudentDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile/edit"
+          element={
+            <ProtectedRoute>
+              <EditProfilePage />
             </ProtectedRoute>
           }
         />

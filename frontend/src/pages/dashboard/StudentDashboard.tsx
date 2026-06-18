@@ -22,6 +22,13 @@ function StudentDashboard() {
           My Incidents
         </Link>
 
+        <Link
+          to="/profile"
+          className="rounded-lg bg-green-600 px-5 py-3 text-white"
+        >
+          My Profile
+        </Link>
+
       </div>
 
     </DashboardLayout>
