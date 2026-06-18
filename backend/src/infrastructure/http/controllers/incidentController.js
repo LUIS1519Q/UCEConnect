@@ -5,7 +5,7 @@ const UpdateStatus = require('../../../application/incidents/UpdateStatus');
 const ClassifyIncident = require('../../../application/incidents/ClassifyIncident');
 const DetectDuplicates = require('../../../application/incidents/DetectDuplicates');
 const PostgresIncidentRepo = require('../../repositories/PostgresIncidentRepo');
-const GeminiClassifier = require('../services/GeminiClassifier');
+const GeminiClassifier = require('../../services/GeminiClassifier');
 const db = require('../../db/connection');
 const logger = require('../../logger/logger');
 
