@@ -2,15 +2,21 @@ const CreateIncident = require('../../../application/incidents/CreateIncident');
 const ListIncidents = require('../../../application/incidents/ListIncidents');
 const GetIncidentById = require('../../../application/incidents/GetIncidentById');
 const UpdateStatus = require('../../../application/incidents/UpdateStatus');
+const ClassifyIncident = require('../../../application/incidents/ClassifyIncident');
+const DetectDuplicates = require('../../../application/incidents/DetectDuplicates');
 const PostgresIncidentRepo = require('../../repositories/PostgresIncidentRepo');
+const GeminiClassifier = require('../services/GeminiClassifier');
 const db = require('../../db/connection');
 const logger = require('../../logger/logger');
 
 const incidentRepo = new PostgresIncidentRepo(db);
+const classifier = new GeminiClassifier(process.env.OPENROUTER_API_KEY);
+const classifyIncidentUC = new ClassifyIncident(classifier, logger);
+const detectDuplicatesUC = new DetectDuplicates(incidentRepo, logger);
 
 async function create(req, res) {
   try {
-    const incident = await new CreateIncident(incidentRepo, logger).execute({
+    const incident = await new CreateIncident(incidentRepo, classifyIncidentUC, detectDuplicatesUC).execute({
       ...req.body,
       createdBy: req.user.id,
     });

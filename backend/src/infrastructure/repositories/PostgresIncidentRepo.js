@@ -134,7 +134,8 @@ class PostgresIncidentRepo {
 
   async findHistoryByIncidentId(incidentId) {
     const result = await this.db.query(
-      `SELECT h.*, u.name AS changed_by_name
+      `SELECT h.id, h.incident_id, h.status, h.note,
+              h.changed_at, u.name AS changed_by_name, u.id AS changed_by_id
        FROM incident_history h
        LEFT JOIN users u ON h.changed_by = u.id
        WHERE h.incident_id = $1
@@ -145,10 +146,32 @@ class PostgresIncidentRepo {
       id: row.id,
       incidentId: row.incident_id,
       status: row.status,
-      changedBy: row.changed_by,
+      changedById: row.changed_by_id,
       changedByName: row.changed_by_name,
       note: row.note,
-      changedAt: row.changed_at,
+      changedAt: row.changed_at instanceof Date ? row.changed_at.toISOString() : row.changed_at,
+    }));
+  }
+
+  async findObservationsByIncidentId(incidentId) {
+    const result = await this.db.query(
+      `SELECT o.id, o.incident_id, o.message, o.created_at,
+              u.name AS author_name, u.id AS author_id, r.name AS author_role
+       FROM observations o
+       LEFT JOIN users u ON o.author_id = u.id
+       LEFT JOIN roles r ON u.role_id = r.id
+       WHERE o.incident_id = $1
+       ORDER BY o.created_at ASC`,
+      [incidentId]
+    );
+    return result.rows.map((row) => ({
+      id: row.id,
+      incidentId: row.incident_id,
+      message: row.message,
+      createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at,
+      authorName: row.author_name,
+      authorId: row.author_id,
+      authorRole: row.author_role,
     }));
   }
 
