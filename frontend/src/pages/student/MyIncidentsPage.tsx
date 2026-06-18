@@ -1,32 +1,37 @@
 import { Link } from "react-router-dom";
-
+import { useQuery } from "@tanstack/react-query";
+import { incidentService } from "../../api/incidentService";
 import DashboardLayout from "../../components/DashboardLayout";
 
-const incidents = [
-  {
-    id: 1,
-    title: "Enrollment Delay",
-    category: "Administrative",
-    status: "Open",
-    date: "2026-06-10",
-  },
-  {
-    id: 2,
-    title: "FEUE Platform Failure",
-    category: "Platform Support",
-    status: "In Progress",
-    date: "2026-06-08",
-  },
-  {
-    id: 3,
-    title: "Scholarship Issue",
-    category: "Student Welfare",
-    status: "Resolved",
-    date: "2026-06-05",
-  },
-];
+type Incident = {
+  id: number;
+  title: string;
+  category?: string;
+  categoryName?: string;
+  status: string;
+  createdAt?: string;
+  date?: string;
+};
 
 function MyIncidentsPage() {
+  
+  const {
+    data: incidents = [],
+    isLoading,
+  } = useQuery<Incident[]>({
+    queryKey: ["incidents"],
+    queryFn: () =>
+      incidentService.getIncidents(),
+  });
+
+  if (isLoading) {
+    return (
+      <DashboardLayout title="My Incidents">
+        <p>Loading incidents...</p>
+      </DashboardLayout>
+    );
+  }
+
   return (
     <DashboardLayout title="My Incidents">
       <div className="space-y-6">
@@ -75,7 +80,7 @@ function MyIncidentsPage() {
               </h3>
 
               <p className="mt-1 text-gray-500">
-                {incident.category}
+                {incident.categoryName ?? incident.category}
               </p>
 
         <div className="mt-4 flex items-center justify-between">
@@ -87,7 +92,7 @@ function MyIncidentsPage() {
           <div className="flex items-center gap-3">
 
             <span className="text-sm text-gray-500">
-              {incident.date}
+              {incident.createdAt ?? incident.date}
             </span>
 
           {incident.status === "Open" && (

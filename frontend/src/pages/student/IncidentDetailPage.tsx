@@ -1,26 +1,56 @@
+import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { incidentService } from "../../api/incidentService";
 import DashboardLayout from "../../components/DashboardLayout";
 
 function IncidentDetailPage() {
+  const { id } = useParams();
+
+  const {
+    data: incident,
+    isLoading,
+  } = useQuery({
+    queryKey: ["incident", id],
+    queryFn: () =>
+      incidentService.getIncidentById(id!),
+    enabled: !!id,
+  });
+
+  if (isLoading) {
+    return (
+      <DashboardLayout title="Incident Details">
+        <p>Loading incident...</p>
+      </DashboardLayout>
+    );
+  }
+
+  if (!incident) {
+    return (
+      <DashboardLayout title="Incident Details">
+        <p>Incident not found.</p>
+      </DashboardLayout>
+    );
+  }
   return (
     <DashboardLayout title="Incident Details">
       <div className="space-y-6">
 
         <div className="rounded-xl bg-white p-6 shadow">
           <h2 className="text-2xl font-bold">
-            INC-001
+            {incident.id}
           </h2>
 
           <div className="mt-4 space-y-2">
             <p>
-              <strong>Category:</strong> Administrative
+              <strong>Category:</strong> {incident.categoryName}
             </p>
 
             <p>
-              <strong>Status:</strong> Open
+              <strong>Status:</strong> {incident.status}
             </p>
 
             <p>
-              <strong>Created:</strong> 2026-06-10
+              <strong>Created:</strong> {incident.createdAt}
             </p>
           </div>
         </div>
@@ -31,8 +61,7 @@ function IncidentDetailPage() {
           </h3>
 
           <p>
-            There is a delay in my enrollment
-            process and I need assistance.
+            {incident.description}
           </p>
         </div>
 

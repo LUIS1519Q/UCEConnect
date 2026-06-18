@@ -25,6 +25,19 @@ export default function VerifyEmailPage() {
     onSuccess: () => navigate("/login"),
   });
 
+  const { mutate: resendCode, isPending: isResending } =
+    useMutation({
+      mutationFn: () =>
+        authService.resendCode(email),
+
+      onSuccess: () => {
+        setSeconds(300);
+        alert(
+          "Verification code resent successfully."
+        );
+      },
+    });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     mutate();
@@ -71,13 +84,13 @@ export default function VerifyEmailPage() {
 
           <button
             type="button"
-            onClick={() => {
-              setSeconds(300);
-              alert("Verification code resent.");
-            }}
-            className="w-full rounded-lg border border-blue-600 p-3 text-blue-600"
+            onClick={() => resendCode()}
+            disabled={isResending}
+            className="w-full rounded-lg border border-blue-600 p-3 text-blue-600 disabled:opacity-70"
           >
-            Resend Code
+            {isResending
+              ? "Resending..."
+              : "Resend Code"}
           </button>
 
           {error && (

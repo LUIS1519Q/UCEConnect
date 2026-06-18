@@ -1,10 +1,17 @@
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { incidentService } from "../../api/incidentService";
 import DashboardLayout from "../../components/DashboardLayout";
 
 function CreateIncidentPage() {
 
   const [selectedFile, setSelectedFile] =
     useState<File | null>(null);
+
+  const [title, setTitle] = useState("");
+  const [categoryId, setCategoryId] = useState("1");
+  const [description, setDescription] =
+    useState("");
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -36,12 +43,44 @@ function CreateIncidentPage() {
     setSelectedFile(file);
   };
 
+  const { mutate, isPending } = useMutation({
+    mutationFn: (data: FormData) =>
+      incidentService.createIncident(data),
+
+    onSuccess: () => {
+      alert("Incident created successfully.");
+    },
+  });
+
+  const handleSubmit = (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+
+    formData.append("title", title);
+    formData.append(
+      "description",
+      description
+    );
+    formData.append(
+      "categoryId",
+      categoryId
+    );
+
+    mutate(formData);
+  };
+
   return (
     <DashboardLayout title="Create Incident">
 
       <div className="rounded-lg bg-white p-6 shadow">
 
-        <form className="space-y-4">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4"
+      >
 
           <div>
 
@@ -51,6 +90,10 @@ function CreateIncidentPage() {
 
             <input
               type="text"
+              value={title}
+              onChange={(e) =>
+                setTitle(e.target.value)
+              }
               className="w-full rounded-lg border p-3"
             />
 
@@ -63,21 +106,25 @@ function CreateIncidentPage() {
             </label>
 
             <select
+              value={categoryId}
+              onChange={(e) =>
+                setCategoryId(e.target.value)
+              }
               className="w-full rounded-lg border p-3"
             >
-              <option>
+              <option value="1">
                 Academic
               </option>
 
-              <option>
+              <option value="2">
                 Administrative
               </option>
 
-              <option>
+              <option value="3">
                 Technology
               </option>
 
-              <option>
+              <option value="4">
                 Infrastructure
               </option>
             </select>
@@ -92,6 +139,10 @@ function CreateIncidentPage() {
 
             <textarea
               rows={5}
+              value={description}
+              onChange={(e) =>
+                setDescription(e.target.value)
+              }
               className="w-full rounded-lg border p-3"
             />
 
@@ -153,7 +204,9 @@ function CreateIncidentPage() {
             type="submit"
             className="rounded-lg bg-blue-600 px-5 py-3 text-white"
           >
-            Submit Incident
+            {isPending
+              ? "Submitting..."
+              : "Submit Incident"}
           </button>
 
         </div>

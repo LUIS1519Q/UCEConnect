@@ -1,6 +1,24 @@
+import { useParams } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { incidentService } from "../../api/incidentService";
 import DashboardLayout from "../../components/DashboardLayout";
 
 function ManagerIncidentDetailPage() {
+
+  const { id } = useParams();
+
+  const { mutate: updateStatus } = useMutation({
+    mutationFn: (status: string) =>
+      incidentService.updateIncidentStatus(
+        id!,
+        status
+      ),
+
+    onSuccess: () => {
+      alert("Status updated successfully.");
+    },
+  });
+
   return (
     <DashboardLayout title="Incident Detail (Manager)">
 
@@ -34,6 +52,37 @@ function ManagerIncidentDetailPage() {
           <p>
             Status: Open
           </p>
+
+          <div className="mt-4 flex gap-3">
+
+            <button
+              onClick={() =>
+                updateStatus("In Progress")
+              }
+              className="rounded-lg bg-yellow-500 px-4 py-2 text-white"
+            >
+              In Progress
+            </button>
+
+            <button
+              onClick={() =>
+                updateStatus("Resolved")
+              }
+              className="rounded-lg bg-green-600 px-4 py-2 text-white"
+            >
+              Resolve
+            </button>
+
+            <button
+              onClick={() =>
+                updateStatus("Rejected")
+              }
+              className="rounded-lg bg-red-600 px-4 py-2 text-white"
+            >
+              Reject
+            </button>
+
+          </div>
 
         </div>
         
