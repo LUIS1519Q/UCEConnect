@@ -1,6 +1,3 @@
-// NodemailerEmailNotifier.js — Adaptador de infraestructura: implementación de IEmailNotifier con Nodemailer
-// Encapsula el transporte SMTP de Gmail y el formato de los correos enviados por la plataforma.
-
 const nodemailer = require('nodemailer');
 
 const BRAND_COLOR = '#1F4E79';

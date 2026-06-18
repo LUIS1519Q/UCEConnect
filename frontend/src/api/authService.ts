@@ -28,6 +28,19 @@ export const authService = {
     return response.data;
   },
 
+  async resendCode(
+    email: string
+  ): Promise<{ message: string }> {
+    const response = await api.post<{ message: string }>(
+      "/api/v1/auth/resend-code",
+      { email }
+    );
+
+  async register(payload: RegisterPayload): Promise<{ message: string }> {
+    const response = await api.post<{ message: string }>("/api/v1/auth/register", payload);
+    return response.data;
+  },
+
   async me(): Promise<User> {
     const response = await api.get<User>("/api/v1/auth/me");
     return response.data;
