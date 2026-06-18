@@ -60,6 +60,48 @@ function IncidentDetailPage() {
           </div>
         </div>
 
+        <div className="rounded-xl bg-white p-6 shadow">
+
+          <h3 className="mb-3 text-xl font-semibold">
+            Case Timeline
+          </h3>
+
+          <div className="space-y-4">
+
+            <div className="border-l-4 border-blue-600 pl-4">
+              <p className="font-semibold">
+                Incident Created
+              </p>
+
+              <p className="text-sm text-gray-500">
+                2026-06-10 08:30
+              </p>
+            </div>
+
+            <div className="border-l-4 border-yellow-500 pl-4">
+              <p className="font-semibold">
+                Assigned to Manager
+              </p>
+
+              <p className="text-sm text-gray-500">
+                2026-06-10 10:15
+              </p>
+            </div>
+
+            <div className="border-l-4 border-green-500 pl-4">
+              <p className="font-semibold">
+                Under Review
+              </p>
+
+              <p className="text-sm text-gray-500">
+                2026-06-10 11:00
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
       </div>
     </DashboardLayout>
   );
