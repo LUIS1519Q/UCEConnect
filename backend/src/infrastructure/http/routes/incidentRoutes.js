@@ -18,6 +18,12 @@ const updateStatusSchema = z.object({
   note: z.string().max(500).optional(),
 });
 
+const updateIncidentSchema = z.object({
+  title: z.string().min(5).max(200).optional(),
+  description: z.string().min(10).optional(),
+  categoryId: z.number().int().positive().optional(),
+});
+
 function validate(schema) {
   return (req, res, next) => {
     const result = schema.safeParse(req.body);
@@ -43,6 +49,21 @@ router.post(
 );
 
 router.get('/:id', authMiddleware, incidentController.getById);
+
+router.patch(
+  '/:id',
+  authMiddleware,
+  roleMiddleware('student'),
+  validate(updateIncidentSchema),
+  incidentController.update
+);
+
+router.patch(
+  '/:id/cancel',
+  authMiddleware,
+  roleMiddleware('student'),
+  incidentController.cancel
+);
 
 router.patch(
   '/:id/status',

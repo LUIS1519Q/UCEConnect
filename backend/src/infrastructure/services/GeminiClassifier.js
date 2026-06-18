@@ -12,7 +12,7 @@ class GeminiClassifier extends IClassifier {
 
   async classify(title, description) {
     const response = await this.client.chat.completions.create({
-      model: 'google/gemini-flash-1.5',
+      model: process.env.OPENROUTER_MODEL || 'google/gemini-flash-1.5',
       messages: [
         {
           role: 'system',

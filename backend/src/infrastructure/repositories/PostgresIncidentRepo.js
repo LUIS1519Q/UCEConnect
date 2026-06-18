@@ -62,6 +62,7 @@ class PostgresIncidentRepo {
   }
 
   async findAll({ userId, status, categoryId, page, limit }) {
+    const VALID_STATUSES = ['open', 'in_progress', 'resolved', 'rejected'];
     const params = [];
     const conditions = [];
 
@@ -69,7 +70,7 @@ class PostgresIncidentRepo {
       params.push(userId);
       conditions.push(`i.created_by = $${params.length}`);
     }
-    if (status !== undefined) {
+    if (status !== undefined && VALID_STATUSES.includes(status)) {
       params.push(status);
       conditions.push(`i.status = $${params.length}`);
     }
@@ -120,6 +121,20 @@ class PostgresIncidentRepo {
        WHERE id = $2
        RETURNING *`,
       [status, id]
+    );
+    return rowToIncident(result.rows[0]);
+  }
+
+  async update(id, { title, description, categoryId }) {
+    const result = await this.db.query(
+      `UPDATE incidents
+       SET title = COALESCE($1, title),
+           description = COALESCE($2, description),
+           category_id = COALESCE($3, category_id),
+           updated_at = NOW()
+       WHERE id = $4
+       RETURNING *`,
+      [title, description, categoryId, id]
     );
     return rowToIncident(result.rows[0]);
   }
