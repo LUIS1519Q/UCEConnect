@@ -47,6 +47,7 @@ function validate(schema) {
 router.post('/register', validate(registerSchema), authController.register);
 router.post('/verify-code', validate(verifySchema), authController.verifyCode);
 router.post('/login', validate(loginSchema), authController.login);
+router.post('/resend-code', validate(verifySchema), authController.resendCode);
 
 router.get('/me', authMiddleware, (req, res) => {
   res.json({ user: req.user });

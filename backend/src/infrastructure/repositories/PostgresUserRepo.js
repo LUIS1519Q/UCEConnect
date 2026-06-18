@@ -106,6 +106,13 @@ class PostgresUserRepo {
       [email]
     );
   }
+
+  async deleteVerifyCodesByUserId(userId) {
+    await this.db.query(
+      `DELETE FROM verify_codes WHERE user_id = $1 AND used = false`,
+      [userId]
+    );
+  }
 }
 
 module.exports = PostgresUserRepo;
