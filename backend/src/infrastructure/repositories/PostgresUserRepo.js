@@ -113,6 +113,42 @@ class PostgresUserRepo {
       [userId]
     );
   }
+
+  async saveResetCode(userId, code, expiresAt) {
+    await this.db.query(
+      'INSERT INTO password_reset_codes (user_id, code, expires_at) VALUES ($1, $2, $3)',
+      [userId, code, expiresAt]
+    );
+  }
+
+  async findResetCode(email) {
+    const result = await this.db.query(
+      `SELECT prc.* FROM password_reset_codes prc
+       JOIN users u ON prc.user_id = u.id
+       WHERE u.email = $1 AND prc.used = false
+       ORDER BY prc.created_at DESC
+       LIMIT 1`,
+      [email]
+    );
+
+    const row = result.rows[0];
+    if (!row) return null;
+
+    return { code: row.code, expiresAt: row.expires_at, used: row.used };
+  }
+
+  async markResetCodeAsUsed(email) {
+    await this.db.query(
+      `UPDATE password_reset_codes SET used = true
+       WHERE user_id = (SELECT id FROM users WHERE email = $1)
+       AND used = false`,
+      [email]
+    );
+  }
+
+  async updatePassword(userId, passwordHash) {
+    await this.db.query('UPDATE users SET password_hash = $1 WHERE id = $2', [passwordHash, userId]);
+  }
 }
 
 module.exports = PostgresUserRepo;

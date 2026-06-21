@@ -6,5 +6,9 @@ class IUserRepo {
   saveVerifyCode(userId, code, expiresAt) { throw new Error('Not implemented') }
   findVerifyCode(email) { throw new Error('Not implemented') }
   markCodeAsUsed(email) { throw new Error('Not implemented') }
+  saveResetCode(userId, code, expiresAt) { throw new Error('Not implemented') }
+  findResetCode(email) { throw new Error('Not implemented') }
+  markResetCodeAsUsed(email) { throw new Error('Not implemented') }
+  updatePassword(userId, passwordHash) { throw new Error('Not implemented') }
 }
 module.exports = IUserRepo

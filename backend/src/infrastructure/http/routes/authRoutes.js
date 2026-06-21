@@ -32,6 +32,19 @@ const resendSchema = z.object({
   email: z.string().email(),
 });
 
+const forgotSchema = z.object({
+  email: z.string().email(),
+});
+
+const resetSchema = z.object({
+  email: z.string().email(),
+  code: z.string().length(6),
+  newPassword: z
+    .string()
+    .min(8)
+    .regex(/\d/, 'La contraseña debe contener al menos un número'),
+});
+
 function validate(schema) {
   return (req, res, next) => {
     const result = schema.safeParse(req.body);
@@ -52,6 +65,11 @@ router.post('/register', validate(registerSchema), authController.register);
 router.post('/verify-code', validate(verifySchema), authController.verifyCode);
 router.post('/login', validate(loginSchema), authController.login);
 router.post('/resend-code', validate(resendSchema), authController.resendCode);
+router.post('/forgot-password', validate(forgotSchema), authController.forgotPassword);
+router.post('/reset-password', validate(resetSchema), authController.resetPassword);
+
+router.get('/microsoft', authController.microsoftLogin);
+router.get('/microsoft/callback', authController.microsoftCallback);
 
 router.get('/me', authMiddleware, (req, res) => {
   res.json({ user: req.user });
