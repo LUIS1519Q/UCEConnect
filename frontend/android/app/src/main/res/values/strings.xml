@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">UCEConnect</string>
+    <string name="title_activity_main">UCEConnect</string>
+    <string name="package_name">com.uceconnect.app</string>
+    <string name="custom_url_scheme">com.uceconnect.app</string>
+</resources>
