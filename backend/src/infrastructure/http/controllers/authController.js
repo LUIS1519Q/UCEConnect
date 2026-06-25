@@ -123,8 +123,13 @@ async function resetPasswordHandler(req, res) {
 }
 
 async function microsoftLogin(req, res) {
-  const authUrl = await microsoftAuthService.getAuthUrl();
-  res.redirect(authUrl);
+  try {
+    const authUrl = await microsoftAuthService.getAuthUrl();
+    res.redirect(authUrl);
+  } catch (error) {
+    logger.error(`Error en Microsoft login: ${error.message}`);
+    res.status(500).json({ message: 'Error al iniciar sesión con Microsoft' });
+  }
 }
 
 async function microsoftCallback(req, res) {
