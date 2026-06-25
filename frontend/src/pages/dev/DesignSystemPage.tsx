@@ -4,6 +4,7 @@ import {
   Logo,
   OTPInput,
   TextInput,
+  TimerText,
 } from "../../components/ui/atoms";
 
 export default function DesignSystemPage() {
@@ -235,6 +236,25 @@ export default function DesignSystemPage() {
           </h2>
 
           <OTPInput />
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Timer Text
+          </h2>
+
+          <div className="space-y-4">
+
+            <TimerText
+              time="00:59"
+            />
+
+            <TimerText
+              label="Code expires in"
+              time="04:32"
+            />
+
+          </div>
         </section>
 
       </div>
