@@ -10,9 +10,15 @@ services:
       PORT: 3000
     ports:
       - "3000:3000"
+    volumes:
+      - /home/ubuntu/uceconnect/logs:/app/logs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     networks:
       - uceconnect_prod
-
   frontend:
     image: ${DOCKERHUB_USERNAME:-uceconnect}/frontend:prod
     container_name: uceconnect_frontend_prod
@@ -23,7 +29,6 @@ services:
       - backend
     networks:
       - uceconnect_prod
-
 networks:
   uceconnect_prod:
     name: uceconnect_prod
