@@ -9,7 +9,8 @@ import {
 } from "../../components/ui/atoms";
 
 import {
-  FormField
+  FormField, 
+  FormRow,
 } from "../../components/ui/molecules";
 
 export default function DesignSystemPage() {
@@ -305,6 +306,31 @@ export default function DesignSystemPage() {
 
           </div>
         </section>
+
+        <section>
+
+            <h2 className="mb-4 text-xl font-semibold">
+                Form Row
+            </h2>
+
+            <div className="max-w-md">
+
+                <FormRow>
+
+                    <Checkbox
+                        id="remember"
+                        label="Remember me"
+                    />
+
+                    <Link href="#">
+                        Forgot password?
+                    </Link>
+
+                </FormRow>
+
+            </div>
+
+</section>
 
       </div>
 
