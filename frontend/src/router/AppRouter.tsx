@@ -1,6 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
-//import DesignSystemPage from "../pages/dev/DesignSystemPage";
+import DesignSystemPage from "../pages/dev/DesignSystemPage";
 
 import LoginPage from "../pages/auth/LoginPage";
 import RegisterPage from "../pages/auth/RegisterPage";
@@ -28,6 +28,11 @@ function AppRouter() {
         <Route
           path="/"
           element={<Navigate to="/login" replace />}
+        />
+
+        <Route
+          path="/design-system"
+          element={<DesignSystemPage />}
         />
 
         <Route
