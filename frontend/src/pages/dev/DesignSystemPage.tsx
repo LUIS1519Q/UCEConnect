@@ -2,6 +2,7 @@ import {
   Button,
   Checkbox,
   Logo,
+  OTPInput,
   TextInput,
 } from "../../components/ui/atoms";
 
@@ -226,6 +227,14 @@ export default function DesignSystemPage() {
             />
 
           </div>
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            OTP Input
+          </h2>
+
+          <OTPInput />
         </section>
 
       </div>
