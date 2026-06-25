@@ -1,6 +1,7 @@
 import type { FormFieldProps } from "./FormField.types";
 
 export default function FormField({
+  id,
   label,
   error,
   required = false,
@@ -9,7 +10,10 @@ export default function FormField({
   return (
     <div className="space-y-2">
 
-      <label className="text-sm font-medium text-textPrimary">
+      <label
+        htmlFor={id}
+        className="text-sm font-medium text-textPrimary"
+      >
         {label}
 
         {required && (
