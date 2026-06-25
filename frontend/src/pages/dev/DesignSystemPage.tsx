@@ -8,6 +8,10 @@ import {
   Link,
 } from "../../components/ui/atoms";
 
+import {
+  FormField
+} from "../../components/ui/molecules";
+
 export default function DesignSystemPage() {
   return (
     <div className="min-h-screen bg-background p-10">
@@ -277,6 +281,40 @@ export default function DesignSystemPage() {
             </Link>
 
           </div>
+        </section>
+
+        <section>
+
+          <h2 className="mb-4 text-xl font-semibold">
+            Form Field
+          </h2>
+
+          <div className="max-w-md">
+
+            <FormField
+              label="Institutional email"
+              required
+            >
+              <TextInput
+                id="field-email"
+                placeholder="Enter your institutional email"
+              />
+            </FormField>
+
+            <div className="mt-6" />
+
+            <FormField
+              label="Password"
+              error="Password is required."
+            >
+              <TextInput
+                id="field-password"
+                type="password"
+              />
+            </FormField>
+
+          </div>
+
         </section>
 
       </div>
