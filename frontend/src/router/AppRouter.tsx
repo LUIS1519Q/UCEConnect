@@ -8,6 +8,16 @@ import StudentDashboard from "../pages/dashboard/StudentDashboard";
 import ManagerDashboard from "../pages/dashboard/ManagerDashboard";
 import AdminDashboard from "../pages/dashboard/AdminDashboard";
 import ProtectedRoute from "./ProtectedRoute";
+import ResetPasswordPage from "../pages/auth/ResetPasswordPage";
+import ProfilePage from "../pages/profile/ProfilePage";
+import EditProfilePage from "../pages/profile/EditProfilePage";
+import MyIncidentsPage from "../pages/student/MyIncidentsPage";
+import CreateIncidentPage from "../pages/incidents/CreateIncidentPage";
+import EditIncidentPage from "../pages/student/EditIncidentPage";
+import IncidentDetailPage from "../pages/student/IncidentDetailPage";
+import AISuggestionPage from "../pages/student/AISuggestionPage";
+import ManagerIncidentsPage from "../pages/manager/ManagerIncidentsPage";
+import ManagerIncidentDetailPage from "../pages/manager/ManagerIncidentDetailPage";
 
 function AppRouter() {
   return (
@@ -39,6 +49,11 @@ function AppRouter() {
         />
 
         <Route
+          path="/reset-password"
+          element={<ResetPasswordPage />}
+        />
+
+        <Route
           path="/dashboard/estudiante"
           element={
             <ProtectedRoute>
@@ -48,10 +63,91 @@ function AppRouter() {
         />
 
         <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile/edit"
+          element={
+            <ProtectedRoute>
+              <EditProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/incidents/create"
+          element={
+            <ProtectedRoute>
+              <CreateIncidentPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/incidents"
+          element={
+            <ProtectedRoute>
+              <MyIncidentsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/incidents/:id"
+          element={
+            <ProtectedRoute>
+              <IncidentDetailPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/incidents/:id/edit"
+          element={
+            <ProtectedRoute>
+              <EditIncidentPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/incidents/ai-suggestion"
+          element={
+            <ProtectedRoute>
+              <AISuggestionPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/dashboard/gestor"
           element={
             <ProtectedRoute>
               <ManagerDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/manager/incidents"
+          element={
+            <ProtectedRoute>
+              <ManagerIncidentsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/manager/incidents/:id"
+          element={
+            <ProtectedRoute>
+              <ManagerIncidentDetailPage />
             </ProtectedRoute>
           }
         />
