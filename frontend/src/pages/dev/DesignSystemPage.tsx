@@ -172,40 +172,31 @@ export default function DesignSystemPage() {
         </section>
 
         <section>
-            <h2 className="mb-4 text-xl font-semibold">
-                Text Inputs
-            </h2>
+          <h2 className="mb-4 text-xl font-semibold">
+            Text Input
+          </h2>
 
-            <div className="max-w-md space-y-6">
+          <div className="max-w-md space-y-4">
 
-                <TextInput
-                id="email"
-                label="Institutional email"
-                placeholder="Enter your institutional email"
-                type="email"
-                />
+            <TextInput
+              id="email"
+              type="email"
+              placeholder="Enter your institutional email"
+            />
 
-                <TextInput
-                id="password"
-                label="Password"
-                placeholder="Enter your password"
-                type="password"
-                />
+            <TextInput
+              id="password"
+              type="password"
+              placeholder="Enter your password"
+            />
 
-                <TextInput
-                id="error"
-                label="Institutional email"
-                error="Invalid institutional email."
-                />
+            <TextInput
+              id="disabled"
+              disabled
+              placeholder="Disabled"
+            />
 
-                <TextInput
-                id="disabled"
-                label="Disabled field"
-                placeholder="Disabled"
-                disabled
-                />
-
-            </div>
+          </div>
         </section>
 
         <section>
@@ -284,37 +275,35 @@ export default function DesignSystemPage() {
         </section>
 
         <section>
-
           <h2 className="mb-4 text-xl font-semibold">
             Form Field
           </h2>
 
-          <div className="max-w-md">
+          <div className="max-w-md space-y-6">
 
             <FormField
+              id="email"
               label="Institutional email"
               required
             >
               <TextInput
-                id="field-email"
+                id="email"
                 placeholder="Enter your institutional email"
               />
             </FormField>
 
-            <div className="mt-6" />
-
             <FormField
+              id="password"
               label="Password"
               error="Password is required."
             >
               <TextInput
-                id="field-password"
+                id="password"
                 type="password"
               />
             </FormField>
 
           </div>
-
         </section>
 
       </div>
