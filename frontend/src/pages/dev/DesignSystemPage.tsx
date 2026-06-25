@@ -5,6 +5,7 @@ import {
   OTPInput,
   TextInput,
   TimerText,
+  Link,
 } from "../../components/ui/atoms";
 
 export default function DesignSystemPage() {
@@ -253,6 +254,27 @@ export default function DesignSystemPage() {
               label="Code expires in"
               time="04:32"
             />
+
+          </div>
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Links
+          </h2>
+
+          <div className="space-y-4">
+
+            <Link href="#">
+              Forgot password?
+            </Link>
+
+            <Link
+              href="#"
+              underline
+            >
+              Create account
+            </Link>
 
           </div>
         </section>
