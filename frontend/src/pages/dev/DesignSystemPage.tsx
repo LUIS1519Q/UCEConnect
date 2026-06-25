@@ -13,6 +13,7 @@ import {
   FormRow,
 } from "../../components/ui/molecules";
 
+import { AuthScreen } from "../../components/ui/organisms";
 export default function DesignSystemPage() {
   return (
     <div className="min-h-screen bg-background p-10">
@@ -330,7 +331,28 @@ export default function DesignSystemPage() {
 
             </div>
 
-</section>
+        </section>
+
+        <section>
+
+          <h2 className="mb-4 text-xl font-semibold">
+            Auth Screen
+          </h2>
+
+          <div className="overflow-hidden rounded-xl border border-border">
+
+            <AuthScreen
+              title="Welcome Back"
+              subtitle="Sign in to continue to UCEConnect."
+            >
+              <Button>
+                Demo Button
+              </Button>
+            </AuthScreen>
+
+          </div>
+
+        </section>
 
       </div>
 
