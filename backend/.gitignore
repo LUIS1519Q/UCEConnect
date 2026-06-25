@@ -13,7 +13,8 @@ dist/
 build/
 
 # Logs
-logs/
+logs/*.log
+logs/*.log.*
 *.log
 
 # Cobertura de tests
@@ -25,5 +26,3 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
-logs/*
-!logs/.gitkeep

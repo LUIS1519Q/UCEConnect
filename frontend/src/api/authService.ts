@@ -1,5 +1,12 @@
 import axios from "axios";
-import type { AuthResponse, LoginPayload, RegisterPayload, VerifyCodePayload, User } from "../types/auth";
+import { useAuthStore } from "../store/authStore";
+import type {
+  AuthResponse,
+  LoginPayload,
+  RegisterPayload,
+  VerifyCodePayload,
+  User,
+} from "../types/auth";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -7,29 +14,75 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("accessToken");
-  if (token) config.headers.Authorization = `Bearer ${token}`;
+  const token = useAuthStore.getState().accessToken;
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
   return config;
 });
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      useAuthStore.getState().logout();
+      window.location.href = "/login";
+    }
+
+    return Promise.reject(error);
+  }
+);
+
 export const authService = {
   async login(payload: LoginPayload): Promise<AuthResponse> {
-    const response = await api.post<AuthResponse>("/api/v1/auth/login", payload);
+    const response = await api.post<AuthResponse>(
+      "/api/v1/auth/login",
+      payload
+    );
+
     return response.data;
   },
 
-  async register(payload: RegisterPayload): Promise<{ message: string }> {
-    const response = await api.post<{ message: string }>("/api/v1/auth/register", payload);
+  async register(
+    payload: RegisterPayload
+  ): Promise<{ message: string }> {
+    const response = await api.post<{ message: string }>(
+      "/api/v1/auth/register",
+      payload
+    );
+
     return response.data;
   },
 
-  async verifyCode(payload: VerifyCodePayload): Promise<{ message: string }> {
-    const response = await api.post<{ message: string }>("/api/v1/auth/verify-code", payload);
+  async verifyCode(
+    payload: VerifyCodePayload
+  ): Promise<{ message: string }> {
+    const response = await api.post<{ message: string }>(
+      "/api/v1/auth/verify-code",
+      payload
+    );
+
+    return response.data;
+  },
+
+  async resendCode(
+    email: string
+  ): Promise<{ message: string }> {
+    const response = await api.post<{ message: string }>(
+      "/api/v1/auth/resend-code",
+      { email }
+    );
+
     return response.data;
   },
 
   async me(): Promise<User> {
-    const response = await api.get<User>("/api/v1/auth/me");
+    const response = await api.get<User>(
+      "/api/v1/auth/me"
+    );
+
     return response.data;
   },
 };

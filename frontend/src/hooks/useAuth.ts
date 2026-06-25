@@ -21,17 +21,34 @@ export function useAuth() {
       );
 
       switch (response.user.role) {
-        case "STUDENT":
+        case "student":
           navigate("/dashboard/estudiante");
           break;
 
-        case "MANAGER":
+        case "manager":
           navigate("/dashboard/gestor");
           break;
 
-        case "ADMIN":
+        case "admin":
           navigate("/dashboard/admin");
           break;
+      }
+    },
+
+    onError: (error: any, variables) => {
+      const message =
+        error?.response?.data?.message || "";
+
+      if (
+        message.includes(
+          "Debes verificar tu correo"
+        )
+      ) {
+        navigate("/verify-email", {
+          state: {
+            email: variables.email,
+          },
+        });
       }
     },
   });
