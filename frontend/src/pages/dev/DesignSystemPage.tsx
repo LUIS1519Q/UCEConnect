@@ -1,4 +1,5 @@
 import { Logo } from "../../components/ui/atoms/Logo";
+import { Button } from "../../components/ui/atoms/Button";
 
 export default function DesignSystemPage() {
   return (
@@ -111,6 +112,52 @@ export default function DesignSystemPage() {
             </div>
 
           </div>
+        </section>
+
+        <section>
+            <h2 className="mb-4 text-xl font-semibold">
+                Buttons
+            </h2>
+
+            <div className="flex flex-wrap items-center gap-4">
+
+                <Button variant="primary">
+                Primary
+                </Button>
+
+                <Button variant="secondary">
+                Secondary
+                </Button>
+
+                <Button variant="danger">
+                Danger
+                </Button>
+
+                <Button variant="ghost">
+                Ghost
+                </Button>
+
+                <Button variant="link">
+                Link
+                </Button>
+
+                <Button size="sm">
+                Small
+                </Button>
+
+                <Button size="md">
+                Medium
+                </Button>
+
+                <Button size="lg">
+                Large
+                </Button>
+
+                <Button disabled>
+                Disabled
+                </Button>
+
+            </div>
         </section>
 
       </div>
