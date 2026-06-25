@@ -1,6 +1,7 @@
 import { Logo } from "../../components/ui/atoms/Logo";
 import { Button } from "../../components/ui/atoms/Button";
 import { TextInput } from "../../components/ui/atoms/TextInput";
+import { Checkbox } from "../../components/ui/atoms/Checkbox";
 
 export default function DesignSystemPage() {
   return (
@@ -197,6 +198,34 @@ export default function DesignSystemPage() {
 
             </div>
         </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Checkbox
+          </h2>
+
+          <div className="space-y-4">
+
+            <Checkbox
+              id="remember"
+              label="Remember me"
+            />
+
+            <Checkbox
+              id="checked"
+              label="Checked"
+              defaultChecked
+            />
+
+            <Checkbox
+              id="disabled"
+              label="Disabled"
+              disabled
+            />
+
+          </div>
+        </section>
+
       </div>
 
     </div>
