@@ -24,6 +24,7 @@ class ForgotPassword {
       const code = Math.floor(100000 + Math.random() * 900000).toString();
       const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
 
+      await this.userRepo.deleteResetCodesByUserId(user.id);
       await this.userRepo.saveResetCode(user.id, code, expiresAt);
 
       await this.emailNotifier.sendPasswordResetCode(email, code);

@@ -149,6 +149,13 @@ class PostgresUserRepo {
   async updatePassword(userId, passwordHash) {
     await this.db.query('UPDATE users SET password_hash = $1 WHERE id = $2', [passwordHash, userId]);
   }
+
+  async deleteResetCodesByUserId(userId) {
+    await this.db.query(
+      'DELETE FROM password_reset_codes WHERE user_id = $1 AND used = false',
+      [userId]
+    );
+  }
 }
 
 module.exports = PostgresUserRepo;
