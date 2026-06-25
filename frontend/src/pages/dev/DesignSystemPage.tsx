@@ -1,7 +1,9 @@
-import { Logo } from "../../components/ui/atoms/Logo";
-import { Button } from "../../components/ui/atoms/Button";
-import { TextInput } from "../../components/ui/atoms/TextInput";
-import { Checkbox } from "../../components/ui/atoms/Checkbox";
+import {
+  Button,
+  Checkbox,
+  Logo,
+  TextInput,
+} from "../../components/ui/atoms";
 
 export default function DesignSystemPage() {
   return (
