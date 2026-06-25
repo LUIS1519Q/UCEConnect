@@ -1,7 +1,3 @@
-# docker-compose.local.yml — entorno de desarrollo local para UCEConnect Backend
-# Levanta PostgreSQL + el backend con hot reload (npm run dev)
-# Uso: npm run docker:local
-
 version: '3.8'
 
 services:
@@ -16,16 +12,10 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_local_data:/var/lib/postgresql/data
-      # Los scripts .sql se ejecutan automáticamente al crear el contenedor
+      - postgres_data_local:/var/lib/postgresql/data
       - ./src/infrastructure/db/migrations:/docker-entrypoint-initdb.d
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U uceconnect_user -d uceconnect"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
     networks:
-      - uceconnect_local
+      - uceconnect_network
 
   backend:
     build:
@@ -33,26 +23,22 @@ services:
       dockerfile: Dockerfile.backend
     container_name: uceconnect_backend_local
     restart: unless-stopped
-    env_file:
-      - .env
-    environment:
-      DATABASE_URL: postgresql://uceconnect_user:uceconnect_pass@postgres:5432/uceconnect
     ports:
       - "3000:3000"
+    environment:
+      NODE_ENV: development
+    env_file:
+      - .env
     depends_on:
-      postgres:
-        condition: service_healthy
+      - postgres
     volumes:
-      # Monta el código fuente para recargar automáticamente con nodemon
-      - .:/app
-      - /app/node_modules
-    command: node src/index.js
+      - ./logs:/app/logs
     networks:
-      - uceconnect_local
+      - uceconnect_network
 
 volumes:
-  postgres_local_data:
+  postgres_data_local:
 
 networks:
-  uceconnect_local:
-    name: uceconnect_local
+  uceconnect_network:
+    driver: bridge
