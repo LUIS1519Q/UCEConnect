@@ -2,19 +2,19 @@ import type { ButtonProps } from "./Button.types";
 
 const variantStyles = {
   primary:
-    "bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500",
+    "bg-primary text-white hover:opacity-90",
 
   secondary:
-    "border border-blue-600 bg-white text-blue-600 hover:bg-blue-50 focus:ring-2 focus:ring-blue-500",
+    "border border-primary bg-surface text-primary hover:bg-blue-50",
 
   danger:
-    "bg-red-600 text-white hover:bg-red-700 focus:ring-2 focus:ring-red-500",
+    "bg-danger text-white hover:opacity-90",
 
   ghost:
-    "bg-transparent text-gray-700 hover:bg-gray-100",
+    "bg-transparent text-textPrimary hover:bg-gray-100",
 
   link:
-    "bg-transparent text-blue-600 hover:underline p-0",
+    "bg-transparent p-0 text-primary hover:underline",
 };
 
 const sizeStyles = {
