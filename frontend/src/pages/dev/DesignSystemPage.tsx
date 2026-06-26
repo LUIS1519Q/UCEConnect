@@ -10,7 +10,6 @@ import {
   Button,
   Checkbox,
   Logo,
-  OTPInput,
   TextInput,
   TimerText,
   Link,
@@ -21,6 +20,8 @@ import {
 import {
   FormField, 
   FormRow,
+  OTPInput,
+  PasswordInput,
 } from "../../components/ui/molecules";
 
 import {
@@ -406,6 +407,22 @@ export default function DesignSystemPage() {
                 </FormRow>
 
             </div>
+
+        </section>
+
+        <section className="space-y-6">
+
+          <h2 className="mb-4 text-xl font-semibold">
+            Password Input
+          </h2>
+
+          <div className="max-w-md">
+
+            <PasswordInput
+              placeholder="Enter your password"
+            />
+
+          </div>
 
         </section>
 
