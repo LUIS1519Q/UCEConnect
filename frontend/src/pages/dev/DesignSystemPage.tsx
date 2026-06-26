@@ -15,6 +15,7 @@ import {
   TimerText,
   Link,
   Divider,
+  SocialButton,
 } from "../../components/ui/atoms";
 
 import {
@@ -332,6 +333,18 @@ export default function DesignSystemPage() {
 
           <div className="max-w-md">
             <Divider />
+          </div>
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Social Button
+          </h2>
+
+          <div className="max-w-sm">
+            <SocialButton provider="microsoft">
+              Continue with Microsoft
+            </SocialButton>
           </div>
         </section>
 
