@@ -14,6 +14,7 @@ import {
   TextInput,
   TimerText,
   Link,
+  Divider,
 } from "../../components/ui/atoms";
 
 import {
@@ -321,6 +322,16 @@ export default function DesignSystemPage() {
               Create account
             </Link>
 
+          </div>
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Divider
+          </h2>
+
+          <div className="max-w-md">
+            <Divider />
           </div>
         </section>
 
