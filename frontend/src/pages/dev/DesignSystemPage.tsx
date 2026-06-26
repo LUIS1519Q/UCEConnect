@@ -26,6 +26,7 @@ import {
 import {
   LoginForm,
   RegisterForm,
+  ForgotPasswordForm,
 } from "../../components/ui/organisms";
 
 export default function DesignSystemPage() {
@@ -426,6 +427,16 @@ export default function DesignSystemPage() {
           </div>
         </section>
 
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Forgot Password Form
+          </h2>
+
+          <div className="max-w-md rounded-xl border border-border bg-surface p-8">
+            <ForgotPasswordForm />
+          </div>
+        </section>
+   
       </div>
 
     </div>
