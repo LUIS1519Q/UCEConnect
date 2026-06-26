@@ -2,7 +2,7 @@ export * from "./Button";
 export * from "./Checkbox";
 export * from "./Logo";
 export * from "./TextInput";
-export * from "./OTPInput";
+export * from "../molecules/OTPInput";
 export * from "./TimerText";
 export * from "./Link";
 export * from "./Divider";

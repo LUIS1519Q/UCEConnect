@@ -10,6 +10,7 @@ import {
 import {
   FormField,
   FormRow,
+  PasswordInput,
 } from "../../molecules";
 
 import type { LoginFormProps } from "./LoginForm.types";
@@ -40,9 +41,8 @@ export default function LoginForm({
         label="Password"
         required
       >
-        <TextInput
+        <PasswordInput
           id="password"
-          type="password"
           placeholder="Enter your password"
           fullWidth
         />
