@@ -28,6 +28,7 @@ import {
   RegisterForm,
   ForgotPasswordForm,
   VerifyCodeForm,
+  ResetPasswordForm,
 } from "../../components/ui/organisms";
 
 export default function DesignSystemPage() {
@@ -445,6 +446,16 @@ export default function DesignSystemPage() {
 
           <div className="max-w-md rounded-xl border border-border bg-surface p-8">
             <VerifyCodeForm />
+          </div>
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Reset Password Form
+          </h2>
+
+          <div className="max-w-md rounded-xl border border-border bg-surface p-8">
+            <ResetPasswordForm />
           </div>
         </section>
 
