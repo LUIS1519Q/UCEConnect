@@ -5,3 +5,4 @@ export * from "./TextInput";
 export * from "./OTPInput";
 export * from "./TimerText";
 export * from "./Link";
+export * from "./Divider";
