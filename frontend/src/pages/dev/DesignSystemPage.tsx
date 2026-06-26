@@ -1,4 +1,12 @@
 import {
+    Eye,
+    EyeOff,
+    Mail,
+    Lock,
+    User,
+} from "../../components/ui/icons";
+
+import {
   Button,
   Checkbox,
   Logo,
@@ -128,6 +136,43 @@ export default function DesignSystemPage() {
             </div>
 
           </div>
+        </section>
+
+        <section>
+
+          <h2 className="mb-4 text-xl font-semibold">
+            Authentication Icons
+          </h2>
+
+          <div className="flex gap-8">
+
+            <div className="flex flex-col items-center gap-2">
+              <Mail className="h-6 w-6 text-primary" />
+              <span>Email</span>
+            </div>
+
+            <div className="flex flex-col items-center gap-2">
+              <Lock className="h-6 w-6 text-primary" />
+              <span>Password</span>
+            </div>
+
+            <div className="flex flex-col items-center gap-2">
+              <Eye className="h-6 w-6 text-primary" />
+              <span>Show</span>
+            </div>
+
+            <div className="flex flex-col items-center gap-2">
+              <EyeOff className="h-6 w-6 text-primary" />
+              <span>Hide</span>
+            </div>
+
+            <div className="flex flex-col items-center gap-2">
+              <User className="h-6 w-6 text-primary" />
+              <span>User</span>
+            </div>
+
+          </div>
+
         </section>
 
         <section>
