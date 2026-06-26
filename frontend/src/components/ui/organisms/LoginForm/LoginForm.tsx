@@ -1,7 +1,9 @@
 import {
   Button,
   Checkbox,
+  Divider,
   Link,
+  SocialButton,
   TextInput,
 } from "../../atoms";
 
@@ -60,10 +62,22 @@ export default function LoginForm({
       <Button
         type="submit"
         className="w-full"
-        >
+      >
         Log in
-
       </Button>
+
+      <Divider />
+
+      <SocialButton provider="microsoft">
+        Continue with Microsoft
+      </SocialButton>
+
+      <p className="text-center text-sm text-textSecondary">
+        Don't have an account?{" "}
+        <Link href="#">
+          Sign up
+        </Link>
+      </p>
     </form>
   );
 }
