@@ -1,10 +1,10 @@
 import {
   Button,
-  TextInput,
 } from "../../atoms";
 
 import {
   FormField,
+  PasswordInput,
 } from "../../molecules";
 
 import type { ResetPasswordFormProps } from "./ResetPasswordForm.types";
@@ -22,9 +22,8 @@ export default function ResetPasswordForm({
         label="New Password"
         required
       >
-        <TextInput
+        <PasswordInput
           id="password"
-          type="password"
           placeholder="Enter your new password"
         />
       </FormField>
@@ -34,9 +33,8 @@ export default function ResetPasswordForm({
         label="Confirm Password"
         required
       >
-        <TextInput
+        <PasswordInput
           id="confirmPassword"
-          type="password"
           placeholder="Confirm your new password"
         />
       </FormField>

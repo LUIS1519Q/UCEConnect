@@ -9,6 +9,7 @@ import {
 import {
   FormField,
   FormRow,
+  PasswordInput,
 } from "../../molecules";
 
 import type { RegisterFormProps } from "./RegisterForm.types";
@@ -62,9 +63,8 @@ export default function RegisterForm({
         label="Password"
         required
       >
-        <TextInput
+        <PasswordInput
           id="password"
-          type="password"
           placeholder="Create a password"
         />
       </FormField>
@@ -74,9 +74,8 @@ export default function RegisterForm({
         label="Confirm Password"
         required
       >
-        <TextInput
+        <PasswordInput
           id="confirmPassword"
-          type="password"
           placeholder="Confirm your password"
         />
       </FormField>

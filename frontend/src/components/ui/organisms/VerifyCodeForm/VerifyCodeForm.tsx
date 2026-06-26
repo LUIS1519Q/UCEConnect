@@ -1,8 +1,11 @@
 import {
   Button,
-  OTPInput,
   TimerText,
 } from "../../atoms";
+
+import {
+  OTPInput,
+} from "../../molecules";
 
 import type { VerifyCodeFormProps } from "./VerifyCodeForm.types";
 
