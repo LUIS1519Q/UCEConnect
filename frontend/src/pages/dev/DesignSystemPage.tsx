@@ -25,6 +25,7 @@ import {
 
 import {
   LoginForm,
+  RegisterForm,
 } from "../../components/ui/organisms";
 
 export default function DesignSystemPage() {
@@ -412,6 +413,16 @@ export default function DesignSystemPage() {
 
           <div className="max-w-md rounded-xl border border-border bg-surface p-8">
             <LoginForm />
+          </div>
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Register Form
+          </h2>
+
+          <div className="max-w-md rounded-xl border border-border bg-surface p-8">
+            <RegisterForm />
           </div>
         </section>
 
