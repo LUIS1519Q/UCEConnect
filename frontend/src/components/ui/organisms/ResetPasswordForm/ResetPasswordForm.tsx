@@ -15,7 +15,7 @@ export default function ResetPasswordForm({
   return (
     <form
       onSubmit={onSubmit}
-      className="space-y-6"
+      className="space-y-4"
     >
       <FormField
         id="password"
