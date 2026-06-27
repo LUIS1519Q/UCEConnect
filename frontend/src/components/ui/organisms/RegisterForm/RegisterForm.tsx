@@ -16,6 +16,10 @@ import type { RegisterFormProps } from "./RegisterForm.types";
 
 export default function RegisterForm({
   onSubmit,
+  register,
+  errors,
+  isPending,
+  error,
 }: RegisterFormProps) {
   return (
     <form
@@ -30,10 +34,19 @@ export default function RegisterForm({
             label="First Name"
             required
           >
+          <>
             <TextInput
               id="firstName"
               placeholder="Enter your first name"
+              {...register("firstName")}
             />
+
+            {errors.firstName && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.firstName.message}
+              </p>
+            )}
+          </>
           </FormField>
         </div>
 
@@ -43,10 +56,19 @@ export default function RegisterForm({
             label="Last Name"
             required
           >
-            <TextInput
-              id="lastName"
-              placeholder="Enter your last name"
-            />
+            <>
+              <TextInput
+                id="lastName"
+                placeholder="Enter your last name"
+                {...register("lastName")}
+              />
+
+              {errors.lastName && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.lastName.message}
+                </p>
+              )}
+            </>
           </FormField>
         </div>
 
@@ -57,11 +79,20 @@ export default function RegisterForm({
         label="Institutional Email"
         required
       >
-        <TextInput
-          id="email"
-          type="email"
-          placeholder="Enter your institutional email"
-        />
+        <>
+          <TextInput
+            id="email"
+            type="email"
+            placeholder="Enter your institutional email"
+            {...register("email")}
+          />
+
+          {errors.email && (
+            <p className="mt-1 text-sm text-red-500">
+              {errors.email.message}
+            </p>
+          )}
+        </>
       </FormField>
 
       <FormField
@@ -69,10 +100,19 @@ export default function RegisterForm({
         label="Password"
         required
       >
-        <PasswordInput
-          id="password"
-          placeholder="Create a password"
-        />
+        <>
+          <PasswordInput
+            id="password"
+            placeholder="Create a password"
+            {...register("password")}
+          />
+
+          {errors.password && (
+            <p className="mt-1 text-sm text-red-500">
+              {errors.password.message}
+            </p>
+          )}
+        </>
       </FormField>
 
       <FormField
@@ -80,18 +120,36 @@ export default function RegisterForm({
         label="Confirm Password"
         required
       >
-        <PasswordInput
-          id="confirmPassword"
-          placeholder="Confirm your password"
-        />
+        <>
+          <PasswordInput
+            id="confirmPassword"
+            placeholder="Confirm your password"
+            {...register("confirmPassword")}
+          />
+
+          {errors.confirmPassword && (
+            <p className="mt-1 text-sm text-red-500">
+              {errors.confirmPassword.message}
+            </p>
+          )}
+        </>
       </FormField>
 
       <Button
         type="submit"
         className="w-full"
+        disabled={isPending}
       >
-        Create Account
+        {isPending
+          ? "Creating Account..."
+          : "Create Account"}
       </Button>
+
+      {error && (
+        <p className="text-center text-sm text-red-500">
+          {error}
+        </p>
+      )}
 
       <Divider />
 

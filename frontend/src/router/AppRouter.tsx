@@ -1,10 +1,10 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
-import DesignSystemPage from "../pages/dev/DesignSystemPage";
+//import DesignSystemPage from "../pages/dev/DesignSystemPage";
 
 import LoginPage from "../pages/auth/LoginPage";
 import RegisterPage from "../pages/auth/RegisterPage";
-import VerifyEmailPage from "../pages/auth/VerifyEmailPage";
+import VerifyEmailPage from "../pages/auth/VerifyCodePage";
 import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage";
 import StudentDashboard from "../pages/dashboard/StudentDashboard";
 import ManagerDashboard from "../pages/dashboard/ManagerDashboard";
@@ -20,6 +20,7 @@ import IncidentDetailPage from "../pages/student/IncidentDetailPage";
 import AISuggestionPage from "../pages/student/AISuggestionPage";
 import ManagerIncidentsPage from "../pages/manager/ManagerIncidentsPage";
 import ManagerIncidentDetailPage from "../pages/manager/ManagerIncidentDetailPage";
+import DesignSystemPage from "../pages/dev/DesignSystemPage";
 
 function AppRouter() {
   return (

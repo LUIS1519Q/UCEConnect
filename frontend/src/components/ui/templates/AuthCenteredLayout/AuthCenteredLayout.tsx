@@ -29,7 +29,7 @@ export default function AuthCenteredLayout({
             className="mx-auto w-56 sm:w-64 lg:w-80"
           />
 
-          <div className="mt-6 space-y-3">
+          <div className="mt-6 space-y-4">
 
             <h1 className="text-center text-2xl lg:text-3xl font-bold text-textPrimary">
               {title}
