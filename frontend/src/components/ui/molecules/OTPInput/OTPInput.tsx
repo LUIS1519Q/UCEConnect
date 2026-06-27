@@ -20,7 +20,7 @@ export default function OTPInput({
   };
 
   return (
-    <div className="flex gap-3">
+    <div className="flex justify-center gap-2 sm:gap-3">
       {internalValue.map((digit, index) => (
         <input
           key={index}
@@ -32,8 +32,11 @@ export default function OTPInput({
             handleChange(index, e.target.value)
           }
           className="
-            h-14
-            w-14
+            h-12
+            w-12
+
+            sm:h-14
+            sm:w-14
             rounded-xl
             border
             border-border

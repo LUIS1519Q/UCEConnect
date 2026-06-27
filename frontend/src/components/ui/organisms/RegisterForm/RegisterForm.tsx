@@ -23,27 +23,33 @@ export default function RegisterForm({
       className="space-y-4"
     >
       <FormRow>
-        <FormField
-          id="firstName"
-          label="First Name"
-          required
-        >
-          <TextInput
-            id="firstName"
-            placeholder="Enter your first name"
-          />
-        </FormField>
 
-        <FormField
-          id="lastName"
-          label="Last Name"
-          required
-        >
-          <TextInput
+        <div className="flex-1">
+          <FormField
+            id="firstName"
+            label="First Name"
+            required
+          >
+            <TextInput
+              id="firstName"
+              placeholder="Enter your first name"
+            />
+          </FormField>
+        </div>
+
+        <div className="flex-1">
+          <FormField
             id="lastName"
-            placeholder="Enter your last name"
-          />
-        </FormField>
+            label="Last Name"
+            required
+          >
+            <TextInput
+              id="lastName"
+              placeholder="Enter your last name"
+            />
+          </FormField>
+        </div>
+
       </FormRow>
 
       <FormField
