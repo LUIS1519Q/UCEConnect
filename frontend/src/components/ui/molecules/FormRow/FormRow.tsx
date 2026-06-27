@@ -8,9 +8,12 @@ export default function FormRow({
     <div
       className={`
         flex
-        items-center
-        justify-between
+        flex-col
         gap-4
+
+        md:flex-row
+        md:items-start
+
         ${className}
       `}
     >

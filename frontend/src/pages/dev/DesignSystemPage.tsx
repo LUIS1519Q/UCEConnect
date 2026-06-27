@@ -511,7 +511,7 @@ export default function DesignSystemPage() {
               title="Create your account"
               description="Register using your institutional email."
             >
-              <RegisterForm
+              <VerifyCodeForm
                 onSubmit={(e) => e.preventDefault()}
               />
             </AuthCenteredLayout>
