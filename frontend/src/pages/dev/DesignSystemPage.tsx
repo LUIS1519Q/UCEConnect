@@ -37,7 +37,75 @@ import {
   AuthCenteredLayout,
 } from "../../components/ui/templates"
 
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod"; 
+
+import {
+  loginSchema,
+  type LoginFormData,
+} from "../../pages/auth/loginSchema";
+
+import {
+  registerSchema,
+  type RegisterFormData,
+} from "../../pages/auth/registerSchema";
+
+import {
+  forgotPasswordSchema,
+  type ForgotPasswordFormData,
+} from "../../pages/auth/forgotPasswordSchema";
+
+import {
+  verifyCodeSchema,
+  type VerifyCodeFormData,
+} from "../../pages/auth/verifyCodeSchema";
+
+import {
+  resetPasswordSchema,
+  type ResetPasswordFormData,
+} from "../../pages/auth/resetPasswordSchema";
+
 export default function DesignSystemPage() {
+
+    const {
+      register: registerLogin,
+      handleSubmit: handleLoginSubmit,
+      formState: { errors: loginErrors },
+    } = useForm<LoginFormData>({
+      resolver: zodResolver(loginSchema),
+    });
+
+    const {
+      register: registerRegister,
+      handleSubmit: handleRegisterSubmit,
+      formState: { errors: registerErrors },
+    } = useForm<RegisterFormData>({
+      resolver: zodResolver(registerSchema),
+    });
+
+    const {
+      register: registerForgot,
+      handleSubmit: handleForgotSubmit,
+      formState: { errors: forgotErrors },
+    } = useForm<ForgotPasswordFormData>({
+      resolver: zodResolver(forgotPasswordSchema),
+    });
+
+    const {
+      control: verifyControl,
+      handleSubmit: handleVerifySubmit,
+      formState: { errors: verifyErrors },
+    } = useForm<VerifyCodeFormData>({
+      resolver: zodResolver(verifyCodeSchema),
+    });
+
+    const {
+      control: resetControl,
+      handleSubmit: handleResetSubmit,
+      formState: { errors: resetErrors },
+    } = useForm<ResetPasswordFormData>({
+      resolver: zodResolver(resetPasswordSchema),
+    });
   return (
     <div className="min-h-screen bg-background p-10">
 
@@ -415,7 +483,7 @@ export default function DesignSystemPage() {
 
         </section>
 
-        <section className="space-y-6">
+        <section>
 
           <h2 className="mb-4 text-xl font-semibold">
             Password Input
@@ -437,7 +505,15 @@ export default function DesignSystemPage() {
           </h2>
 
           <div className="max-w-md rounded-xl border border-border bg-surface p-8">
-            <LoginForm />
+            <LoginForm
+              onSubmit={handleLoginSubmit((data) => {
+                console.log(data);
+              })}
+              register={registerLogin}
+              errors={loginErrors}
+              isPending={false}
+              error="Invalid email or password."
+            />
           </div>
         </section>
 
@@ -446,8 +522,16 @@ export default function DesignSystemPage() {
             Register Form
           </h2>
 
-          <div className="max-w-md rounded-xl border border-border bg-surface p-8">
-            <RegisterForm />
+          <div className="max-w-lg rounded-xl border border-border bg-surface p-8">
+            <RegisterForm
+              onSubmit={handleRegisterSubmit((data) => {
+                console.log(data);
+              })}
+              register={registerRegister}
+              errors={registerErrors}
+              isPending={false}
+              error=""
+            />
           </div>
         </section>
 
@@ -457,7 +541,13 @@ export default function DesignSystemPage() {
           </h2>
 
           <div className="max-w-md rounded-xl border border-border bg-surface p-8">
-            <ForgotPasswordForm />
+            <ForgotPasswordForm
+              onSubmit={handleForgotSubmit((data) => {
+                console.log(data);
+              })}
+              register={registerForgot}
+              errors={forgotErrors}
+            />
           </div>
         </section>
 
@@ -467,7 +557,16 @@ export default function DesignSystemPage() {
           </h2>
 
           <div className="max-w-md rounded-xl border border-border bg-surface p-8">
-            <VerifyCodeForm />
+            <VerifyCodeForm
+              onSubmit={handleVerifySubmit((data) => {
+                console.log(data);
+              })}
+              control={verifyControl}
+              errors={verifyErrors}
+              expiresIn="04:58"
+              resendIn="00:30"
+              canResend={false}
+            />
           </div>
         </section>
 
@@ -477,7 +576,13 @@ export default function DesignSystemPage() {
           </h2>
 
           <div className="max-w-md rounded-xl border border-border bg-surface p-8">
-            <ResetPasswordForm />
+            <ResetPasswordForm
+              onSubmit={handleResetSubmit((data) => {
+                console.log(data);
+              })}
+              control={resetControl}
+              errors={resetErrors}
+            />
           </div>
         </section>
 
@@ -493,7 +598,16 @@ export default function DesignSystemPage() {
                     description="Access your institutional account."
                 >
 
-                    <LoginForm />
+                    <LoginForm
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        console.log("Login");
+                      }}
+                      register={registerLogin}
+                      errors={loginErrors}
+                      isPending={false}
+                      error=""
+                    />
 
                 </AuthSplitLayout>
 
@@ -512,7 +626,16 @@ export default function DesignSystemPage() {
               description="Register using your institutional email."
             >
               <VerifyCodeForm
-                onSubmit={(e) => e.preventDefault()}
+                onSubmit={handleVerifySubmit((data) => {
+                  console.log(data);
+                })}
+                control={verifyControl}
+                errors={verifyErrors}
+                expiresIn="04:58"
+                resendIn="00:30"
+                canResend={false}
+                //success="Verification code sent successfully."
+                //onResend={() => alert("Código reenviado")}
               />
             </AuthCenteredLayout>
           </div>

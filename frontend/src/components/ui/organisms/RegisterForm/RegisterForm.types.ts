@@ -1,5 +1,14 @@
-import type { FormEventHandler } from "react";
+import type {
+  FieldErrors,
+  UseFormRegister,
+} from "react-hook-form";
+
+import type { RegisterFormData } from "../../../../pages/auth/registerSchema";
 
 export interface RegisterFormProps {
-  onSubmit?: FormEventHandler<HTMLFormElement>;
+  onSubmit: React.FormEventHandler<HTMLFormElement>;
+  register: UseFormRegister<RegisterFormData>;
+  errors: FieldErrors<RegisterFormData>;
+  isPending: boolean;
+  error?: string;
 }

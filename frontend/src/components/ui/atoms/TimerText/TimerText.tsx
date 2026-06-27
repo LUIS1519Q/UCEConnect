@@ -5,7 +5,7 @@ export default function TimerText({
   label = "Resend code in",
 }: TimerTextProps) {
   return (
-    <p className="text-sm text-textSecondary">
+    <p className="text-center text-sm text-textSecondary">
       {label}{" "}
       <span className="font-semibold text-primary">
         {time}
