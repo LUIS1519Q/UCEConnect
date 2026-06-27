@@ -32,6 +32,8 @@ import {
   ResetPasswordForm,
 } from "../../components/ui/organisms";
 
+import {AuthSplitLayout} from "../../components/ui/templates"
+
 export default function DesignSystemPage() {
   return (
     <div className="min-h-screen bg-background p-10">
@@ -474,6 +476,26 @@ export default function DesignSystemPage() {
           <div className="max-w-md rounded-xl border border-border bg-surface p-8">
             <ResetPasswordForm />
           </div>
+        </section>
+
+        <section>
+            <h2 className="mb-4 text-xl font-semibold">
+                Auth Split Layout
+            </h2>
+
+            <div className="border rounded-xl overflow-hidden h-[700px]">
+
+                <AuthSplitLayout
+                    title="Log in"
+                    description="Access your institutional account."
+                >
+
+                    <LoginForm />
+
+                </AuthSplitLayout>
+
+            </div>
+
         </section>
 
       </div>
