@@ -15,7 +15,7 @@ export default function VerifyCodeForm({
   return (
     <form
       onSubmit={onSubmit}
-      className="space-y-6"
+      className="space-y-4"
     >
       <div className="space-y-2">
         <label className="text-sm font-medium text-textPrimary">
