@@ -32,7 +32,10 @@ import {
   ResetPasswordForm,
 } from "../../components/ui/organisms";
 
-import {AuthSplitLayout} from "../../components/ui/templates"
+import {
+  AuthSplitLayout,
+  AuthCenteredLayout,
+} from "../../components/ui/templates"
 
 export default function DesignSystemPage() {
   return (
@@ -496,6 +499,23 @@ export default function DesignSystemPage() {
 
             </div>
 
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Auth Centered Layout
+          </h2>
+
+          <div className="overflow-hidden rounded-xl border">
+            <AuthCenteredLayout
+              title="Create your account"
+              description="Register using your institutional email."
+            >
+              <RegisterForm
+                onSubmit={(e) => e.preventDefault()}
+              />
+            </AuthCenteredLayout>
+          </div>
         </section>
 
       </div>
