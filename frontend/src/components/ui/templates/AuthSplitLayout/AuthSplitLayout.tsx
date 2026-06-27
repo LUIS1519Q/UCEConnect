@@ -8,9 +8,9 @@ export default function AuthSplitLayout({
   children,
 }: AuthSplitLayoutProps) {
   return (
-    <div className="grid min-h-screen lg:grid-cols-2">
+    <div className="min-h-screen lg:grid lg:grid-cols-2">
 
-      <div className="flex flex-1 items-center justify-center bg-primary p-1">
+      <div className="hidden items-center justify-center bg-primary p-1 lg:flex">
         <div className="flex flex-col items-center text-center -translate-y-8">
 
           <Logo
@@ -25,13 +25,29 @@ export default function AuthSplitLayout({
         </div>
       </div>
 
-      <div className="flex justify-center bg-background px-12 pt-10 pb-8">
+      <div className="flex items-center justify-center bg-background px-4 py-6 lg:px-12 lg:pt-10 lg:pb-8">
 
-        <div className="w-full max-w-md space-y-4">
+        <div
+          className="
+            w-full
+            max-w-md
+            space-y-4
+
+            rounded-2xl
+            bg-surface
+            p-6
+            shadow-lg
+
+            lg:rounded-none
+            lg:bg-transparent
+            lg:p-0
+            lg:shadow-none
+          "
+        >
 
           <Logo
             variant="horizontal-color"
-            className="w-80 mx-auto"
+            className="mx-auto w-56 lg:w-80"
           />
 
           <div className="space-y-4">
