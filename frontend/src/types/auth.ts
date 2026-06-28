@@ -1,11 +1,4 @@
-export type Role = 'student' | 'manager' | 'admin';
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: Role;
-}
+import type { Role, User } from "./user";
 
 export interface AuthResponse {
   accessToken: string;
@@ -31,10 +24,7 @@ export interface VerifyCodePayload {
   code: string;
 }
 
-export interface VerifyResetCodePayload {
-  email: string;
-  code: string;
-}
+export type VerifyResetCodePayload = VerifyCodePayload;
 
 export interface ForgotPasswordPayload {
   email: string;

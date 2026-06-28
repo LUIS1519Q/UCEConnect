@@ -62,7 +62,7 @@ function AppRouter() {
         />
 
         <Route
-          path="/dashboard/estudiante"
+          path="/dashboard/student"
           element={
             <ProtectedRoute>
               <StudentDashboard />
@@ -134,7 +134,7 @@ function AppRouter() {
         />
 
         <Route
-          path="/dashboard/gestor"
+          path="/dashboard/manager"
           element={
             <ProtectedRoute>
               <ManagerDashboard />

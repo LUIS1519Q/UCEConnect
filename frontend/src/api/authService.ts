@@ -1,5 +1,6 @@
-import axios from "axios";
-import { useAuthStore } from "../store/authStore";
+import api from "./axios";
+import type { ApiMessageResponse } from "../types/common";
+
 import type {
   AuthResponse,
   LoginPayload,
@@ -8,35 +9,9 @@ import type {
   VerifyResetCodePayload,
   ForgotPasswordPayload,
   ResetPasswordPayload,
-  User,
 } from "../types/auth";
 
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-  headers: { "Content-Type": "application/json" },
-});
-
-api.interceptors.request.use((config) => {
-  const token = useAuthStore.getState().accessToken;
-
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-
-  return config;
-});
-
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      useAuthStore.getState().logout();
-      window.location.href = "/login";
-    }
-
-    return Promise.reject(error);
-  }
-);
+import type { User } from "../types/user";
 
 export const authService = {
   async login(payload: LoginPayload): Promise<AuthResponse> {
@@ -50,8 +25,8 @@ export const authService = {
 
   async register(
     payload: RegisterPayload
-  ): Promise<{ message: string }> {
-    const response = await api.post<{ message: string }>(
+  ): Promise<ApiMessageResponse> {
+    const response = await api.post<ApiMessageResponse>(
       "/api/v1/auth/register",
       payload
     );
@@ -61,8 +36,8 @@ export const authService = {
 
   async verifyCode(
     payload: VerifyCodePayload
-  ): Promise<{ message: string }> {
-    const response = await api.post<{ message: string }>(
+  ): Promise<ApiMessageResponse> {
+    const response = await api.post<ApiMessageResponse>(
       "/api/v1/auth/verify-code",
       payload
     );
@@ -72,8 +47,8 @@ export const authService = {
 
   async verifyResetCode(
     payload: VerifyResetCodePayload
-  ): Promise<{ message: string }> {
-    const response = await api.post<{ message: string }>(
+  ): Promise<ApiMessageResponse> {
+    const response = await api.post<ApiMessageResponse>(
       "/api/v1/auth/verify-reset-code",
       payload
     );
@@ -83,8 +58,8 @@ export const authService = {
 
   async resendCode(
     email: string
-  ): Promise<{ message: string }> {
-    const response = await api.post<{ message: string }>(
+  ): Promise<ApiMessageResponse> {
+    const response = await api.post<ApiMessageResponse>(
       "/api/v1/auth/resend-code",
       { email }
     );
@@ -94,8 +69,8 @@ export const authService = {
 
   async resendResetCode(
     email: string
-  ): Promise<{ message: string }> {
-    const response = await api.post<{ message: string }>(
+  ): Promise<ApiMessageResponse> {
+    const response = await api.post<ApiMessageResponse>(
       "/api/v1/auth/resend-reset-code",
       { email }
     );
@@ -105,8 +80,8 @@ export const authService = {
 
   async forgotPassword(
     payload: ForgotPasswordPayload
-  ): Promise<{ message: string }> {
-    const response = await api.post<{ message: string }>(
+  ): Promise<ApiMessageResponse> {
+    const response = await api.post<ApiMessageResponse>(
       "/api/v1/auth/forgot-password",
       payload
     );
@@ -124,8 +99,8 @@ export const authService = {
 
   async resetPassword(
     payload: ResetPasswordPayload
-  ): Promise<{ message: string }> {
-    const response = await api.post<{ message: string }>(
+  ): Promise<ApiMessageResponse> {
+    const response = await api.post<ApiMessageResponse>(
       "/api/v1/auth/reset-password",
       payload
     );
@@ -133,6 +108,10 @@ export const authService = {
     return response.data;
   },
 
+  microsoftLogin(): void {
+    window.location.href = `${import.meta.env.VITE_API_URL}/api/v1/auth/microsoft`;
+  },
+  
 };
 
 export default api;

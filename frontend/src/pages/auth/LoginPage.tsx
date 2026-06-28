@@ -4,12 +4,12 @@ import { LoginForm } from "../../components/ui/organisms";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useAuth } from "../../hooks/useAuth";
+import { useLogin } from "../../hooks/useLogin";
 import { loginSchema, type LoginFormData } from "./loginSchema";
 
 function LoginPage() {
 
-  const { login, isPending, error } = useAuth();
+  const { login, isPending, error } = useLogin();
 
   const errorMessage =
     error instanceof Error

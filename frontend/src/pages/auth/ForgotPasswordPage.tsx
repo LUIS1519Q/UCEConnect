@@ -1,11 +1,10 @@
 import { AuthCenteredLayout } from "../../components/ui/templates";
 import { ForgotPasswordForm } from "../../components/ui/organisms";
 
-import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { authService } from "../../api/authService";
+
+import { useForgotPassword } from "../../hooks/useForgotPassword";
 
 import {
   forgotPasswordSchema,
@@ -13,8 +12,6 @@ import {
 } from "./forgotPasswordSchema";
 
 export default function ForgotPasswordPage() {
-  const navigate = useNavigate();
-
   const {
     register,
     handleSubmit,
@@ -23,28 +20,15 @@ export default function ForgotPasswordPage() {
     resolver: zodResolver(forgotPasswordSchema),
   });
 
-  const { mutate, isPending, error } = useMutation({
-    mutationFn: (data: ForgotPasswordFormData) =>
-      authService.forgotPassword(data),
+  const { forgotPassword, isPending, error } =
+    useForgotPassword();
 
-    onSuccess: (_, variables) => {
-      navigate("/verify-email", {
-        state: {
-          email: variables.email,
-          flow: "forgot-password",
-        },
-      });
-    },
-  });
+  const errorMessage =
+    error instanceof Error ? error.message : "";
 
   const onSubmit = (data: ForgotPasswordFormData) => {
-    mutate(data);
+    forgotPassword(data);
   };
-  
-  const errorMessage =
-    error instanceof Error
-      ? error.message
-      : "";
 
   return (
     <AuthCenteredLayout
