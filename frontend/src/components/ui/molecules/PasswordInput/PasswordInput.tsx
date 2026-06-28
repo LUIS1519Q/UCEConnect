@@ -1,3 +1,4 @@
+import { cn } from "../../../../utils/cn";
 import { useState } from "react";
 
 import { TextInput } from "../../atoms";
@@ -16,11 +17,16 @@ export default function PasswordInput({
       <TextInput
         {...props}
         type={showPassword ? "text" : "password"}
-        className={`pr-12 ${className}`}
+        className={cn("pr-12", className)}
       />
 
       <button
         type="button"
+        aria-label={
+          showPassword
+            ? "Hide password"
+            : "Show password"
+        }
         onClick={() => setShowPassword(!showPassword)}
         className="
           absolute

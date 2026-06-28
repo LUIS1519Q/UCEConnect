@@ -1,4 +1,5 @@
 import { Logo } from "../../atoms";
+import { AUTH_TEXT } from "../../../../constants/authText";
 
 import type { AuthSplitLayoutProps } from "./AuthSplitLayout.types";
 
@@ -16,10 +17,11 @@ export default function AuthSplitLayout({
           <Logo
             variant="vertical-white"
             className="w-80"
+            alt="Institutional Logo"
           />
 
           <p className="mt-2 max-w-xs text-center text-xl font-bold italic text-white">
-            From your claim to the solution
+            {AUTH_TEXT.slogan}
           </p>
 
         </div>
@@ -48,6 +50,7 @@ export default function AuthSplitLayout({
           <Logo
             variant="horizontal-color"
             className="mx-auto w-56 lg:w-80"
+            alt="Institutional Logo"
           />
 
           <div className="space-y-4">

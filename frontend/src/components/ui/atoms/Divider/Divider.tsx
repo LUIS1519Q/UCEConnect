@@ -1,3 +1,5 @@
+import { cn } from "../../../../utils/cn";
+
 import type { DividerProps } from "./Divider.types";
 
 export default function Divider({
@@ -6,7 +8,10 @@ export default function Divider({
 }: DividerProps) {
   return (
     <div
-      className={`flex items-center gap-4 ${className}`}
+      className={cn(
+        "flex items-center gap-4",
+        className
+      )}
     >
       <div className="h-px flex-1 bg-border" />
 

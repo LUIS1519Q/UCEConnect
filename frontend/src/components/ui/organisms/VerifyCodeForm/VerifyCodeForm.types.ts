@@ -7,7 +7,7 @@ import type {
 
 import type {
   VerifyCodeFormData,
-} from "../../../../pages/auth/verifyCodeSchema";
+} from "../../../../shemas/auth/verifyCodeSchema";
 
 export interface VerifyCodeFormProps {
   onSubmit?: FormEventHandler<HTMLFormElement>;

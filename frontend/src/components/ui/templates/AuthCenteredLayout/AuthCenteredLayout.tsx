@@ -27,11 +27,12 @@ export default function AuthCenteredLayout({
           <Logo
             variant="horizontal-color"
             className="mx-auto w-56 sm:w-64 lg:w-80"
+            alt="Institutional Logo"
           />
 
           <div className="mt-6 space-y-4">
 
-            <h1 className="text-center text-2xl lg:text-3xl font-bold text-textPrimary">
+            <h1 className="text-center text-2xl font-bold text-textPrimary lg:text-3xl">
               {title}
             </h1>
 

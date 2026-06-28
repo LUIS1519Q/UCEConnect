@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import { authService } from "../api/authService";
 
-import type { VerifyCodeFormData } from "../pages/auth/verifyCodeSchema";
+import type { VerifyCodeFormData } from "../shemas/auth/verifyCodeSchema";
 
 type Flow = "register" | "forgot-password";
 
@@ -96,8 +96,6 @@ export function useVerifyCode({ email, flow }: Params) {
 
   return {
     onSubmit,
-
-    control: undefined, // lo dejamos en page
     isPending: verifyMutation.isPending,
     error: verifyMutation.error,
 

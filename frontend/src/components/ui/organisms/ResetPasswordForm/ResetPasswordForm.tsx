@@ -1,3 +1,5 @@
+import { ROUTES } from "../../../../constants/routes";
+
 import {
   Button,
   Link,
@@ -24,9 +26,10 @@ export default function ResetPasswordForm({
       className="space-y-4"
     >
       <FormField
-        id="password"
-        label="New Password"
-        required
+          id="password"
+          label="New Password"
+          required
+          error={errors.password?.message}
       >
         <Controller
           name="password"
@@ -40,18 +43,13 @@ export default function ResetPasswordForm({
             />
           )}
         />
-
-        {errors.password && (
-          <p className="mt-1 text-sm text-red-500">
-            {errors.password.message}
-          </p>
-        )}
       </FormField>
 
       <FormField
         id="confirmPassword"
         label="Confirm Password"
         required
+        error={errors.confirmPassword?.message}
       >
         <Controller
           name="confirmPassword"
@@ -65,12 +63,6 @@ export default function ResetPasswordForm({
             />
           )}
         />
-
-        {errors.confirmPassword && (
-          <p className="mt-1 text-sm text-red-500">
-            {errors.confirmPassword.message}
-          </p>
-        )}
       </FormField>
 
       <Button
@@ -89,7 +81,7 @@ export default function ResetPasswordForm({
       )}
 
       <div className="text-center">
-      <Link to="/login">
+      <Link to={ROUTES.auth.login}>
         Back to Login
       </Link>
     </div>

@@ -1,15 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import type { AxiosError } from "axios";
 
 import { authService } from "../api/authService";
-import type { RegisterFormData } from "../pages/auth/registerSchema";
-import type { ApiMessageResponse } from "../types/common";
+import type { RegisterFormData } from "../shemas/auth/registerSchema";
 
 export function useRegister() {
   const navigate = useNavigate();
 
-  const registerMutation = useMutation({
+  const mutation = useMutation({
     mutationFn: (data: RegisterFormData) =>
       authService.register({
         firstName: data.firstName,
@@ -27,15 +25,11 @@ export function useRegister() {
         },
       });
     },
-
-    onError: (error: AxiosError<ApiMessageResponse>) => {
-      console.log(error?.response?.data?.message);
-    },
   });
 
   return {
-    register: registerMutation.mutate,
-    isPending: registerMutation.isPending,
-    error: registerMutation.error,
+    register: mutation.mutate,
+    isPending: mutation.isPending,
+    error: mutation.error,
   };
 }

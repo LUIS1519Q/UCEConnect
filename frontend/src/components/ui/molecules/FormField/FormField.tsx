@@ -24,7 +24,10 @@ export default function FormField({
       {children}
 
       {error && (
-        <p className="text-sm text-danger">
+        <p
+          id={`${id}-error`}
+          className="text-sm text-danger"
+        >
           {error}
         </p>
       )}

@@ -1,3 +1,5 @@
+import { ROUTES } from "../../../../constants/routes";
+
 import {
   Button,
   Divider,
@@ -33,38 +35,28 @@ export default function RegisterForm({
             id="firstName"
             label="First Name"
             required
+            error={errors.firstName?.message}
           >
             <TextInput
               id="firstName"
               placeholder="Enter your first name"
               {...register("firstName")}
             />
-
-            {errors.firstName && (
-              <p className="mt-1 text-sm text-red-500">
-                {errors.firstName.message}
-              </p>
-            )}
           </FormField>
         </div>
 
         <div className="flex-1">
           <FormField
-            id="firstName"
-            label="First Name"
+            id="lastName"
+            label="Last Name"
             required
+            error={errors.lastName?.message}
           >
             <TextInput
               id="firstName"
               placeholder="Enter your first name"
               {...register("firstName")}
             />
-
-            {errors.firstName && (
-              <p className="mt-1 text-sm text-red-500">
-                {errors.firstName.message}
-              </p>
-            )}
           </FormField>
         </div>
 
@@ -74,6 +66,7 @@ export default function RegisterForm({
         id="email"
         label="Institutional Email"
         required
+        error={errors.email?.message}
       >
         <TextInput
           id="email"
@@ -81,48 +74,32 @@ export default function RegisterForm({
           placeholder="Enter your institutional email"
           {...register("email")}
         />
-
-        {errors.email && (
-          <p className="mt-1 text-sm text-red-500">
-            {errors.email.message}
-          </p>
-        )}
       </FormField>
 
       <FormField
         id="password"
         label="Password"
         required
+        error={errors.password?.message}
       >
         <PasswordInput
           id="password"
           placeholder="Create a password"
           {...register("password")}
         />
-
-        {errors.password && (
-          <p className="mt-1 text-sm text-red-500">
-            {errors.password.message}
-          </p>
-        )}
       </FormField>
 
       <FormField
         id="confirmPassword"
         label="Confirm Password"
         required
+        error={errors.confirmPassword?.message}
       >
         <PasswordInput
           id="confirmPassword"
           placeholder="Confirm your password"
           {...register("confirmPassword")}
         />
-
-        {errors.confirmPassword && (
-          <p className="mt-1 text-sm text-red-500">
-            {errors.confirmPassword.message}
-          </p>
-        )}
       </FormField>
 
       <Button
@@ -149,7 +126,7 @@ export default function RegisterForm({
 
       <p className="text-center text-sm text-textSecondary">
         Already have an account?{" "}
-        <Link to="/login">
+        <Link to={ROUTES.auth.login}>
           Log in
         </Link>
       </p>
