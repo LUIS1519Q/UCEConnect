@@ -5,11 +5,12 @@ import type { LogoProps } from "./Logo.types";
 export function Logo({
   variant = "horizontal-color",
   className = "",
+  alt = "UCEConnect",
 }: LogoProps) {
   return (
     <img
       src={logoMap[variant]}
-      alt="UCEConnect"
+      alt={alt}
       className={className}
       loading="lazy"
       draggable={false}
