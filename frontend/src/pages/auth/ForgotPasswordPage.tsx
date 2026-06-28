@@ -9,7 +9,7 @@ import { useForgotPassword } from "../../hooks/useForgotPassword";
 import {
   forgotPasswordSchema,
   type ForgotPasswordFormData,
-} from "./forgotPasswordSchema";
+} from "../../shemas/auth/forgotPasswordSchema";
 
 export default function ForgotPasswordPage() {
   const {

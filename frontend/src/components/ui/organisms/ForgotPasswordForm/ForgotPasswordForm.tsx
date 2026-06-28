@@ -1,12 +1,12 @@
+import { ROUTES } from "../../../../constants/routes";
+
 import {
   Button,
   Link,
   TextInput,
 } from "../../atoms";
 
-import {
-  FormField,
-} from "../../molecules";
+import { FormField } from "../../molecules";
 
 import type { ForgotPasswordFormProps } from "./ForgotPasswordForm.types";
 
@@ -26,21 +26,14 @@ export default function ForgotPasswordForm({
         id="email"
         label="Institutional Email"
         required
+        error={errors.email?.message}
       >
-        <>
-          <TextInput
-            id="email"
-            type="email"
-            placeholder="Enter your institutional email"
-            {...register("email")}
-          />
-
-          {errors.email && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.email.message}
-            </p>
-          )}
-        </>
+        <TextInput
+          id="email"
+          type="email"
+          placeholder="Enter your institutional email"
+          {...register("email")}
+        />
       </FormField>
 
       <Button
@@ -61,7 +54,7 @@ export default function ForgotPasswordForm({
 
       <p className="text-center text-sm text-textSecondary">
         Remember your password?{" "}
-        <Link to="/login">
+        <Link to={ROUTES.auth.login}>
           Log in
         </Link>
       </p>

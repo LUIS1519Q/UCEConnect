@@ -1,3 +1,5 @@
+import { cn } from "../../../../utils/cn";
+
 import type { TextInputProps } from "./TextInput.types";
 
 export default function TextInput({
@@ -9,9 +11,9 @@ export default function TextInput({
   return (
     <input
       type={type}
-      className={`
+      className={cn(
+        `
         h-12
-        ${fullWidth ? "w-full" : ""}
         rounded-xl
         border
         border-border
@@ -29,8 +31,10 @@ export default function TextInput({
         disabled:cursor-not-allowed
         disabled:bg-gray-100
         disabled:text-textSecondary
-        ${className}
-      `}
+        `,
+        fullWidth && "w-full",
+        className
+      )}
       {...props}
     />
   );

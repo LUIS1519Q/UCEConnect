@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 import { authService } from "../api/authService";
-import type { ResetPasswordFormData } from "../pages/auth/resetPasswordSchema";
+import type { ResetPasswordFormData } from "../shemas/auth/resetPasswordSchema";
 
 interface Params {
   email: string;
@@ -40,7 +40,6 @@ export function useResetPassword({ email, code }: Params) {
 
   return {
     onSubmit,
-    control: undefined, // lo maneja la page
     isPending: mutation.isPending,
     error: mutation.error,
   };

@@ -1,3 +1,4 @@
+import { ROUTES } from "../../../../constants/routes";
 import { Controller } from "react-hook-form";
 
 import {
@@ -106,7 +107,7 @@ export default function VerifyCodeForm({
       )}
 
       <div className="text-center">
-        <Link to="/login">
+        <Link to={ROUTES.auth.login}>
           Back to Login
         </Link>
       </div>

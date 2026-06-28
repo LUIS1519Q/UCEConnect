@@ -1,10 +1,9 @@
+import { ROUTES } from "../constants/routes";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import type { AxiosError } from "axios";
 
 import { authService } from "../api/authService";
-import type { ForgotPasswordFormData } from "../pages/auth/forgotPasswordSchema";
-import type { ApiMessageResponse } from "../types/common";
+import type { ForgotPasswordFormData } from "../shemas/auth/forgotPasswordSchema";
 
 export function useForgotPassword() {
   const navigate = useNavigate();
@@ -14,16 +13,12 @@ export function useForgotPassword() {
       authService.forgotPassword(data),
 
     onSuccess: (_, variables) => {
-      navigate("/verify-email", {
+      navigate(ROUTES.auth.verifyCode, {
         state: {
           email: variables.email,
           flow: "forgot-password",
         },
       });
-    },
-
-    onError: (error: AxiosError<ApiMessageResponse>) => {
-      console.log(error?.response?.data?.message);
     },
   });
 

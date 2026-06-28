@@ -1,8 +1,10 @@
+import { AUTH_TEXT } from "../../../../constants/authText";
+
 import type { TimerTextProps } from "./TimerText.types";
 
 export default function TimerText({
   time,
-  label = "Resend code in",
+  label = AUTH_TEXT.resendCodeIn,
 }: TimerTextProps) {
   return (
     <p className="text-center text-sm text-textSecondary">

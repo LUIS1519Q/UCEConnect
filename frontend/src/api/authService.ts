@@ -1,5 +1,7 @@
-import api from "./axios";
+import api from "./client";
+
 import type { ApiMessageResponse } from "../types/common";
+import type { User } from "../types/user";
 
 import type {
   AuthResponse,
@@ -11,34 +13,76 @@ import type {
   ResetPasswordPayload,
 } from "../types/auth";
 
-import type { User } from "../types/user";
+const AUTH_BASE = "/api/v1/auth";
 
 export const authService = {
-  async login(payload: LoginPayload): Promise<AuthResponse> {
+  // ---------------- LOGIN ----------------
+
+  async login(
+    payload: LoginPayload
+  ): Promise<AuthResponse> {
     const response = await api.post<AuthResponse>(
-      "/api/v1/auth/login",
+      `${AUTH_BASE}/login`,
       payload
     );
 
     return response.data;
   },
+
+  // ---------------- REGISTER ----------------
 
   async register(
     payload: RegisterPayload
   ): Promise<ApiMessageResponse> {
     const response = await api.post<ApiMessageResponse>(
-      "/api/v1/auth/register",
+      `${AUTH_BASE}/register`,
       payload
     );
 
     return response.data;
   },
 
+  // ---------------- CURRENT USER ----------------
+
+  async me(): Promise<User> {
+    const response = await api.get<User>(
+      `${AUTH_BASE}/me`
+    );
+
+    return response.data;
+  },
+
+  // ---------------- FORGOT PASSWORD ----------------
+
+  async forgotPassword(
+    payload: ForgotPasswordPayload
+  ): Promise<ApiMessageResponse> {
+    const response = await api.post<ApiMessageResponse>(
+      `${AUTH_BASE}/forgot-password`,
+      payload
+    );
+
+    return response.data;
+  },
+
+  async resetPassword(
+    payload: ResetPasswordPayload
+  ): Promise<ApiMessageResponse> {
+    const response = await api.post<ApiMessageResponse>(
+      `${AUTH_BASE}/reset-password`,
+      payload
+    );
+
+    return response.data;
+  },
+
+  // ---------------- VERIFY CODE ----------------
+
   async verifyCode(
     payload: VerifyCodePayload
   ): Promise<ApiMessageResponse> {
     const response = await api.post<ApiMessageResponse>(
-      "/api/v1/auth/verify-code",
+      `${AUTH_BASE}/verify-code`,
       payload
     );
 
@@ -49,18 +93,20 @@ export const authService = {
     payload: VerifyResetCodePayload
   ): Promise<ApiMessageResponse> {
     const response = await api.post<ApiMessageResponse>(
-      "/api/v1/auth/verify-reset-code",
+      `${AUTH_BASE}/verify-reset-code`,
       payload
     );
 
     return response.data;
   },
 
+  // ---------------- RESEND CODE ----------------
+
   async resendCode(
     email: string
   ): Promise<ApiMessageResponse> {
     const response = await api.post<ApiMessageResponse>(
-      "/api/v1/auth/resend-code",
+      `${AUTH_BASE}/resend-code`,
       { email }
     );
 
@@ -71,47 +117,16 @@ export const authService = {
     email: string
   ): Promise<ApiMessageResponse> {
     const response = await api.post<ApiMessageResponse>(
-      "/api/v1/auth/resend-reset-code",
+      `${AUTH_BASE}/resend-reset-code`,
       { email }
     );
 
     return response.data;
   },
 
-  async forgotPassword(
-    payload: ForgotPasswordPayload
-  ): Promise<ApiMessageResponse> {
-    const response = await api.post<ApiMessageResponse>(
-      "/api/v1/auth/forgot-password",
-      payload
-    );
-
-    return response.data;
-  },
-
-  async me(): Promise<User> {
-    const response = await api.get<User>(
-      "/api/v1/auth/me"
-    );
-
-    return response.data;
-  },
-
-  async resetPassword(
-    payload: ResetPasswordPayload
-  ): Promise<ApiMessageResponse> {
-    const response = await api.post<ApiMessageResponse>(
-      "/api/v1/auth/reset-password",
-      payload
-    );
-
-    return response.data;
-  },
+  // ---------------- MICROSOFT LOGIN ----------------
 
   microsoftLogin(): void {
-    window.location.href = `${import.meta.env.VITE_API_URL}/api/v1/auth/microsoft`;
+    window.location.href = `${import.meta.env.VITE_API_URL}${AUTH_BASE}/microsoft`;
   },
-  
 };
-
-export default api;

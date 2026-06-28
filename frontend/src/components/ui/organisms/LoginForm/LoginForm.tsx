@@ -1,3 +1,5 @@
+import { ROUTES } from "../../../../constants/routes";
+
 import {
   Button,
   Checkbox,
@@ -31,6 +33,7 @@ export default function LoginForm({
         id="email"
         label="Institutional Email"
         required
+        error={errors.email?.message}
       >
         <TextInput
           id="email"
@@ -39,18 +42,13 @@ export default function LoginForm({
           fullWidth
           {...register("email")}
         />
-
-        {errors.email && (
-          <p className="mt-1 text-sm text-red-500">
-            {errors.email.message}
-          </p>
-        )}
       </FormField>
 
       <FormField
         id="password"
         label="Password"
         required
+        error={errors.password?.message}
       >
         <PasswordInput
           id="password"
@@ -58,12 +56,6 @@ export default function LoginForm({
           fullWidth
           {...register("password")}
         />
-
-        {errors.password && (
-          <p className="mt-1 text-sm text-red-500">
-            {errors.password.message}
-          </p>
-        )}
       </FormField>
 
       <FormRow>
@@ -72,7 +64,7 @@ export default function LoginForm({
           label="Remember me"
         />
 
-        <Link to="/forgot-password">
+        <Link to={ROUTES.auth.forgotPassword}>
           Forgot password?
         </Link>
       </FormRow>
@@ -99,7 +91,7 @@ export default function LoginForm({
 
       <p className="text-center text-sm text-textSecondary">
         Don't have an account?{" "}
-        <Link to="/register">
+        <Link to={ROUTES.auth.register}>
           Sign up
         </Link>
       </p>

@@ -24,7 +24,10 @@ export interface VerifyCodePayload {
   code: string;
 }
 
-export type VerifyResetCodePayload = VerifyCodePayload;
+export interface VerifyResetCodePayload {
+  email: string;
+  code: string;
+}
 
 export interface ForgotPasswordPayload {
   email: string;

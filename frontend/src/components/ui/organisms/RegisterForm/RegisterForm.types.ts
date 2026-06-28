@@ -3,7 +3,7 @@ import type {
   UseFormRegister,
 } from "react-hook-form";
 
-import type { RegisterFormData } from "../../../../pages/auth/registerSchema";
+import type { RegisterFormData } from "../../../../shemas/auth/registerSchema";
 
 export interface RegisterFormProps {
   onSubmit: React.FormEventHandler<HTMLFormElement>;

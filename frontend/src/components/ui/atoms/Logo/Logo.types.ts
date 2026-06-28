@@ -14,4 +14,5 @@ export type LogoVariant =
 export interface LogoProps {
   variant?: LogoVariant;
   className?: string;
+  alt?: string;
 }

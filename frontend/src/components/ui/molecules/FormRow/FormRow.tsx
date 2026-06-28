@@ -1,3 +1,4 @@
+import { cn } from "../../../../utils/cn";
 import type { FormRowProps } from "./FormRow.types";
 
 export default function FormRow({
@@ -6,16 +7,10 @@ export default function FormRow({
 }: FormRowProps) {
   return (
     <div
-      className={`
-        flex
-        flex-col
-        gap-4
-
-        md:flex-row
-        md:items-start
-
-        ${className}
-      `}
+      className={cn(
+        "flex flex-col gap-4 md:flex-row md:items-start",
+        className
+      )}
     >
       {children}
     </div>

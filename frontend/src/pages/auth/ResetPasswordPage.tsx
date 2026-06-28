@@ -8,7 +8,7 @@ import { ResetPasswordForm } from "../../components/ui/organisms";
 import {
   resetPasswordSchema,
   type ResetPasswordFormData,
-} from "./resetPasswordSchema";
+} from "../../shemas/auth/resetPasswordSchema";
 
 import { useResetPassword } from "../../hooks/useResetPassword";
 

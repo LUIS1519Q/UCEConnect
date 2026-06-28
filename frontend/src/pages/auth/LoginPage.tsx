@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useLogin } from "../../hooks/useLogin";
-import { loginSchema, type LoginFormData } from "./loginSchema";
+import { loginSchema, type LoginFormData } from "../../shemas/auth/loginSchema";
 
 function LoginPage() {
 

@@ -1,3 +1,4 @@
+import { ROUTES } from "../constants/routes";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import type { AxiosError } from "axios";
@@ -9,9 +10,9 @@ import type { LoginPayload } from "../types/auth";
 import type { ApiMessageResponse } from "../types/common";
 
 const DASHBOARD_ROUTES = {
-  student: "/dashboard/student",
-  manager: "/dashboard/manager",
-  admin: "/dashboard/admin",
+  student: ROUTES.dashboard.student,
+  manager: ROUTES.dashboard.manager,
+  admin: ROUTES.dashboard.admin,
 } as const;
 
 export function useLogin() {
@@ -36,7 +37,7 @@ export function useLogin() {
       const message = error?.response?.data?.message || "";
 
       if (message.includes("Debes verificar tu correo")) {
-        navigate("/verify-email", {
+        navigate(ROUTES.auth.verifyCode, {
           state: {
             email: variables.email,
           },
