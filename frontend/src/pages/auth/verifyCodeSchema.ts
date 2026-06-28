@@ -3,13 +3,14 @@ import { z } from "zod";
 export const verifyCodeSchema = z.object({
   code: z
     .string()
+    .min(1, "Verification code is required.")
     .length(
       6,
-      "The verification code must contain 6 digits."
+      "Verification code must contain exactly 6 digits."
     )
     .regex(
-      /^\d+$/,
-      "The verification code must contain only numbers."
+      /^\d{6}$/,
+      "Verification code must contain only numbers."
     ),
 });
 

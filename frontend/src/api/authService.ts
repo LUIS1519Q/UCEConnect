@@ -5,6 +5,9 @@ import type {
   LoginPayload,
   RegisterPayload,
   VerifyCodePayload,
+  VerifyResetCodePayload,
+  ForgotPasswordPayload,
+  ResetPasswordPayload,
   User,
 } from "../types/auth";
 
@@ -67,12 +70,45 @@ export const authService = {
     return response.data;
   },
 
+  async verifyResetCode(
+    payload: VerifyResetCodePayload
+  ): Promise<{ message: string }> {
+    const response = await api.post<{ message: string }>(
+      "/api/v1/auth/verify-reset-code",
+      payload
+    );
+
+    return response.data;
+  },
+
   async resendCode(
     email: string
   ): Promise<{ message: string }> {
     const response = await api.post<{ message: string }>(
       "/api/v1/auth/resend-code",
       { email }
+    );
+
+    return response.data;
+  },
+
+  async resendResetCode(
+    email: string
+  ): Promise<{ message: string }> {
+    const response = await api.post<{ message: string }>(
+      "/api/v1/auth/resend-reset-code",
+      { email }
+    );
+
+    return response.data;
+  },
+
+  async forgotPassword(
+    payload: ForgotPasswordPayload
+  ): Promise<{ message: string }> {
+    const response = await api.post<{ message: string }>(
+      "/api/v1/auth/forgot-password",
+      payload
     );
 
     return response.data;
@@ -85,6 +121,18 @@ export const authService = {
 
     return response.data;
   },
+
+  async resetPassword(
+    payload: ResetPasswordPayload
+  ): Promise<{ message: string }> {
+    const response = await api.post<{ message: string }>(
+      "/api/v1/auth/reset-password",
+      payload
+    );
+
+    return response.data;
+  },
+
 };
 
 export default api;

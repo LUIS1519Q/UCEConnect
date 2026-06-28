@@ -390,12 +390,12 @@ export default function DesignSystemPage() {
 
           <div className="space-y-4">
 
-            <Link href="#">
+            <Link to="#">
               Forgot password?
             </Link>
 
             <Link
-              href="#"
+              to="#"
               underline
             >
               Create account
@@ -473,7 +473,7 @@ export default function DesignSystemPage() {
                         label="Remember me"
                     />
 
-                    <Link href="#">
+                    <Link to="#">
                         Forgot password?
                     </Link>
 

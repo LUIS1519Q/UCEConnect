@@ -17,7 +17,13 @@ import {
 export default function VerifyCodePage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const email = (location.state as { email?: string })?.email ?? "";
+  const {
+    email = "",
+    flow = "register",
+  } = (location.state as {
+    email?: string;
+    flow?: "register" | "forgot-password";
+  }) ?? {};
 
   const {
     control,
@@ -30,6 +36,16 @@ export default function VerifyCodePage() {
   const [seconds, setSeconds] = useState(300);
   const [resendSeconds, setResendSeconds] = useState(30);
   const [success, setSuccess] = useState("");
+
+  useEffect(() => {
+    if (!email) {
+      navigate(
+        flow === "register"
+          ? "/register"
+          : "/forgot-password"
+      );
+    }
+  }, [email, flow, navigate]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -52,27 +68,75 @@ export default function VerifyCodePage() {
   }, []);
 
   const { mutate, isPending, error } = useMutation({
-    mutationFn: (data: VerifyCodeFormData) => authService.verifyCode({ email, code: data.code, }),
-    onSuccess: () => navigate("/login"),
+    mutationFn: (data: VerifyCodeFormData) => {
+      if (flow === "register") {
+        return authService.verifyCode({
+          email,
+          code: data.code,
+        });
+      }
+
+      return authService.verifyResetCode({
+        email,
+        code: data.code,
+      });
+    },
+
+    onSuccess: (_, variables) => {
+      if (flow === "register") {
+        navigate("/login");
+      } else {
+        navigate("/reset-password", {
+          state: {
+            email,
+            code: variables.code,
+          },
+        });
+      }
+    },
   });
 
   const { mutate: resendCode } = useMutation({
-      mutationFn: () =>
-        authService.resendCode(email),
+      mutationFn: () => {
+        if (flow === "register") {
+          return authService.resendCode(email);
+        }
+
+        return authService.resendResetCode(email);
+      },
 
       onSuccess: () => {
         setSeconds(300);
         setResendSeconds(30);
-        setSuccess("A new verification code has been sent.");
+        setSuccess(
+          flow === "register"
+            ? "A new verification code has been sent."
+            : "A new recovery code has been sent."
+        );
       },
     });
 
-  const onSubmit = (data: VerifyCodeFormData) => { mutate(data);};
+  const onSubmit = (data: VerifyCodeFormData) => {
+    setSuccess("");
+    mutate(data);
+  };
 
   return (
     <AuthCenteredLayout
-      title="Verify Email"
-      description={`Enter the verification code sent to ${email || "your institutional email"}.`}
+      title={
+        flow === "register"
+          ? "Verify Email"
+          : "Verify Recovery Code"
+      }
+      description={
+        flow === "register"
+          ? `Enter the verification code sent to ${
+              email || "your institutional email"
+            }.`
+          : `Enter the recovery code sent to ${
+              email || "your institutional email"
+            }.`
+      }
     >
       <VerifyCodeForm
         onSubmit={handleSubmit(onSubmit)}
@@ -91,10 +155,7 @@ export default function VerifyCodePage() {
           .toString()
           .padStart(2, "0")}`}
         canResend={resendSeconds === 0}
-        onResend={() => {
-          console.log("Resend presionado");
-          resendCode();
-        }}
+        onResend={() => resendCode()}
         success={success}
       />
     </AuthCenteredLayout>

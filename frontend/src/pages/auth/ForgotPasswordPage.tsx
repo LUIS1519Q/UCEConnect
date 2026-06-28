@@ -4,6 +4,8 @@ import { ForgotPasswordForm } from "../../components/ui/organisms";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { authService } from "../../api/authService";
 
 import {
   forgotPasswordSchema,
@@ -21,15 +23,28 @@ export default function ForgotPasswordPage() {
     resolver: zodResolver(forgotPasswordSchema),
   });
 
-  const onSubmit = (
-    data: ForgotPasswordFormData
-  ) => {
-    console.log(data);
+  const { mutate, isPending, error } = useMutation({
+    mutationFn: (data: ForgotPasswordFormData) =>
+      authService.forgotPassword(data),
 
-    alert("Recovery email sent successfully.");
+    onSuccess: (_, variables) => {
+      navigate("/verify-email", {
+        state: {
+          email: variables.email,
+          flow: "forgot-password",
+        },
+      });
+    },
+  });
 
-    navigate("/reset-password");
+  const onSubmit = (data: ForgotPasswordFormData) => {
+    mutate(data);
   };
+  
+  const errorMessage =
+    error instanceof Error
+      ? error.message
+      : "";
 
   return (
     <AuthCenteredLayout
@@ -40,6 +55,8 @@ export default function ForgotPasswordPage() {
         onSubmit={handleSubmit(onSubmit)}
         register={register}
         errors={errors}
+        isPending={isPending}
+        error={errorMessage}
       />
     </AuthCenteredLayout>
   );

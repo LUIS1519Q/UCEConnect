@@ -1,3 +1,5 @@
+import { Link as RouterLink } from "react-router-dom";
+
 import type { LinkProps } from "./Link.types";
 
 export default function Link({
@@ -7,7 +9,7 @@ export default function Link({
   ...props
 }: LinkProps) {
   return (
-    <a
+    <RouterLink
       className={`
         text-sm
         font-medium
@@ -20,6 +22,6 @@ export default function Link({
       {...props}
     >
       {children}
-    </a>
+    </RouterLink>
   );
 }

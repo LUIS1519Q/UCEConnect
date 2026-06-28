@@ -106,7 +106,7 @@ export default function VerifyCodeForm({
       )}
 
       <div className="text-center">
-        <Link href="/login">
+        <Link to="/login">
           Back to Login
         </Link>
       </div>

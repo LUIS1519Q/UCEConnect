@@ -20,7 +20,7 @@ export default function ForgotPasswordForm({
   return (
     <form
       onSubmit={onSubmit}
-      className="space-y-6"
+      className="space-y-4"
     >
       <FormField
         id="email"
@@ -61,7 +61,7 @@ export default function ForgotPasswordForm({
 
       <p className="text-center text-sm text-textSecondary">
         Remember your password?{" "}
-        <Link href="#">
+        <Link to="/login">
           Log in
         </Link>
       </p>

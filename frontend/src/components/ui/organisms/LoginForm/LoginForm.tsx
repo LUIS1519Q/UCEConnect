@@ -72,7 +72,7 @@ export default function LoginForm({
           label="Remember me"
         />
 
-        <Link href="#">
+        <Link to="/forgot-password">
           Forgot password?
         </Link>
       </FormRow>
@@ -99,7 +99,7 @@ export default function LoginForm({
 
       <p className="text-center text-sm text-textSecondary">
         Don't have an account?{" "}
-        <Link href="#">
+        <Link to="/register">
           Sign up
         </Link>
       </p>

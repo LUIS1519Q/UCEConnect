@@ -19,13 +19,29 @@ export interface LoginPayload {
 }
 
 export interface RegisterPayload {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
-  role: 'student' | 'manager' | 'admin';
+  role: Role;
 }
 
 export interface VerifyCodePayload {
   email: string;
   code: string;
+}
+
+export interface VerifyResetCodePayload {
+  email: string;
+  code: string;
+}
+
+export interface ForgotPasswordPayload {
+  email: string;
+}
+
+export interface ResetPasswordPayload {
+  email: string;
+  code: string;
+  newPassword: string;
 }
