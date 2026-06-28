@@ -34,7 +34,6 @@ export default function RegisterForm({
             label="First Name"
             required
           >
-          <>
             <TextInput
               id="firstName"
               placeholder="Enter your first name"
@@ -46,29 +45,26 @@ export default function RegisterForm({
                 {errors.firstName.message}
               </p>
             )}
-          </>
           </FormField>
         </div>
 
         <div className="flex-1">
           <FormField
-            id="lastName"
-            label="Last Name"
+            id="firstName"
+            label="First Name"
             required
           >
-            <>
-              <TextInput
-                id="lastName"
-                placeholder="Enter your last name"
-                {...register("lastName")}
-              />
+            <TextInput
+              id="firstName"
+              placeholder="Enter your first name"
+              {...register("firstName")}
+            />
 
-              {errors.lastName && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.lastName.message}
-                </p>
-              )}
-            </>
+            {errors.firstName && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.firstName.message}
+              </p>
+            )}
           </FormField>
         </div>
 
@@ -79,20 +75,18 @@ export default function RegisterForm({
         label="Institutional Email"
         required
       >
-        <>
-          <TextInput
-            id="email"
-            type="email"
-            placeholder="Enter your institutional email"
-            {...register("email")}
-          />
+        <TextInput
+          id="email"
+          type="email"
+          placeholder="Enter your institutional email"
+          {...register("email")}
+        />
 
-          {errors.email && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.email.message}
-            </p>
-          )}
-        </>
+        {errors.email && (
+          <p className="mt-1 text-sm text-red-500">
+            {errors.email.message}
+          </p>
+        )}
       </FormField>
 
       <FormField
@@ -100,19 +94,17 @@ export default function RegisterForm({
         label="Password"
         required
       >
-        <>
-          <PasswordInput
-            id="password"
-            placeholder="Create a password"
-            {...register("password")}
-          />
+        <PasswordInput
+          id="password"
+          placeholder="Create a password"
+          {...register("password")}
+        />
 
-          {errors.password && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.password.message}
-            </p>
-          )}
-        </>
+        {errors.password && (
+          <p className="mt-1 text-sm text-red-500">
+            {errors.password.message}
+          </p>
+        )}
       </FormField>
 
       <FormField
@@ -120,19 +112,17 @@ export default function RegisterForm({
         label="Confirm Password"
         required
       >
-        <>
-          <PasswordInput
-            id="confirmPassword"
-            placeholder="Confirm your password"
-            {...register("confirmPassword")}
-          />
+        <PasswordInput
+          id="confirmPassword"
+          placeholder="Confirm your password"
+          {...register("confirmPassword")}
+        />
 
-          {errors.confirmPassword && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.confirmPassword.message}
-            </p>
-          )}
-        </>
+        {errors.confirmPassword && (
+          <p className="mt-1 text-sm text-red-500">
+            {errors.confirmPassword.message}
+          </p>
+        )}
       </FormField>
 
       <Button
@@ -159,7 +149,7 @@ export default function RegisterForm({
 
       <p className="text-center text-sm text-textSecondary">
         Already have an account?{" "}
-        <Link href="#">
+        <Link to="/login">
           Log in
         </Link>
       </p>

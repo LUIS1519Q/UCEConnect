@@ -23,13 +23,19 @@ export default function RegisterPage() {
   const { mutate, isPending, error } = useMutation({
     mutationFn: (data: RegisterFormData) =>
       authService.register({
-        name: `${data.firstName} ${data.lastName}`,
+        firstName: data.firstName,
+        lastName: data.lastName,
         email: data.email,
         password: data.password,
         role: "student",
       }),
     onSuccess: (_, variables) => {
-      navigate("/verify-email", { state: { email: variables.email } });
+      navigate("/verify-code", {
+        state: {
+          email: variables.email,
+          flow: "register",
+        },
+      });
     },
   });
 

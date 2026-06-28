@@ -1,6 +1,5 @@
-import type { AnchorHTMLAttributes } from "react";
+import type { LinkProps as RouterLinkProps } from "react-router-dom";
 
-export interface LinkProps
-  extends AnchorHTMLAttributes<HTMLAnchorElement> {
+export interface LinkProps extends RouterLinkProps {
   underline?: boolean;
 }

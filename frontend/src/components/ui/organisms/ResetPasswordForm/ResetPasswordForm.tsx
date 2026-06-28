@@ -35,7 +35,7 @@ export default function ResetPasswordForm({
             <PasswordInput
               id="password"
               placeholder="Enter your new password"
-              value={field.value}
+              value={field.value ?? ""}
               onChange={field.onChange}
             />
           )}
@@ -60,7 +60,7 @@ export default function ResetPasswordForm({
             <PasswordInput
               id="confirmPassword"
               placeholder="Confirm your new password"
-              value={field.value}
+              value={field.value ?? ""}
               onChange={field.onChange}
             />
           )}
@@ -89,10 +89,10 @@ export default function ResetPasswordForm({
       )}
 
       <div className="text-center">
-        <Link href="/login">
-          Back to Login
-        </Link>
-      </div>
+      <Link to="/login">
+        Back to Login
+      </Link>
+    </div>
     </form>
   );
 }
