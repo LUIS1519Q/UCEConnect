@@ -3,15 +3,11 @@ import { RegisterForm } from "../../components/ui/organisms";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 
+import { useRegister } from "../../hooks/useRegister";
 import { registerSchema, type RegisterFormData } from "./registerSchema";
-import { authService } from "../../api/authService";
 
 export default function RegisterPage() {
-  const navigate = useNavigate();
-
   const {
     register,
     handleSubmit,
@@ -20,31 +16,14 @@ export default function RegisterPage() {
     resolver: zodResolver(registerSchema),
   });
 
-  const { mutate, isPending, error } = useMutation({
-    mutationFn: (data: RegisterFormData) =>
-      authService.register({
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        password: data.password,
-        role: "student",
-      }),
-    onSuccess: (_, variables) => {
-      navigate("/verify-code", {
-        state: {
-          email: variables.email,
-          flow: "register",
-        },
-      });
-    },
-  });
+  const { register: registerUser, isPending, error } = useRegister();
 
   const errorMessage =
-  error instanceof Error
-    ? error.message
-    : "";
+    error instanceof Error ? error.message : "";
 
-  const onSubmit = (data: RegisterFormData) => mutate(data);
+  const onSubmit = (data: RegisterFormData) => {
+    registerUser(data);
+  };
 
   return (
     <AuthCenteredLayout
@@ -60,5 +39,4 @@ export default function RegisterPage() {
       />
     </AuthCenteredLayout>
   );
-
 }
