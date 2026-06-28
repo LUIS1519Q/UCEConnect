@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-
+import { ROUTES } from "../constants/routes";
+import { useCountdown } from "./useCountdown";
 import { authService } from "../api/authService";
 
 import type { VerifyCodeFormData } from "../shemas/auth/verifyCodeSchema";
@@ -15,27 +16,13 @@ interface Params {
 
 export function useVerifyCode({ email, flow }: Params) {
   const navigate = useNavigate();
-
-  const [seconds, setSeconds] = useState(300);
-  const [resendSeconds, setResendSeconds] = useState(30);
+  
   const [success, setSuccess] = useState("");
 
   // ---------------- TIMER ----------------
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setSeconds((prev) => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
+  const expiresTimer = useCountdown(300);
 
-    return () => clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setResendSeconds((prev) => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
+  const resendTimer = useCountdown(30);
 
   // ---------------- VERIFY CODE ----------------
   const verifyMutation = useMutation({
@@ -55,9 +42,9 @@ export function useVerifyCode({ email, flow }: Params) {
 
     onSuccess: (_, variables) => {
       if (flow === "register") {
-        navigate("/login");
+        navigate(ROUTES.auth.login);
       } else {
-        navigate("/reset-password", {
+        navigate(ROUTES.auth.resetPassword, {
           state: {
             email,
             code: variables.code,
@@ -78,15 +65,15 @@ export function useVerifyCode({ email, flow }: Params) {
     },
 
     onSuccess: () => {
-      setSeconds(300);
-      setResendSeconds(30);
+      expiresTimer.reset();
+      resendTimer.reset();
 
       setSuccess(
         flow === "register"
           ? "A new verification code has been sent."
           : "A new recovery code has been sent."
       );
-    },
+    }
   });
 
   const onSubmit = (data: VerifyCodeFormData) => {
@@ -94,23 +81,23 @@ export function useVerifyCode({ email, flow }: Params) {
     verifyMutation.mutate(data);
   };
 
+  const onResend = useCallback(() => {
+    resendMutation.mutate();
+  }, [resendMutation]);
+
   return {
     onSubmit,
     isPending: verifyMutation.isPending,
     error: verifyMutation.error,
 
-    expiresIn: `${Math.floor(seconds / 60)}:${(seconds % 60)
-      .toString()
-      .padStart(2, "0")}`,
+    expiresIn: expiresTimer.formattedTime,
 
-    resendIn: `00:${resendSeconds
-      .toString()
-      .padStart(2, "0")}`,
+    resendIn: resendTimer.formattedTime,
 
-    canResend: resendSeconds === 0,
+    canResend: resendTimer.seconds === 0,
 
-    onResend: () => resendMutation.mutate(),
-
+    onResend,
+    
     success,
   };
-}
+} 

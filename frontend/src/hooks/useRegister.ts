@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../constants/routes";
 
 import { authService } from "../api/authService";
 import type { RegisterFormData } from "../shemas/auth/registerSchema";
@@ -18,7 +19,7 @@ export function useRegister() {
       }),
 
     onSuccess: (_, variables) => {
-      navigate("/verify-email", {
+      navigate(ROUTES.auth.verifyCode, {
         state: {
           email: variables.email,
           flow: "register",
