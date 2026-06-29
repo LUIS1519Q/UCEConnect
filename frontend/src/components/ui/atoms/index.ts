@@ -8,3 +8,4 @@ export * from "./Link";
 export * from "./Divider";
 export * from "./SocialButton";
 export * from "./Textarea";
+export * from "./StatusBadge";

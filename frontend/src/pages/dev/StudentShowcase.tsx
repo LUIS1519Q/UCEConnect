@@ -1,4 +1,5 @@
 import { Textarea } from "../../components/ui/atoms/Textarea";
+import { StatusBadge } from "../../components/ui/atoms/StatusBadge";
 
 export default function StudentShowcase() {
   return (
@@ -18,6 +19,7 @@ export default function StudentShowcase() {
         <section className="rounded-xl border border-border bg-surface p-6 shadow-sm">
           <h2 className="text-2xl font-semibold text-textPrimary">
             Atoms
+
             <div className="mt-6 space-y-6">
                 <div>
                     <h3 className="mb-2 text-lg font-medium text-textPrimary">
@@ -26,7 +28,20 @@ export default function StudentShowcase() {
 
                     <Textarea placeholder="Describe el problema..." />
                 </div>
+            </div>
+
+            <div>
+                <h3 className="mb-4 text-lg font-medium text-textPrimary">
+                    Status Badge
+                </h3>
+
+                <div className="flex flex-wrap gap-3">
+                    <StatusBadge status="open" />
+                    <StatusBadge status="inProgress" />
+                    <StatusBadge status="resolved" />
+                    <StatusBadge status="rejected" />
                 </div>
+            </div>
 
           </h2>
 
