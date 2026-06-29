@@ -39,18 +39,18 @@ const loginWithMicrosoft = new LoginWithMicrosoft(
   bcrypt
 );
 
-const VALIDATION_ERRORS = [
-  'Solo se permiten correos institucionales @uce.edu.ec',
-  'El correo ya está registrado',
-];
-
 async function register(req, res) {
   try {
     const user = await registerUser.execute(req.body);
     res.status(201).json({ message: 'Usuario registrado. Revisa tu correo para verificar tu cuenta.', user });
   } catch (error) {
-    const status = VALIDATION_ERRORS.includes(error.message) ? 400 : 500;
-    res.status(status).json({ message: error.message });
+    if (error.message.includes('already registered')) {
+      return res.status(400).json({ message: error.message, errorCode: 'EMAIL_ALREADY_REGISTERED' });
+    }
+    if (error.message.includes('institutional')) {
+      return res.status(400).json({ message: error.message });
+    }
+    res.status(500).json({ message: error.message });
   }
 }
 
@@ -59,7 +59,19 @@ async function verifyCodeHandler(req, res) {
     const result = await verifyCode.execute(req.body);
     res.status(200).json(result);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    if (error.message.includes('not found')) {
+      return res.status(404).json({ message: error.message, errorCode: 'CODE_NOT_FOUND' });
+    }
+    if (error.message.includes('expired')) {
+      return res.status(400).json({ message: error.message, errorCode: 'CODE_EXPIRED' });
+    }
+    if (error.message.includes('already been used')) {
+      return res.status(400).json({ message: error.message, errorCode: 'CODE_ALREADY_USED' });
+    }
+    if (error.message.includes('Invalid verification')) {
+      return res.status(400).json({ message: error.message, errorCode: 'INVALID_CODE' });
+    }
+    res.status(500).json({ message: error.message });
   }
 }
 
@@ -68,8 +80,16 @@ async function login(req, res) {
     const result = await loginUser.execute(req.body);
     res.status(200).json(result);
   } catch (error) {
-    const status = error.message === 'Credenciales inválidas' ? 401 : 400;
-    res.status(status).json({ message: error.message });
+    if (error.message.includes('Invalid credentials')) {
+      return res.status(401).json({ message: error.message, errorCode: 'INVALID_CREDENTIALS' });
+    }
+    if (error.message.includes('verify your email')) {
+      return res.status(400).json({ message: error.message, errorCode: 'EMAIL_NOT_VERIFIED' });
+    }
+    if (error.message.includes('deactivated')) {
+      return res.status(400).json({ message: error.message, errorCode: 'USER_DISABLED' });
+    }
+    res.status(500).json({ message: error.message });
   }
 }
 
@@ -78,10 +98,10 @@ async function resendCode(req, res) {
     const result = await resendVerifyCode.execute(req.body);
     res.status(200).json(result);
   } catch (error) {
-    if (error.message.includes('no encontrado')) {
+    if (error.message.includes('not found')) {
       return res.status(404).json({ message: error.message });
     }
-    if (error.message.includes('ya está verificada')) {
+    if (error.message.includes('already verified')) {
       return res.status(400).json({ message: error.message });
     }
     res.status(500).json({ message: error.message });
@@ -93,11 +113,11 @@ async function forgotPasswordHandler(req, res) {
     const result = await forgotPassword.execute({ email: req.body.email });
     res.status(200).json(result);
   } catch (error) {
-    if (error.message.includes('no encontrado')) {
-      return res.status(404).json({ message: error.message });
+    if (error.message.includes('User not found')) {
+      return res.status(404).json({ message: error.message, errorCode: 'USER_NOT_FOUND' });
     }
-    if (error.message.includes('desactivada')) {
-      return res.status(400).json({ message: error.message });
+    if (error.message.includes('deactivated')) {
+      return res.status(400).json({ message: error.message, errorCode: 'USER_DISABLED' });
     }
     res.status(500).json({ message: error.message });
   }
@@ -108,15 +128,17 @@ async function verifyResetCodeHandler(req, res) {
     const result = await verifyResetCode.execute({ email: req.body.email, code: req.body.code });
     res.status(200).json(result);
   } catch (error) {
-    if (error.message.includes('no encontrado')) {
-      return res.status(404).json({ message: error.message });
+    if (error.message.includes('not found')) {
+      return res.status(404).json({ message: error.message, errorCode: 'CODE_NOT_FOUND' });
     }
-    if (
-      error.message.includes('expirado') ||
-      error.message.includes('utilizado') ||
-      error.message.includes('incorrecto')
-    ) {
-      return res.status(400).json({ message: error.message });
+    if (error.message.includes('expired')) {
+      return res.status(400).json({ message: error.message, errorCode: 'CODE_EXPIRED' });
+    }
+    if (error.message.includes('already been used')) {
+      return res.status(400).json({ message: error.message, errorCode: 'CODE_ALREADY_USED' });
+    }
+    if (error.message.includes('Invalid verification')) {
+      return res.status(400).json({ message: error.message, errorCode: 'INVALID_CODE' });
     }
     res.status(500).json({ message: error.message });
   }
@@ -127,10 +149,10 @@ async function resendResetCodeHandler(req, res) {
     const result = await resendResetCode.execute({ email: req.body.email });
     res.status(200).json(result);
   } catch (error) {
-    if (error.message.includes('no encontrado')) {
+    if (error.message.includes('not found')) {
       return res.status(404).json({ message: error.message });
     }
-    if (error.message.includes('desactivada')) {
+    if (error.message.includes('deactivated')) {
       return res.status(400).json({ message: error.message });
     }
     res.status(500).json({ message: error.message });
@@ -145,11 +167,17 @@ async function resetPasswordHandler(req, res) {
     });
     res.status(200).json(result);
   } catch (error) {
-    if (error.message.includes('no encontrado')) {
-      return res.status(404).json({ message: error.message });
+    if (error.message.includes('Invalid or expired')) {
+      return res.status(401).json({ message: error.message, errorCode: 'INVALID_RESET_TOKEN' });
     }
-    if (error.message.includes('Token inválido')) {
-      return res.status(401).json({ message: error.message });
+    if (error.message.includes('Invalid reset token')) {
+      return res.status(401).json({ message: error.message, errorCode: 'INVALID_RESET_TOKEN' });
+    }
+    if (error.message.includes('not found')) {
+      return res.status(404).json({ message: error.message, errorCode: 'USER_NOT_FOUND' });
+    }
+    if (error.message.includes('different from')) {
+      return res.status(400).json({ message: error.message, errorCode: 'SAME_PASSWORD' });
     }
     res.status(500).json({ message: error.message });
   }
