@@ -53,9 +53,9 @@ export default function RegisterForm({
             error={errors.lastName?.message}
           >
             <TextInput
-              id="firstName"
-              placeholder="Enter your first name"
-              {...register("firstName")}
+              id="lastName"
+              placeholder="Enter your last name"
+              {...register("lastName")}
             />
           </FormField>
         </div>
