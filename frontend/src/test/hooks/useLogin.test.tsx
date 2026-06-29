@@ -4,15 +4,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import type { AxiosError } from "axios";
 
-import { useLogin } from "../../../hooks/useLogin";
-import { authService } from "../../../api/authService";
-import { useAuthStore } from "../../../store/authStore";
-import { ROUTES } from "../../../constants/routes";
+import { useLogin } from "../../hooks/useLogin";
+import { authService } from "../../api/authService";
+import { useAuthStore } from "../../store/authStore";
+import { ROUTES } from "../../constants/routes";
 
 const navigate = vi.fn();
-const setSession = vi.fn();
-
-type StoreState = ReturnType<typeof useAuthStore.getState>;
 
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual<
@@ -25,24 +22,11 @@ vi.mock("react-router-dom", async () => {
   };
 });
 
-vi.mock("../../../store/authStore", () => ({
-  useAuthStore: vi.fn(),
-}));
-
 describe("useLogin", () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    vi.mocked(useAuthStore).mockImplementation(
-        (selector: (state: StoreState) => unknown) =>
-            selector({
-                user: null,
-                accessToken: null,
-                refreshToken: null,
-                setSession,
-                logout: vi.fn(),
-            })
-    )
+    useAuthStore.getState().logout();
   });
 
   const wrapper = ({
@@ -120,17 +104,18 @@ describe("useLogin", () => {
     });
 
     await waitFor(() => {
-      expect(setSession).toHaveBeenCalledWith({
-        user: {
-          id: "1",
-          firstName: "John",
-          lastName: "Doe",
-          email: "john@uce.edu.ec",
-          role: "student",
-        },
-        accessToken: "access-token",
-        refreshToken: "refresh-token",
+      const state = useAuthStore.getState();
+
+      expect(state.user).toEqual({
+        id: "1",
+        firstName: "John",
+        lastName: "Doe",
+        email: "john@uce.edu.ec",
+        role: "student",
       });
+
+      expect(state.accessToken).toBe("access-token");
+      expect(state.refreshToken).toBe("refresh-token");
 
       expect(navigate).toHaveBeenCalledWith(
         ROUTES.dashboard.student

@@ -1,10 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import type { ReactNode } from "react";
 
-import { useRegister } from "../../../hooks/useRegister";
-import { ROUTES } from "../../../constants/routes";
-import { authService } from "../../../api/authService";
+import { useRegister } from "../../hooks/useRegister";
+import { ROUTES } from "../../constants/routes";
+import { authService } from "../../api/authService";
 
 const navigate = vi.fn();
 
@@ -19,12 +20,6 @@ vi.mock("react-router-dom", async () => {
   };
 });
 
-vi.mock("../../../api/authService", () => ({
-  authService: {
-    register: vi.fn(),
-  },
-}));
-
 describe("useRegister", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -33,7 +28,7 @@ describe("useRegister", () => {
   const wrapper = ({
     children,
   }: {
-    children: React.ReactNode;
+    children: ReactNode;
   }) => {
     const queryClient = new QueryClient();
 
@@ -45,9 +40,11 @@ describe("useRegister", () => {
   };
 
   it("calls register service", async () => {
-    vi.mocked(authService.register).mockResolvedValue({
-      message: "Success",
-    });
+    const registerSpy = vi
+      .spyOn(authService, "register")
+      .mockResolvedValue({
+        message: "Success",
+      });
 
     const { result } = renderHook(
       () => useRegister(),
@@ -65,7 +62,7 @@ describe("useRegister", () => {
     });
 
     await waitFor(() => {
-      expect(authService.register).toHaveBeenCalledWith({
+      expect(registerSpy).toHaveBeenCalledWith({
         firstName: "John",
         lastName: "Doe",
         email: "john@uce.edu.ec",
@@ -76,7 +73,7 @@ describe("useRegister", () => {
   });
 
   it("navigates after success", async () => {
-    vi.mocked(authService.register).mockResolvedValue({
+    vi.spyOn(authService, "register").mockResolvedValue({
       message: "Success",
     });
 

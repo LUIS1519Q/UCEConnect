@@ -2,49 +2,54 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 
-import ResetPasswordPage from "../../../pages/auth/ResetPasswordPage";
+import VerifyCodePage from "../../pages/auth/VerifyCodePage";
 
-vi.mock("../../../hooks/useResetPassword", () => ({
-  useResetPassword: () => ({
+vi.mock("../../../hooks/useVerifyCode", () => ({
+  useVerifyCode: () => ({
     onSubmit: vi.fn(),
     isPending: false,
     error: null,
+    expiresIn: "05:00",
+    resendIn: "00:30",
+    canResend: false,
+    onResend: vi.fn(),
+    success: "",
   }),
 }));
 
-describe("ResetPasswordPage", () => {
-  it("renders the reset password page", () => {
+describe("VerifyCodePage", () => {
+  it("renders the verify code page", () => {
     render(
       <MemoryRouter
         initialEntries={[
           {
-            pathname: "/reset-password",
+            pathname: "/verify-code",
             state: {
               email: "test@uce.edu.ec",
-              code: "123456",
+              flow: "register",
             },
           },
         ]}
       >
-        <ResetPasswordPage />
+        <VerifyCodePage />
       </MemoryRouter>
     );
 
     expect(
       screen.getByRole("heading", {
-        name: "Reset Password",
+        name: "Verify Email",
       })
     ).toBeInTheDocument();
 
     expect(
       screen.getByText(
-        "Create a new password for your account."
+        "Enter the verification code sent to test@uce.edu.ec."
       )
     ).toBeInTheDocument();
 
     expect(
       screen.getByRole("button", {
-        name: "Reset Password",
+        name: "Verify Code",
       })
     ).toBeInTheDocument();
   });

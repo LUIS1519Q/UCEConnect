@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-import api from "../../../api/client";
-import { authService } from "../../../api/authService";
-import type { Role } from "../../../types/user";
+import api from "../../api/client";
+import { authService } from "../../api/authService";
+import type { Role } from "../../types/user";
 
 vi.mock("../../../api/client", () => ({
   default: {

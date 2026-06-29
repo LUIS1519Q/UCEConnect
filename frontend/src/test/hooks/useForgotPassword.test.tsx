@@ -3,9 +3,9 @@ import { renderHook, act, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 
-import { useForgotPassword } from "../../../hooks/useForgotPassword";
-import { authService } from "../../../api/authService";
-import { ROUTES } from "../../../constants/routes";
+import { useForgotPassword } from "../../hooks/useForgotPassword";
+import { authService } from "../../api/authService";
+import { ROUTES } from "../../constants/routes";
 
 const navigate = vi.fn();
 
