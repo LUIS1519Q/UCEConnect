@@ -34,7 +34,11 @@ export interface ForgotPasswordPayload {
 }
 
 export interface ResetPasswordPayload {
-  email: string;
-  code: string;
+  resetToken: string;
   newPassword: string;
+}
+
+export interface VerifyResetCodeResponse {
+  message: string;
+  resetToken: string;
 }
