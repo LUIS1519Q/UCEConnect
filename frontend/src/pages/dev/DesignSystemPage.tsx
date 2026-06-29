@@ -1,0 +1,648 @@
+import {
+    Eye,
+    EyeOff,
+    Mail,
+    Lock,
+    User,
+} from "../../components/ui/icons";
+
+import {
+  Button,
+  Checkbox,
+  Logo,
+  TextInput,
+  TimerText,
+  Link,
+  Divider,
+  SocialButton,
+} from "../../components/ui/atoms";
+
+import {
+  FormField, 
+  FormRow,
+  OTPInput,
+  PasswordInput,
+} from "../../components/ui/molecules";
+
+import {
+  LoginForm,
+  RegisterForm,
+  ForgotPasswordForm,
+  VerifyCodeForm,
+  ResetPasswordForm,
+} from "../../components/ui/organisms";
+
+import {
+  AuthSplitLayout,
+  AuthCenteredLayout,
+} from "../../components/ui/templates"
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod"; 
+
+import {
+  loginSchema,
+  type LoginFormData,
+} from "../../schemas/auth/loginSchema";
+
+import {
+  registerSchema,
+  type RegisterFormData,
+} from "../../schemas/auth/registerSchema";
+
+import {
+  forgotPasswordSchema,
+  type ForgotPasswordFormData,
+} from "../../schemas/auth/forgotPasswordSchema";
+
+import {
+  verifyCodeSchema,
+  type VerifyCodeFormData,
+} from "../../schemas/auth/verifyCodeSchema";
+
+import {
+  resetPasswordSchema,
+  type ResetPasswordFormData,
+} from "../../schemas/auth/resetPasswordSchema";
+
+export default function DesignSystemPage() {
+
+    const {
+      register: registerLogin,
+      handleSubmit: handleLoginSubmit,
+      formState: { errors: loginErrors },
+    } = useForm<LoginFormData>({
+      resolver: zodResolver(loginSchema),
+    });
+
+    const {
+      register: registerRegister,
+      handleSubmit: handleRegisterSubmit,
+      formState: { errors: registerErrors },
+    } = useForm<RegisterFormData>({
+      resolver: zodResolver(registerSchema),
+    });
+
+    const {
+      register: registerForgot,
+      handleSubmit: handleForgotSubmit,
+      formState: { errors: forgotErrors },
+    } = useForm<ForgotPasswordFormData>({
+      resolver: zodResolver(forgotPasswordSchema),
+    });
+
+    const {
+      control: verifyControl,
+      handleSubmit: handleVerifySubmit,
+      formState: { errors: verifyErrors },
+    } = useForm<VerifyCodeFormData>({
+      resolver: zodResolver(verifyCodeSchema),
+    });
+
+    const {
+      control: resetControl,
+      handleSubmit: handleResetSubmit,
+      formState: { errors: resetErrors },
+    } = useForm<ResetPasswordFormData>({
+      resolver: zodResolver(resetPasswordSchema),
+    });
+  return (
+    <div className="min-h-screen bg-background p-10">
+
+      <h1 className="mb-8 text-3xl font-bold text-text-primary">
+        UCEConnect Design System
+      </h1>
+
+      <div className="space-y-10">
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Horizontal Logos
+          </h2>
+
+          <div className="space-y-6">
+
+            <Logo
+              variant="horizontal-color"
+              className="h-16"
+            />
+
+            <div className="rounded-lg bg-gray-900 p-6">
+              <Logo
+                variant="horizontal-white"
+                className="h-16"
+              />
+            </div>
+
+            <Logo
+              variant="horizontal-dark"
+              className="h-16"
+            />
+
+          </div>
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Vertical Logos
+          </h2>
+
+          <div className="flex gap-8">
+
+            <Logo
+              variant="vertical-color"
+              className="h-32"
+            />
+
+            <div className="rounded-lg bg-gray-900 p-6">
+              <Logo
+                variant="vertical-white"
+                className="h-32"
+              />
+            </div>
+
+            <Logo
+              variant="vertical-dark"
+              className="h-32"
+            />
+
+          </div>
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Isotype Logos
+          </h2>
+
+          <div className="flex gap-8">
+
+            <Logo
+              variant="isotype-color"
+              className="h-24"
+            />
+
+            <div className="rounded-lg bg-gray-900 p-6">
+              <Logo
+                variant="isotype-white"
+                className="h-24"
+              />
+            </div>
+
+            <Logo
+              variant="isotype-dark"
+              className="h-24"
+            />
+
+          </div>
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Slogan Logos
+          </h2>
+
+          <div className="space-y-6">
+
+            <Logo
+              variant="horizontal-slogan-color"
+              className="h-20"
+            />
+
+            <div className="rounded-lg bg-primary p-6">
+              <Logo
+                variant="horizontal-slogan-white"
+                className="h-20"
+              />
+            </div>
+
+          </div>
+        </section>
+
+        <section>
+
+          <h2 className="mb-4 text-xl font-semibold">
+            Authentication Icons
+          </h2>
+
+          <div className="flex gap-8">
+
+            <div className="flex flex-col items-center gap-2">
+              <Mail className="h-6 w-6 text-primary" />
+              <span>Email</span>
+            </div>
+
+            <div className="flex flex-col items-center gap-2">
+              <Lock className="h-6 w-6 text-primary" />
+              <span>Password</span>
+            </div>
+
+            <div className="flex flex-col items-center gap-2">
+              <Eye className="h-6 w-6 text-primary" />
+              <span>Show</span>
+            </div>
+
+            <div className="flex flex-col items-center gap-2">
+              <EyeOff className="h-6 w-6 text-primary" />
+              <span>Hide</span>
+            </div>
+
+            <div className="flex flex-col items-center gap-2">
+              <User className="h-6 w-6 text-primary" />
+              <span>User</span>
+            </div>
+
+          </div>
+
+        </section>
+
+        <section>
+            <h2 className="mb-4 text-xl font-semibold">
+                Buttons
+            </h2>
+
+            <div className="flex flex-wrap items-center gap-4">
+
+                <Button variant="primary">
+                Primary
+                </Button>
+
+                <Button variant="secondary">
+                Secondary
+                </Button>
+
+                <Button variant="danger">
+                Danger
+                </Button>
+
+                <Button variant="ghost">
+                Ghost
+                </Button>
+
+                <Button variant="link">
+                Link
+                </Button>
+
+                <Button size="sm">
+                Small
+                </Button>
+
+                <Button size="md">
+                Medium
+                </Button>
+
+                <Button size="lg">
+                Large
+                </Button>
+
+                <Button disabled>
+                Disabled
+                </Button>
+
+            </div>
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Text Input
+          </h2>
+
+          <div className="max-w-md space-y-4">
+
+            <TextInput
+              id="email"
+              type="email"
+              placeholder="Enter your institutional email"
+            />
+
+            <TextInput
+              id="password"
+              type="password"
+              placeholder="Enter your password"
+            />
+
+            <TextInput
+              id="disabled"
+              disabled
+              placeholder="Disabled"
+            />
+
+          </div>
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Checkbox
+          </h2>
+
+          <div className="space-y-4">
+
+            <Checkbox
+              id="remember"
+              label="Remember me"
+            />
+
+            <Checkbox
+              id="checked"
+              label="Checked"
+              defaultChecked
+            />
+
+            <Checkbox
+              id="disabled"
+              label="Disabled"
+              disabled
+            />
+
+          </div>
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            OTP Input
+          </h2>
+
+          <OTPInput />
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Timer Text
+          </h2>
+
+          <div className="space-y-4">
+
+            <TimerText
+              time="00:59"
+            />
+
+            <TimerText
+              label="Code expires in"
+              time="04:32"
+            />
+
+          </div>
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Links
+          </h2>
+
+          <div className="space-y-4">
+
+            <Link to="#">
+              Forgot password?
+            </Link>
+
+            <Link
+              to="#"
+              underline
+            >
+              Create account
+            </Link>
+
+          </div>
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Divider
+          </h2>
+
+          <div className="max-w-md">
+            <Divider />
+          </div>
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Social Button
+          </h2>
+
+          <div className="max-w-sm">
+            <SocialButton provider="microsoft">
+              Continue with Microsoft
+            </SocialButton>
+          </div>
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Form Field
+          </h2>
+
+          <div className="max-w-md space-y-6">
+
+            <FormField
+              id="email"
+              label="Institutional email"
+              required
+            >
+              <TextInput
+                id="email"
+                placeholder="Enter your institutional email"
+              />
+            </FormField>
+
+            <FormField
+              id="password"
+              label="Password"
+              error="Password is required."
+            >
+              <TextInput
+                id="password"
+                type="password"
+              />
+            </FormField>
+
+          </div>
+        </section>
+
+        <section>
+
+            <h2 className="mb-4 text-xl font-semibold">
+                Form Row
+            </h2>
+
+            <div className="max-w-md">
+
+                <FormRow>
+
+                    <Checkbox
+                        id="remember"
+                        label="Remember me"
+                    />
+
+                    <Link to="#">
+                        Forgot password?
+                    </Link>
+
+                </FormRow>
+
+            </div>
+
+        </section>
+
+        <section>
+
+          <h2 className="mb-4 text-xl font-semibold">
+            Password Input
+          </h2>
+
+          <div className="max-w-md">
+
+            <PasswordInput
+              placeholder="Enter your password"
+            />
+
+          </div>
+
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Login Form
+          </h2>
+
+          <div className="max-w-md rounded-xl border border-border bg-surface p-8">
+            <LoginForm
+              onSubmit={handleLoginSubmit((data) => {
+                console.log(data);
+              })}
+              register={registerLogin}
+              errors={loginErrors}
+              isPending={false}
+              error="Invalid email or password."
+            />
+          </div>
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Register Form
+          </h2>
+
+          <div className="max-w-lg rounded-xl border border-border bg-surface p-8">
+            <RegisterForm
+              onSubmit={handleRegisterSubmit((data) => {
+                console.log(data);
+              })}
+              register={registerRegister}
+              errors={registerErrors}
+              isPending={false}
+              error=""
+            />
+          </div>
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Forgot Password Form
+          </h2>
+
+          <div className="max-w-md rounded-xl border border-border bg-surface p-8">
+            <ForgotPasswordForm
+              onSubmit={handleForgotSubmit((data) => {
+                console.log(data);
+              })}
+              register={registerForgot}
+              errors={forgotErrors}
+            />
+          </div>
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Verify Code Form
+          </h2>
+
+          <div className="max-w-md rounded-xl border border-border bg-surface p-8">
+            <VerifyCodeForm
+              onSubmit={handleVerifySubmit((data) => {
+                console.log(data);
+              })}
+              control={verifyControl}
+              errors={verifyErrors}
+              expiresIn="04:58"
+              resendIn="00:30"
+              canResend={false}
+            />
+          </div>
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Reset Password Form
+          </h2>
+
+          <div className="max-w-md rounded-xl border border-border bg-surface p-8">
+            <ResetPasswordForm
+              onSubmit={handleResetSubmit((data) => {
+                console.log(data);
+              })}
+              control={resetControl}
+              errors={resetErrors}
+            />
+          </div>
+        </section>
+
+        <section>
+            <h2 className="mb-4 text-xl font-semibold">
+                Auth Split Layout
+            </h2>
+
+            <div className="border rounded-xl overflow-hidden h-[700px]">
+
+                <AuthSplitLayout
+                    title="Log in"
+                    description="Access your institutional account."
+                >
+
+                    <LoginForm
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        console.log("Login");
+                      }}
+                      register={registerLogin}
+                      errors={loginErrors}
+                      isPending={false}
+                      error=""
+                    />
+
+                </AuthSplitLayout>
+
+            </div>
+
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-xl font-semibold">
+            Auth Centered Layout
+          </h2>
+
+          <div className="overflow-hidden rounded-xl border">
+            <AuthCenteredLayout
+              title="Create your account"
+              description="Register using your institutional email."
+            >
+              <VerifyCodeForm
+                onSubmit={handleVerifySubmit((data) => {
+                  console.log(data);
+                })}
+                control={verifyControl}
+                errors={verifyErrors}
+                expiresIn="04:58"
+                resendIn="00:30"
+                canResend={false}
+                //success="Verification code sent successfully."
+                //onResend={() => alert("Código reenviado")}
+              />
+            </AuthCenteredLayout>
+          </div>
+        </section>
+
+      </div>
+
+    </div>
+  );
+}
