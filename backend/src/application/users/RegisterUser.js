@@ -33,7 +33,7 @@ class RegisterUser {
 
       const roleId = ROLE_IDS[role] || ROLE_IDS.student;
 
-      const code = Math.floor(100000 + Math.random() * 900000).toString();
+      const code = require('crypto').randomInt(100000, 999999).toString();
       const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
 
       logger.info(`Enviando código de verificación a: ${email}`);

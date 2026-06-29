@@ -8,6 +8,8 @@ const LoginUser = require('../../../application/users/LoginUser');
 const ResendVerifyCode = require('../../../application/users/ResendVerifyCode');
 const ForgotPassword = require('../../../application/users/ForgotPassword');
 const ResetPassword = require('../../../application/users/ResetPassword');
+const VerifyResetCode = require('../../../application/users/VerifyResetCode');
+const ResendResetCode = require('../../../application/users/ResendResetCode');
 const LoginWithMicrosoft = require('../../../application/users/LoginWithMicrosoft');
 
 const PostgresUserRepo = require('../../repositories/PostgresUserRepo');
@@ -24,7 +26,9 @@ const verifyCode = new VerifyCode(userRepo);
 const loginUser = new LoginUser(userRepo, bcrypt, jwt, process.env.JWT_SECRET, process.env.JWT_REFRESH_SECRET);
 const resendVerifyCode = new ResendVerifyCode(userRepo, emailNotifier);
 const forgotPassword = new ForgotPassword(userRepo, emailNotifier);
-const resetPassword = new ResetPassword(userRepo, bcrypt);
+const resetPassword = new ResetPassword(userRepo, bcrypt, jwt, process.env.JWT_SECRET);
+const verifyResetCode = new VerifyResetCode(userRepo);
+const resendResetCode = new ResendResetCode(userRepo, emailNotifier);
 const microsoftAuthService = new MicrosoftAuthService();
 const loginWithMicrosoft = new LoginWithMicrosoft(
   userRepo,
@@ -99,13 +103,9 @@ async function forgotPasswordHandler(req, res) {
   }
 }
 
-async function resetPasswordHandler(req, res) {
+async function verifyResetCodeHandler(req, res) {
   try {
-    const result = await resetPassword.execute({
-      email: req.body.email,
-      code: req.body.code,
-      newPassword: req.body.newPassword,
-    });
+    const result = await verifyResetCode.execute({ email: req.body.email, code: req.body.code });
     res.status(200).json(result);
   } catch (error) {
     if (error.message.includes('no encontrado')) {
@@ -113,10 +113,43 @@ async function resetPasswordHandler(req, res) {
     }
     if (
       error.message.includes('expirado') ||
-      error.message.includes('ya fue utilizado') ||
+      error.message.includes('utilizado') ||
       error.message.includes('incorrecto')
     ) {
       return res.status(400).json({ message: error.message });
+    }
+    res.status(500).json({ message: error.message });
+  }
+}
+
+async function resendResetCodeHandler(req, res) {
+  try {
+    const result = await resendResetCode.execute({ email: req.body.email });
+    res.status(200).json(result);
+  } catch (error) {
+    if (error.message.includes('no encontrado')) {
+      return res.status(404).json({ message: error.message });
+    }
+    if (error.message.includes('desactivada')) {
+      return res.status(400).json({ message: error.message });
+    }
+    res.status(500).json({ message: error.message });
+  }
+}
+
+async function resetPasswordHandler(req, res) {
+  try {
+    const result = await resetPassword.execute({
+      resetToken: req.body.resetToken,
+      newPassword: req.body.newPassword,
+    });
+    res.status(200).json(result);
+  } catch (error) {
+    if (error.message.includes('no encontrado')) {
+      return res.status(404).json({ message: error.message });
+    }
+    if (error.message.includes('Token inválido')) {
+      return res.status(401).json({ message: error.message });
     }
     res.status(500).json({ message: error.message });
   }
@@ -141,12 +174,13 @@ async function microsoftCallback(req, res) {
 
     const result = await loginWithMicrosoft.execute({ code });
 
-    res.status(200).json({
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const params = new URLSearchParams({
       accessToken: result.accessToken,
       refreshToken: result.refreshToken,
-      user: result.user,
-      isNewUser: result.isNewUser,
+      isNewUser: result.isNewUser.toString(),
     });
+    res.redirect(`${frontendUrl}/auth/microsoft/callback?${params}`);
   } catch (error) {
     logger.error(`Error en Microsoft callback: ${error.message}`);
 
@@ -166,6 +200,8 @@ module.exports = {
   login,
   resendCode,
   forgotPassword: forgotPasswordHandler,
+  verifyResetCodeHandler,
+  resendResetCodeHandler,
   resetPassword: resetPasswordHandler,
   microsoftLogin,
   microsoftCallback,

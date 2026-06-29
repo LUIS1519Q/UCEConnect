@@ -37,12 +37,23 @@ const forgotSchema = z.object({
 });
 
 const resetSchema = z.object({
-  email: z.string().email(),
-  code: z.string().length(6),
+  resetToken: z.string().min(1, 'Reset token is required.'),
   newPassword: z
     .string()
-    .min(8)
-    .regex(/\d/, 'La contraseña debe contener al menos un número'),
+    .min(8, 'Password must contain at least 8 characters.')
+    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter.')
+    .regex(/[a-z]/, 'Password must contain at least one lowercase letter.')
+    .regex(/[0-9]/, 'Password must contain at least one number.')
+    .regex(/[^a-zA-Z0-9]/, 'Password must contain at least one special character.'),
+});
+
+const verifyResetCodeSchema = z.object({
+  email: z.string().email().endsWith('@uce.edu.ec'),
+  code: z.string().length(6),
+});
+
+const resendResetCodeSchema = z.object({
+  email: z.string().email().endsWith('@uce.edu.ec'),
 });
 
 function validate(schema) {
@@ -66,6 +77,8 @@ router.post('/verify-code', validate(verifySchema), authController.verifyCode);
 router.post('/login', validate(loginSchema), authController.login);
 router.post('/resend-code', validate(resendSchema), authController.resendCode);
 router.post('/forgot-password', validate(forgotSchema), authController.forgotPassword);
+router.post('/verify-reset-code', validate(verifyResetCodeSchema), authController.verifyResetCodeHandler);
+router.post('/resend-reset-code', validate(resendResetCodeSchema), authController.resendResetCodeHandler);
 router.post('/reset-password', validate(resetSchema), authController.resetPassword);
 
 router.get('/microsoft', authController.microsoftLogin);
