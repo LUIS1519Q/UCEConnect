@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 
 import RegisterPage from "../../pages/auth/RegisterPage";
 
-vi.mock("../../../hooks/useRegister", () => ({
+vi.mock("../../hooks/useRegister", () => ({
   useRegister: () => ({
     register: vi.fn(),
     isPending: false,

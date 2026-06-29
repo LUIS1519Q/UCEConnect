@@ -1,47 +1,106 @@
-import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { renderHook, act, waitFor } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import type { ReactNode } from "react";
 
-import ForgotPasswordPage from "../../pages/auth/ForgotPasswordPage";
+import { useRegister } from "../../hooks/useRegister";
+import { ROUTES } from "../../constants/routes";
 
-vi.mock("react-hook-form", () => ({
-  useForm: () => ({
-    register: vi.fn(),
-    handleSubmit: vi.fn(() => vi.fn()),
-    formState: {
-      errors: {},
-    },
-  }),
+const navigate = vi.fn();
+
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual<
+    typeof import("react-router-dom")
+  >("react-router-dom");
+
+  return {
+    ...actual,
+    useNavigate: () => navigate,
+  };
+});
+
+vi.mock("../../api/authService", () => ({
+  authService: {
+    register: vi.fn().mockResolvedValue({
+      message: "Success",
+    }),
+  },
 }));
 
-vi.mock("../../../hooks/useForgotPassword", () => ({
-  useForgotPassword: () => ({
-    forgotPassword: vi.fn(),
-    isPending: false,
-    error: null,
-  }),
-}));
+describe("useRegister", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
-describe("ForgotPasswordPage", () => {
-  it("renders the forgot password page", () => {
-    render(
-      <MemoryRouter>
-        <ForgotPasswordPage />
-      </MemoryRouter>
+  const wrapper = ({
+    children,
+  }: {
+    children: ReactNode;
+  }) => {
+    const queryClient = new QueryClient();
+
+    return (
+      <QueryClientProvider client={queryClient}>
+        {children}
+      </QueryClientProvider>
+    );
+  };
+
+  it("calls register service", async () => {
+    const { authService } = await import("../../api/authService");
+
+    const { result } = renderHook(
+      () => useRegister(),
+      { wrapper }
     );
 
-    expect(
-      screen.getByText("Forgot Password")
-    ).toBeInTheDocument();
+    act(() => {
+      result.current.register({
+        firstName: "John",
+        lastName: "Doe",
+        email: "john@uce.edu.ec",
+        password: "Password123!",
+        confirmPassword: "Password123!",
+      });
+    });
 
-    expect(
-      screen.getByText("Enter your institutional email.")
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(authService.register).toHaveBeenCalledWith({
+        firstName: "John",
+        lastName: "Doe",
+        email: "john@uce.edu.ec",
+        password: "Password123!",
+        role: "student",
+      });
+    });
+  });
 
-    expect(
-      screen.getByRole("button", {
-        name: "Send Verification Code",
-      })
-    ).toBeInTheDocument();
+  it("navigates after success", async () => {
+    const { result } = renderHook(
+      () => useRegister(),
+      { wrapper }
+    );
+
+    act(() => {
+      result.current.register({
+        firstName: "John",
+        lastName: "Doe",
+        email: "john@uce.edu.ec",
+        password: "Password123!",
+        confirmPassword: "Password123!",
+      });
+    });
+
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith(
+        ROUTES.auth.verifyCode,
+        {
+          state: {
+            email: "john@uce.edu.ec",
+            flow: "register",
+          },
+        }
+      );
+    });
   });
 });

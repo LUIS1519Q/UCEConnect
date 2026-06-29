@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 
 import VerifyCodePage from "../../pages/auth/VerifyCodePage";
 
-vi.mock("../../../hooks/useVerifyCode", () => ({
+vi.mock("../../hooks/useVerifyCode", () => ({
   useVerifyCode: () => ({
     onSubmit: vi.fn(),
     isPending: false,
