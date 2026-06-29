@@ -12,12 +12,12 @@ class ResendResetCode {
     const user = await this.userRepo.findByEmail(email);
     if (!user) {
       logger.warn(`Reenvío de código de reset fallido — usuario no encontrado: ${email}`);
-      throw new Error('Correo no encontrado');
+      throw new Error('User not found.');
     }
 
     if (user.isActive === false) {
       logger.warn(`Reenvío de código de reset fallido — cuenta desactivada: ${email}`);
-      throw new Error('Tu cuenta ha sido desactivada');
+      throw new Error('Your account has been deactivated.');
     }
 
     const code = require('crypto').randomInt(100000, 999999).toString();
@@ -28,7 +28,7 @@ class ResendResetCode {
 
     logger.info(`Código de reset reenviado a: ${email}`);
 
-    return { message: 'Código reenviado. Revisa tu correo.' };
+    return { message: 'Código reenviado correctamente' };
   }
 }
 

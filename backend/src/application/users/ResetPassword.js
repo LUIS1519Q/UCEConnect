@@ -13,12 +13,12 @@ class ResetPassword {
       decoded = jwt.verify(resetToken, process.env.JWT_SECRET);
     } catch (error) {
       logger.warn(`Restablecimiento fallido — token inválido o expirado: ${error.message}`);
-      throw new Error('Token inválido o expirado');
+      throw new Error('Invalid or expired reset token.');
     }
 
     if (decoded.purpose !== 'reset_password') {
       logger.warn('Restablecimiento fallido — token con propósito inválido');
-      throw new Error('Token inválido');
+      throw new Error('Invalid reset token.');
     }
 
     const { email } = decoded;
@@ -28,7 +28,13 @@ class ResetPassword {
       const user = await this.userRepo.findByEmail(email);
       if (!user) {
         logger.warn(`Restablecimiento fallido — usuario no encontrado: ${email}`);
-        throw new Error('Usuario no encontrado');
+        throw new Error('User not found.');
+      }
+
+      const samePassword = await this.bcrypt.compare(newPassword, user.passwordHash);
+      if (samePassword) {
+        logger.warn(`Restablecimiento fallido — misma contraseña: ${email}`);
+        throw new Error('New password must be different from the current password.');
       }
 
       const passwordHash = await this.bcrypt.hash(newPassword, 10);
@@ -36,7 +42,7 @@ class ResetPassword {
 
       logger.info(`Contraseña actualizada para: ${email}`);
 
-      return { message: 'Contraseña actualizada exitosamente' };
+      return { message: 'Password updated successfully' };
     } catch (error) {
       logger.error(`Error en restablecimiento de contraseña: ${error.message}`);
       throw error;
