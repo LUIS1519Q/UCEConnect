@@ -1,4 +1,4 @@
-import { User } from "lucide-react";
+import { User } from "../../icons";
 
 import { cn } from "../../../../utils/cn";
 

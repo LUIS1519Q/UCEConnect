@@ -1,4 +1,4 @@
-import { FileText } from "lucide-react";
+import { FileText } from "../../icons";
 
 import { cn } from "../../../../utils/cn";
 
