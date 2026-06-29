@@ -6,3 +6,4 @@ export * from "./SearchBar";
 export * from "./IncidentCard";
 export * from "./EvidenceItem";
 export * from "./NotificationItem";
+export * from "./ProfileInfoItem";

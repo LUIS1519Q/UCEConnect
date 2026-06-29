@@ -6,6 +6,7 @@ import { SearchBar } from "../../components/ui/molecules/SearchBar";
 import { IncidentCard } from "../../components/ui/molecules/IncidentCard";
 import { EvidenceItem } from "../../components/ui/molecules/EvidenceItem";
 import { NotificationItem } from "../../components/ui/molecules/NotificationItem";
+import { ProfileInfoItem } from "../../components/ui/molecules/ProfileInfoItem";
 
 export default function StudentShowcase() {
   return (
@@ -125,6 +126,24 @@ export default function StudentShowcase() {
                 date="2 hours ago"
                 unread
               />
+            </div>
+
+            <div>
+              <h3 className="mb-4 text-lg font-medium text-textPrimary">
+                Profile Info Item
+              </h3>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <ProfileInfoItem
+                  label="Student ID"
+                  value="2023123456"
+                />
+
+                <ProfileInfoItem
+                  label="Career"
+                  value="Software Engineering"
+                />
+              </div>
             </div>
 
         </section>
