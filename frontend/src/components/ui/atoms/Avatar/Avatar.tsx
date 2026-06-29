@@ -34,6 +34,7 @@ export default function Avatar({
 
   return (
     <div
+      data-testid="avatar-fallback"
       className={cn(
         avatarSize,
         "flex items-center justify-center rounded-full border border-border bg-gray-100",
