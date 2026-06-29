@@ -4,7 +4,7 @@ import api from "../../api/client";
 import { authService } from "../../api/authService";
 import type { Role } from "../../types/user";
 
-vi.mock("../../../api/client", () => ({
+vi.mock("../../api/client", () => ({
   default: {
     post: vi.fn(),
     get: vi.fn(),
@@ -102,8 +102,7 @@ describe("authService", () => {
       email: "john@test.com",
     };
 
-    const result =
-      await authService.forgotPassword(payload);
+    const result = await authService.forgotPassword(payload);
 
     expect(api.post).toHaveBeenCalledWith(
       "/api/v1/auth/forgot-password",
@@ -126,8 +125,7 @@ describe("authService", () => {
       newPassword: "Password123!",
     };
 
-    const result =
-      await authService.resetPassword(payload);
+    const result = await authService.resetPassword(payload);
 
     expect(api.post).toHaveBeenCalledWith(
       "/api/v1/auth/reset-password",
@@ -149,8 +147,7 @@ describe("authService", () => {
       code: "123456",
     };
 
-    const result =
-      await authService.verifyCode(payload);
+    const result = await authService.verifyCode(payload);
 
     expect(api.post).toHaveBeenCalledWith(
       "/api/v1/auth/verify-code",
@@ -172,8 +169,7 @@ describe("authService", () => {
       code: "123456",
     };
 
-    const result =
-      await authService.verifyResetCode(payload);
+    const result = await authService.verifyResetCode(payload);
 
     expect(api.post).toHaveBeenCalledWith(
       "/api/v1/auth/verify-reset-code",
@@ -190,8 +186,7 @@ describe("authService", () => {
       },
     });
 
-    const result =
-      await authService.resendCode("john@test.com");
+    const result = await authService.resendCode("john@test.com");
 
     expect(api.post).toHaveBeenCalledWith(
       "/api/v1/auth/resend-code",
@@ -210,10 +205,9 @@ describe("authService", () => {
       },
     });
 
-    const result =
-      await authService.resendResetCode(
-        "john@test.com"
-      );
+    const result = await authService.resendResetCode(
+      "john@test.com"
+    );
 
     expect(api.post).toHaveBeenCalledWith(
       "/api/v1/auth/resend-reset-code",
