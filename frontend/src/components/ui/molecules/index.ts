@@ -5,3 +5,4 @@ export * from "./PasswordInput";
 export * from "./SearchBar";
 export * from "./IncidentCard";
 export * from "./EvidenceItem";
+export * from "./NotificationItem";
