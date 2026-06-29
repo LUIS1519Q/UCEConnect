@@ -1,7 +1,8 @@
 class User {
-  constructor({ id, name, email, passwordHash, roleId, isActive, isVerified, createdAt }) {
+  constructor({ id, firstName, lastName, email, passwordHash, roleId, isActive, isVerified, createdAt }) {
     this.id = id;
-    this.name = name;
+    this.firstName = firstName;
+    this.lastName = lastName;
     this.email = email;
     this.passwordHash = passwordHash;
     this.roleId = roleId;
@@ -10,9 +11,10 @@ class User {
     this.createdAt = createdAt;
   }
 
-  static create({ name, email, passwordHash, roleId }) {
+  static create({ firstName, lastName, email, passwordHash, roleId }) {
     return new User({
-      name,
+      firstName,
+      lastName,
       email,
       passwordHash,
       roleId,
@@ -24,7 +26,8 @@ class User {
   toJSON() {
     return {
       id: this.id,
-      name: this.name,
+      firstName: this.firstName,
+      lastName: this.lastName,
       email: this.email,
       roleId: this.roleId,
       isActive: this.isActive,
