@@ -11,6 +11,7 @@ import type {
   VerifyResetCodePayload,
   ForgotPasswordPayload,
   ResetPasswordPayload,
+  VerifyResetCodeResponse,
 } from "../types/auth";
 
 const AUTH_BASE = "/api/v1/auth";
@@ -96,11 +97,12 @@ export const authService = {
 
   async verifyResetCode(
     payload: VerifyResetCodePayload
-  ): Promise<ApiMessageResponse> {
-    const response = await api.post<ApiMessageResponse>(
-      `${AUTH_BASE}/verify-reset-code`,
-      payload
-    );
+  ): Promise<VerifyResetCodeResponse> {
+    const response =
+      await api.post<VerifyResetCodeResponse>(
+        `${AUTH_BASE}/verify-reset-code`,
+        payload
+      );
 
     return response.data;
   },

@@ -109,6 +109,7 @@ describe("useVerifyCode", () => {
       .spyOn(authService, "verifyResetCode")
       .mockResolvedValue({
         message: "Success",
+        resetToken: "fake-reset-token",
       });
 
     const { result } = renderHook(
@@ -137,6 +138,7 @@ describe("useVerifyCode", () => {
   it("navigates to reset password after forgot-password verification", async () => {
     vi.spyOn(authService, "verifyResetCode").mockResolvedValue({
       message: "Success",
+      resetToken: "fake-reset-token",
     });
 
     const { result } = renderHook(
@@ -159,8 +161,7 @@ describe("useVerifyCode", () => {
         ROUTES.auth.resetPassword,
         {
           state: {
-            email: "test@uce.edu.ec",
-            code: "123456",
+            resetToken: "fake-reset-token",
           },
         }
       );

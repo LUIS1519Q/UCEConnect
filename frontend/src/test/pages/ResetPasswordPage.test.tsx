@@ -20,8 +20,7 @@ describe("ResetPasswordPage", () => {
           {
             pathname: "/reset-password",
             state: {
-              email: "test@uce.edu.ec",
-              code: "123456",
+              resetToken: "fake-reset-token",
             },
           },
         ]}

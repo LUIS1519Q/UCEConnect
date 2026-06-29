@@ -7,26 +7,24 @@ import { authService } from "../api/authService";
 import type { ResetPasswordFormData } from "../schemas/auth/resetPasswordSchema";
 
 interface Params {
-  email: string;
-  code: string;
+  resetToken: string;
 }
 
-export function useResetPassword({ email, code }: Params) {
+export function useResetPassword({ resetToken}: Params) {
   const navigate = useNavigate();
 
   // ---------------- VALIDATION GUARD ----------------
   useEffect(() => {
-    if (!email || !code) {
+    if (!resetToken) {
       navigate(ROUTES.auth.forgotPassword);
     }
-  }, [email, code, navigate]);
+  }, [resetToken, navigate]);
 
   // ---------------- MUTATION ----------------
   const mutation = useMutation({
     mutationFn: (data: ResetPasswordFormData) =>
       authService.resetPassword({
-        email,
-        code,
+        resetToken,
         newPassword: data.password,
       }),
 

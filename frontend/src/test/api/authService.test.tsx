@@ -120,8 +120,7 @@ describe("authService", () => {
     });
 
     const payload = {
-      email: "john@test.com",
-      code: "123456",
+      resetToken: "fake-reset-token",
       newPassword: "Password123!",
     };
 
@@ -161,6 +160,7 @@ describe("authService", () => {
     vi.mocked(api.post).mockResolvedValue({
       data: {
         message: "Success",
+        resetToken: "fake-reset-token",
       },
     });
 
@@ -177,6 +177,7 @@ describe("authService", () => {
     );
 
     expect(result.message).toBe("Success");
+    expect(result.resetToken).toBe("fake-reset-token");
   });
 
   it("calls resendCode endpoint", async () => {
@@ -186,7 +187,9 @@ describe("authService", () => {
       },
     });
 
-    const result = await authService.resendCode("john@test.com");
+    const result = await authService.resendCode(
+      "john@test.com"
+    );
 
     expect(api.post).toHaveBeenCalledWith(
       "/api/v1/auth/resend-code",

@@ -6,6 +6,7 @@ import { useCountdown } from "./useCountdown";
 import { authService } from "../api/authService";
 
 import type { VerifyCodeFormData } from "../schemas/auth/verifyCodeSchema";
+import type { VerifyResetCodeResponse } from "../types/auth";
 
 type Flow = "register" | "forgot-password";
 
@@ -40,17 +41,16 @@ export function useVerifyCode({ email, flow }: Params) {
       });
     },
 
-    onSuccess: (_, variables) => {
+    onSuccess: (response) => {
       if (flow === "register") {
         navigate(ROUTES.auth.login);
-      } else {
-        navigate(ROUTES.auth.resetPassword, {
-          state: {
-            email,
-            code: variables.code,
-          },
-        });
+        return;
       }
+      navigate(ROUTES.auth.resetPassword, {
+        state: {
+          resetToken: (response as VerifyResetCodeResponse).resetToken,
+        },
+      });
     },
   });
 
