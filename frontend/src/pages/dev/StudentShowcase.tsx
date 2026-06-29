@@ -4,6 +4,7 @@ import { FileChip } from "../../components/ui/atoms/FileChip";
 import { Avatar } from "../../components/ui/atoms/Avatar";
 import { SearchBar } from "../../components/ui/molecules/SearchBar";
 import { IncidentCard } from "../../components/ui/molecules/IncidentCard";
+import { EvidenceItem } from "../../components/ui/molecules/EvidenceItem";
 
 export default function StudentShowcase() {
   return (
@@ -98,6 +99,17 @@ export default function StudentShowcase() {
                 location="Building A - Lab 3"
                 status="open"
                 createdAt="Jun 29, 2026"
+              />
+            </div>
+
+            <div>
+              <h3 className="mb-4 text-lg font-medium text-textPrimary">
+                Evidence Item
+              </h3>
+
+              <EvidenceItem
+                fileName="incident-photo.jpg"
+                onRemove={() => {}}
               />
             </div>
 
