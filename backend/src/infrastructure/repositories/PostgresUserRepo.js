@@ -5,7 +5,8 @@ function rowToUser(row) {
 
   return new User({
     id: row.id,
-    name: row.name,
+    firstName: row.first_name,
+    lastName: row.last_name,
     email: row.email,
     passwordHash: row.password_hash,
     roleId: row.role_id,
@@ -42,20 +43,38 @@ class PostgresUserRepo {
 
   async save(user) {
     const result = await this.db.query(
-      `INSERT INTO users (name, email, password_hash, role_id, is_active, is_verified)
-       VALUES ($1, $2, $3, $4, $5, $6)
+      `INSERT INTO users (first_name, last_name, name, email, password_hash, role_id, is_active, is_verified)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
        RETURNING *`,
-      [user.name, user.email, user.passwordHash, user.roleId, user.isActive, user.isVerified]
+      [
+        user.firstName,
+        user.lastName,
+        `${user.firstName} ${user.lastName}`,
+        user.email,
+        user.passwordHash,
+        user.roleId,
+        user.isActive,
+        user.isVerified,
+      ]
     );
     return rowToUser(result.rows[0]);
   }
 
   async saveWithTransaction(client, user) {
     const result = await client.query(
-      `INSERT INTO users (name, email, password_hash, role_id, is_active, is_verified)
-       VALUES ($1, $2, $3, $4, $5, $6)
+      `INSERT INTO users (first_name, last_name, name, email, password_hash, role_id, is_active, is_verified)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
        RETURNING *`,
-      [user.name, user.email, user.passwordHash, user.roleId, user.isActive, user.isVerified]
+      [
+        user.firstName,
+        user.lastName,
+        `${user.firstName} ${user.lastName}`,
+        user.email,
+        user.passwordHash,
+        user.roleId,
+        user.isActive,
+        user.isVerified,
+      ]
     );
     return rowToUser(result.rows[0]);
   }
