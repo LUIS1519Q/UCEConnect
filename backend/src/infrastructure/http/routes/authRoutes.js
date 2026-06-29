@@ -6,17 +6,32 @@ const authMiddleware = require('../middlewares/authMiddleware');
 
 const router = Router();
 
-const registerSchema = z.object({
-  name: z.string().min(2).max(100),
-  email: z.string().email().refine((value) => value.endsWith('@uce.edu.ec'), {
-    message: 'El correo debe ser institucional (@uce.edu.ec)',
-  }),
-  password: z
-    .string()
-    .min(8)
-    .regex(/\d/, 'La contraseña debe contener al menos un número'),
-  role: z.enum(['student', 'manager', 'admin']).default('student'),
-});
+const registerSchema = z
+  .object({
+    firstName: z
+      .string()
+      .min(2, 'First name must contain at least 2 characters.')
+      .max(50, 'First name must contain at most 50 characters.')
+      .regex(/^[A-Za-zÀ-ÿ\s]+$/, 'First name must contain only letters and spaces.'),
+    lastName: z
+      .string()
+      .min(2, 'Last name must contain at least 2 characters.')
+      .max(50, 'Last name must contain at most 50 characters.')
+      .regex(/^[A-Za-zÀ-ÿ\s]+$/, 'Last name must contain only letters and spaces.'),
+    email: z.string().email().refine((value) => value.endsWith('@uce.edu.ec'), {
+      message: 'Only institutional emails are allowed (@uce.edu.ec).',
+    }),
+    password: z
+      .string()
+      .min(8)
+      .regex(/\d/, 'Password must contain at least one number.'),
+    confirmPassword: z.string().min(1, 'Confirm password is required.'),
+    role: z.enum(['student', 'manager', 'admin']).default('student'),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match.',
+    path: ['confirmPassword'],
+  });
 
 const verifySchema = z.object({
   email: z.string().email(),
@@ -62,7 +77,7 @@ function validate(schema) {
 
     if (!result.success) {
       return res.status(400).json({
-        message: 'Error de validación',
+        message: 'Validation error',
         errors: result.error.flatten().fieldErrors,
       });
     }
