@@ -7,3 +7,4 @@ export * from "./IncidentCard";
 export * from "./EvidenceItem";
 export * from "./NotificationItem";
 export * from "./ProfileInfoItem";
+export * from "./FAQItem";

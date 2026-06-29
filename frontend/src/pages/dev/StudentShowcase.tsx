@@ -7,6 +7,7 @@ import { IncidentCard } from "../../components/ui/molecules/IncidentCard";
 import { EvidenceItem } from "../../components/ui/molecules/EvidenceItem";
 import { NotificationItem } from "../../components/ui/molecules/NotificationItem";
 import { ProfileInfoItem } from "../../components/ui/molecules/ProfileInfoItem";
+import { FAQItem } from "../../components/ui/molecules/FAQItem";
 
 export default function StudentShowcase() {
   return (
@@ -144,6 +145,17 @@ export default function StudentShowcase() {
                   value="Software Engineering"
                 />
               </div>
+            </div>
+
+            <div>
+              <h3 className="mb-4 text-lg font-medium text-textPrimary">
+                FAQ Item
+              </h3>
+
+              <FAQItem
+                question="How can I create a new incident?"
+                answer="Go to the Create Incident page, fill out the form, attach any evidence if needed, and submit your report."
+              />
             </div>
 
         </section>
