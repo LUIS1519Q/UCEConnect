@@ -5,6 +5,7 @@ import { Avatar } from "../../components/ui/atoms/Avatar";
 import { SearchBar } from "../../components/ui/molecules/SearchBar";
 import { IncidentCard } from "../../components/ui/molecules/IncidentCard";
 import { EvidenceItem } from "../../components/ui/molecules/EvidenceItem";
+import { NotificationItem } from "../../components/ui/molecules/NotificationItem";
 
 export default function StudentShowcase() {
   return (
@@ -110,6 +111,19 @@ export default function StudentShowcase() {
               <EvidenceItem
                 fileName="incident-photo.jpg"
                 onRemove={() => {}}
+              />
+            </div>
+
+            <div>
+              <h3 className="mb-4 text-lg font-medium text-textPrimary">
+                Notification Item
+              </h3>
+
+              <NotificationItem
+                title="Incident Updated"
+                message="Your incident status has changed to In Progress."
+                date="2 hours ago"
+                unread
               />
             </div>
 
