@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 
 import ResetPasswordPage from "../../pages/auth/ResetPasswordPage";
 
-vi.mock("../../../hooks/useResetPassword", () => ({
+vi.mock("../../hooks/useResetPassword", () => ({
   useResetPassword: () => ({
     onSubmit: vi.fn(),
     isPending: false,

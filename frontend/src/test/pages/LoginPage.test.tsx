@@ -14,7 +14,7 @@ vi.mock("react-hook-form", () => ({
   }),
 }));
 
-vi.mock("../../../hooks/useLogin", () => ({
+vi.mock("../../hooks/useLogin", () => ({
   useLogin: () => ({
     login: vi.fn(),
     isPending: false,
