@@ -1,5 +1,6 @@
 import { Textarea } from "../../components/ui/atoms/Textarea";
 import { StatusBadge } from "../../components/ui/atoms/StatusBadge";
+import { FileChip } from "../../components/ui/atoms/FileChip";
 
 export default function StudentShowcase() {
   return (
@@ -40,6 +41,18 @@ export default function StudentShowcase() {
                     <StatusBadge status="inProgress" />
                     <StatusBadge status="resolved" />
                     <StatusBadge status="rejected" />
+                </div>
+            </div>
+
+            <div>
+                <h3 className="mb-4 text-lg font-medium text-textPrimary">
+                    File Chip
+                </h3>
+
+                <div className="flex flex-wrap gap-3">
+                    <FileChip fileName="incident-image.png" />
+                    <FileChip fileName="evidence.pdf" />
+                    <FileChip fileName="report.docx" />
                 </div>
             </div>
 
