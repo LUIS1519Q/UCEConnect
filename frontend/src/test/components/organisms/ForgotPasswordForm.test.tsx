@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 
 import { ForgotPasswordForm } from "../../../../src/components/ui/organisms/ForgotPasswordForm";
 
-import type { ForgotPasswordFormData } from "../../../../src/shemas/auth/forgotPasswordSchema";
+import type { ForgotPasswordFormData } from "../../../schemas/auth/forgotPasswordSchema";
 
 function renderForm(
   props: Partial<

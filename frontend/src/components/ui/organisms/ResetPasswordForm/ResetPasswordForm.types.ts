@@ -7,7 +7,7 @@ import type {
 
 import type {
   ResetPasswordFormData,
-} from "../../../../shemas/auth/resetPasswordSchema";
+} from "../../../../schemas/auth/resetPasswordSchema";
 
 export interface ResetPasswordFormProps {
   onSubmit?: FormEventHandler<HTMLFormElement>;

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../constants/routes";
 
 import { authService } from "../api/authService";
-import type { RegisterFormData } from "../shemas/auth/registerSchema";
+import type { RegisterFormData } from "../schemas/auth/registerSchema";
 
 export function useRegister() {
   const navigate = useNavigate();

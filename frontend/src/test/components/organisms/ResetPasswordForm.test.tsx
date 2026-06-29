@@ -11,7 +11,7 @@ import { ResetPasswordForm } from "../../../../src/components/ui/organisms/Reset
 
 import type {
   ResetPasswordFormData,
-} from "../../../../src/shemas/auth/resetPasswordSchema";
+} from "../../../schemas/auth/resetPasswordSchema";
 
 function renderForm(
   props: Partial<

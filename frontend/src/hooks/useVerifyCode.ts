@@ -5,7 +5,7 @@ import { ROUTES } from "../constants/routes";
 import { useCountdown } from "./useCountdown";
 import { authService } from "../api/authService";
 
-import type { VerifyCodeFormData } from "../shemas/auth/verifyCodeSchema";
+import type { VerifyCodeFormData } from "../schemas/auth/verifyCodeSchema";
 
 type Flow = "register" | "forgot-password";
 

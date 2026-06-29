@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 import { authService } from "../api/authService";
-import type { ForgotPasswordFormData } from "../shemas/auth/forgotPasswordSchema";
+import type { ForgotPasswordFormData } from "../schemas/auth/forgotPasswordSchema";
 
 export function useForgotPassword() {
   const navigate = useNavigate();

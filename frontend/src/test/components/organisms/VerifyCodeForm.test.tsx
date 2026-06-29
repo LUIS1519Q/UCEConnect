@@ -11,7 +11,7 @@ import { VerifyCodeForm } from "../../../../src/components/ui/organisms/VerifyCo
 
 import type {
   VerifyCodeFormData,
-} from "../../../../src/shemas/auth/verifyCodeSchema";
+} from "../../../schemas/auth/verifyCodeSchema";
 
 function renderForm(
   props: Partial<

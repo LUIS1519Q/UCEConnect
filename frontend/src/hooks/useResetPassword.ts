@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { ROUTES } from "../constants/routes";
 
 import { authService } from "../api/authService";
-import type { ResetPasswordFormData } from "../shemas/auth/resetPasswordSchema";
+import type { ResetPasswordFormData } from "../schemas/auth/resetPasswordSchema";
 
 interface Params {
   email: string;
