@@ -9,7 +9,7 @@ import { VerifyCodeForm } from "../../components/ui/organisms";
 import {
   verifyCodeSchema,
   type VerifyCodeFormData,
-} from "../../shemas/auth/verifyCodeSchema";
+} from "../../schemas/auth/verifyCodeSchema";
 
 import { useVerifyCode } from "../../hooks/useVerifyCode";
 

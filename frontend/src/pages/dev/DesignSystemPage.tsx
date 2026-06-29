@@ -43,27 +43,27 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   loginSchema,
   type LoginFormData,
-} from "../../shemas/auth/loginSchema";
+} from "../../schemas/auth/loginSchema";
 
 import {
   registerSchema,
   type RegisterFormData,
-} from "../../shemas/auth/registerSchema";
+} from "../../schemas/auth/registerSchema";
 
 import {
   forgotPasswordSchema,
   type ForgotPasswordFormData,
-} from "../../shemas/auth/forgotPasswordSchema";
+} from "../../schemas/auth/forgotPasswordSchema";
 
 import {
   verifyCodeSchema,
   type VerifyCodeFormData,
-} from "../../shemas/auth/verifyCodeSchema";
+} from "../../schemas/auth/verifyCodeSchema";
 
 import {
   resetPasswordSchema,
   type ResetPasswordFormData,
-} from "../../shemas/auth/resetPasswordSchema";
+} from "../../schemas/auth/resetPasswordSchema";
 
 export default function DesignSystemPage() {
 

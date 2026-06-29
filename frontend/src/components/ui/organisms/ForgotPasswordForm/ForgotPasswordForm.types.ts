@@ -4,7 +4,7 @@ import type {
   UseFormRegister,
 } from "react-hook-form";
 
-import type { ForgotPasswordFormData } from "../../../../shemas/auth/forgotPasswordSchema";
+import type { ForgotPasswordFormData } from "../../../../schemas/auth/forgotPasswordSchema";
 
 export interface ForgotPasswordFormProps {
   onSubmit?: FormEventHandler<HTMLFormElement>;

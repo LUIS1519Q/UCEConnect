@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 
 import { RegisterForm } from "../../../../src/components/ui/organisms/RegisterForm";
 
-import type { RegisterFormData } from "../../../../src/shemas/auth/registerSchema";
+import type { RegisterFormData } from "../../../schemas/auth/registerSchema";
 
 function renderForm(
   props: Partial<
