@@ -2,6 +2,7 @@ import { Textarea } from "../../components/ui/atoms/Textarea";
 import { StatusBadge } from "../../components/ui/atoms/StatusBadge";
 import { FileChip } from "../../components/ui/atoms/FileChip";
 import { Avatar } from "../../components/ui/atoms/Avatar";
+import { SearchBar } from "../../components/ui/molecules/SearchBar";
 
 export default function StudentShowcase() {
   return (
@@ -70,12 +71,6 @@ export default function StudentShowcase() {
             </div>
 
           </h2>
-
-          <div className="mt-6">
-            <p className="text-textSecondary">
-              Próximamente...
-            </p>
-          </div>
         </section>
 
         {/* ===================== MOLECULES ===================== */}
@@ -84,11 +79,14 @@ export default function StudentShowcase() {
             Molecules
           </h2>
 
-          <div className="mt-6">
-            <p className="text-textSecondary">
-              Próximamente...
-            </p>
-          </div>
+            <div>
+              <h3 className="mb-4 text-lg font-medium text-textPrimary">
+                Search Bar
+              </h3>
+
+              <SearchBar placeholder="Search incidents..." />
+            </div>
+
         </section>
 
         {/* ===================== ORGANISMS ===================== */}
