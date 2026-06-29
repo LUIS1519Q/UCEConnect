@@ -1,9 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import type { ReactNode } from "react";
 
-import { useResetPassword } from "../../../hooks/useResetPassword";
-import { ROUTES } from "../../../constants/routes";
+import { useResetPassword } from "../../hooks/useResetPassword";
+import { authService } from "../../api/authService";
+import { ROUTES } from "../../constants/routes";
 
 const navigate = vi.fn();
 
@@ -18,14 +20,6 @@ vi.mock("react-router-dom", async () => {
   };
 });
 
-vi.mock("../../../api/authService", () => ({
-  authService: {
-    resetPassword: vi.fn().mockResolvedValue({
-      message: "Success",
-    }),
-  },
-}));
-
 describe("useResetPassword", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -34,7 +28,7 @@ describe("useResetPassword", () => {
   const wrapper = ({
     children,
   }: {
-    children: React.ReactNode;
+    children: ReactNode;
   }) => {
     const queryClient = new QueryClient();
 
@@ -46,7 +40,11 @@ describe("useResetPassword", () => {
   };
 
   it("calls resetPassword service", async () => {
-    const { authService } = await import("../../../api/authService");
+    const resetSpy = vi
+      .spyOn(authService, "resetPassword")
+      .mockResolvedValue({
+        message: "Success",
+      });
 
     const { result } = renderHook(
       () =>
@@ -65,7 +63,7 @@ describe("useResetPassword", () => {
     });
 
     await waitFor(() => {
-      expect(authService.resetPassword).toHaveBeenCalledWith({
+      expect(resetSpy).toHaveBeenCalledWith({
         email: "test@uce.edu.ec",
         code: "123456",
         newPassword: "Password123!",
@@ -74,6 +72,10 @@ describe("useResetPassword", () => {
   });
 
   it("navigates to login after success", async () => {
+    vi.spyOn(authService, "resetPassword").mockResolvedValue({
+      message: "Success",
+    });
+
     const { result } = renderHook(
       () =>
         useResetPassword({

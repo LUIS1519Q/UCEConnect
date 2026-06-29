@@ -1,9 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import type { ReactNode } from "react";
 
-import { useVerifyCode } from "../../../hooks/useVerifyCode";
-import { ROUTES } from "../../../constants/routes";
+import { useVerifyCode } from "../../hooks/useVerifyCode";
+import { authService } from "../../api/authService";
+import { ROUTES } from "../../constants/routes";
 
 const navigate = vi.fn();
 
@@ -18,29 +20,12 @@ vi.mock("react-router-dom", async () => {
   };
 });
 
-vi.mock("../../../hooks/useCountdown", () => ({
+vi.mock("../../hooks/useCountdown", () => ({
   useCountdown: () => ({
     formattedTime: "5:00",
     seconds: 0,
     reset: vi.fn(),
   }),
-}));
-
-vi.mock("../../../api/authService", () => ({
-  authService: {
-    verifyCode: vi.fn().mockResolvedValue({
-      message: "Success",
-    }),
-    verifyResetCode: vi.fn().mockResolvedValue({
-      message: "Success",
-    }),
-    resendCode: vi.fn().mockResolvedValue({
-      message: "Success",
-    }),
-    resendResetCode: vi.fn().mockResolvedValue({
-      message: "Success",
-    }),
-  },
 }));
 
 describe("useVerifyCode", () => {
@@ -51,7 +36,7 @@ describe("useVerifyCode", () => {
   const wrapper = ({
     children,
   }: {
-    children: React.ReactNode;
+    children: ReactNode;
   }) => {
     const queryClient = new QueryClient();
 
@@ -63,7 +48,11 @@ describe("useVerifyCode", () => {
   };
 
   it("calls verifyCode for register flow", async () => {
-    const { authService } = await import("../../../api/authService");
+    const verifySpy = vi
+      .spyOn(authService, "verifyCode")
+      .mockResolvedValue({
+        message: "Success",
+      });
 
     const { result } = renderHook(
       () =>
@@ -81,7 +70,7 @@ describe("useVerifyCode", () => {
     });
 
     await waitFor(() => {
-      expect(authService.verifyCode).toHaveBeenCalledWith({
+      expect(verifySpy).toHaveBeenCalledWith({
         email: "test@uce.edu.ec",
         code: "123456",
       });
@@ -89,6 +78,10 @@ describe("useVerifyCode", () => {
   });
 
   it("navigates to login after register verification", async () => {
+    vi.spyOn(authService, "verifyCode").mockResolvedValue({
+      message: "Success",
+    });
+
     const { result } = renderHook(
       () =>
         useVerifyCode({
@@ -112,7 +105,11 @@ describe("useVerifyCode", () => {
   });
 
   it("calls verifyResetCode for forgot-password flow", async () => {
-    const { authService } = await import("../../../api/authService");
+    const verifyResetSpy = vi
+      .spyOn(authService, "verifyResetCode")
+      .mockResolvedValue({
+        message: "Success",
+      });
 
     const { result } = renderHook(
       () =>
@@ -130,7 +127,7 @@ describe("useVerifyCode", () => {
     });
 
     await waitFor(() => {
-      expect(authService.verifyResetCode).toHaveBeenCalledWith({
+      expect(verifyResetSpy).toHaveBeenCalledWith({
         email: "test@uce.edu.ec",
         code: "123456",
       });
@@ -138,6 +135,10 @@ describe("useVerifyCode", () => {
   });
 
   it("navigates to reset password after forgot-password verification", async () => {
+    vi.spyOn(authService, "verifyResetCode").mockResolvedValue({
+      message: "Success",
+    });
+
     const { result } = renderHook(
       () =>
         useVerifyCode({
@@ -167,7 +168,11 @@ describe("useVerifyCode", () => {
   });
 
   it("calls resendCode for register flow", async () => {
-    const { authService } = await import("../../../api/authService");
+    const resendSpy = vi
+      .spyOn(authService, "resendCode")
+      .mockResolvedValue({
+        message: "Success",
+      });
 
     const { result } = renderHook(
       () =>
@@ -183,14 +188,18 @@ describe("useVerifyCode", () => {
     });
 
     await waitFor(() => {
-      expect(authService.resendCode).toHaveBeenCalledWith(
+      expect(resendSpy).toHaveBeenCalledWith(
         "test@uce.edu.ec"
       );
     });
   });
 
   it("calls resendResetCode for forgot-password flow", async () => {
-    const { authService } = await import("../../../api/authService");
+    const resendResetSpy = vi
+      .spyOn(authService, "resendResetCode")
+      .mockResolvedValue({
+        message: "Success",
+      });
 
     const { result } = renderHook(
       () =>
@@ -206,7 +215,7 @@ describe("useVerifyCode", () => {
     });
 
     await waitFor(() => {
-      expect(authService.resendResetCode).toHaveBeenCalledWith(
+      expect(resendResetSpy).toHaveBeenCalledWith(
         "test@uce.edu.ec"
       );
     });

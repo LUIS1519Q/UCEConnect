@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 
-import RegisterPage from "../../../pages/auth/RegisterPage";
+import RegisterPage from "../../pages/auth/RegisterPage";
 
 vi.mock("../../../hooks/useRegister", () => ({
   useRegister: () => ({
