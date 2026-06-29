@@ -1,90 +1,137 @@
-import axios from "axios";
-import { useAuthStore } from "../store/authStore";
+import api from "./client";
+
+import type { ApiMessageResponse } from "../types/common";
+import type { User, Role } from "../types/user";
+
 import type {
   AuthResponse,
   LoginPayload,
   RegisterPayload,
   VerifyCodePayload,
-  User,
+  VerifyResetCodePayload,
+  ForgotPasswordPayload,
+  ResetPasswordPayload,
 } from "../types/auth";
 
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-  headers: { "Content-Type": "application/json" },
-});
-
-api.interceptors.request.use((config) => {
-  const token = useAuthStore.getState().accessToken;
-
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-
-  return config;
-});
-
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      useAuthStore.getState().logout();
-      window.location.href = "/login";
-    }
-
-    return Promise.reject(error);
-  }
-);
+const AUTH_BASE = "/api/v1/auth";
 
 export const authService = {
-  async login(payload: LoginPayload): Promise<AuthResponse> {
+  // ---------------- LOGIN ----------------
+
+  async login(
+    payload: LoginPayload
+  ): Promise<AuthResponse> {
     const response = await api.post<AuthResponse>(
-      "/api/v1/auth/login",
+      `${AUTH_BASE}/login`,
       payload
     );
 
     return response.data;
   },
+
+  // ---------------- REGISTER ----------------
 
   async register(
     payload: RegisterPayload
-  ): Promise<{ message: string }> {
-    const response = await api.post<{ message: string }>(
-      "/api/v1/auth/register",
+  ): Promise<ApiMessageResponse> {
+    const registerPayload: RegisterPayload = {
+      ...payload,
+      role: payload.role as Role,
+    };
+
+    const response = await api.post<ApiMessageResponse>(
+      `${AUTH_BASE}/register`,
+      registerPayload
+    );
+
+    return response.data;
+  },
+
+  // ---------------- CURRENT USER ----------------
+
+  async me(): Promise<User> {
+    const response = await api.get<User>(
+      `${AUTH_BASE}/me`
+    );
+
+    return response.data;
+  },
+
+  // ---------------- FORGOT PASSWORD ----------------
+
+  async forgotPassword(
+    payload: ForgotPasswordPayload
+  ): Promise<ApiMessageResponse> {
+    const response = await api.post<ApiMessageResponse>(
+      `${AUTH_BASE}/forgot-password`,
       payload
     );
 
     return response.data;
   },
+
+  async resetPassword(
+    payload: ResetPasswordPayload
+  ): Promise<ApiMessageResponse> {
+    const response = await api.post<ApiMessageResponse>(
+      `${AUTH_BASE}/reset-password`,
+      payload
+    );
+
+    return response.data;
+  },
+
+  // ---------------- VERIFY CODE ----------------
 
   async verifyCode(
     payload: VerifyCodePayload
-  ): Promise<{ message: string }> {
-    const response = await api.post<{ message: string }>(
-      "/api/v1/auth/verify-code",
+  ): Promise<ApiMessageResponse> {
+    const response = await api.post<ApiMessageResponse>(
+      `${AUTH_BASE}/verify-code`,
       payload
     );
 
     return response.data;
   },
 
+  async verifyResetCode(
+    payload: VerifyResetCodePayload
+  ): Promise<ApiMessageResponse> {
+    const response = await api.post<ApiMessageResponse>(
+      `${AUTH_BASE}/verify-reset-code`,
+      payload
+    );
+
+    return response.data;
+  },
+
+  // ---------------- RESEND CODE ----------------
+
   async resendCode(
     email: string
-  ): Promise<{ message: string }> {
-    const response = await api.post<{ message: string }>(
-      "/api/v1/auth/resend-code",
+  ): Promise<ApiMessageResponse> {
+    const response = await api.post<ApiMessageResponse>(
+      `${AUTH_BASE}/resend-code`,
       { email }
     );
 
     return response.data;
   },
 
-  async me(): Promise<User> {
-    const response = await api.get<User>(
-      "/api/v1/auth/me"
+  async resendResetCode(
+    email: string
+  ): Promise<ApiMessageResponse> {
+    const response = await api.post<ApiMessageResponse>(
+      `${AUTH_BASE}/resend-reset-code`,
+      { email }
     );
 
     return response.data;
   },
-};
 
-export default api;
+  // ---------------- MICROSOFT LOGIN ----------------
+
+  microsoftLogin(): void {
+    window.location.href = `${import.meta.env.VITE_API_URL}${AUTH_BASE}/microsoft`;
+  },
+};

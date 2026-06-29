@@ -1,8 +1,9 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { ROUTES } from "../constants/routes";
 
 import LoginPage from "../pages/auth/LoginPage";
 import RegisterPage from "../pages/auth/RegisterPage";
-import VerifyEmailPage from "../pages/auth/VerifyEmailPage";
+import VerifyEmailPage from "../pages/auth/VerifyCodePage";
 import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage";
 import StudentDashboard from "../pages/dashboard/StudentDashboard";
 import ManagerDashboard from "../pages/dashboard/ManagerDashboard";
@@ -18,43 +19,60 @@ import IncidentDetailPage from "../pages/student/IncidentDetailPage";
 import AISuggestionPage from "../pages/student/AISuggestionPage";
 import ManagerIncidentsPage from "../pages/manager/ManagerIncidentsPage";
 import ManagerIncidentDetailPage from "../pages/manager/ManagerIncidentDetailPage";
+import DesignSystemPage from "../pages/dev/DesignSystemPage";
 
 function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
         <Route
-          path="/"
-          element={<Navigate to="/login" replace />}
+          path="*"
+          element={
+              <Navigate
+                  to={ROUTES.auth.login}
+                  replace
+              />
+          }
         />
 
+        {/*DESIGN*/}
+
         <Route
-          path="/login"
+          path="/design-system"
+          element={<DesignSystemPage />}
+        />
+
+        {/*AUTH*/}
+
+        <Route
+          path={ROUTES.auth.login}
           element={<LoginPage />}
         />
 
         <Route
-          path="/register"
+          path={ROUTES.auth.register}
           element={<RegisterPage />}
         />
 
         <Route
-          path="/verify-email"
+          path={ROUTES.auth.verifyCode}
           element={<VerifyEmailPage />}
         />
 
         <Route
-          path="/forgot-password"
+          path={ROUTES.auth.forgotPassword}
           element={<ForgotPasswordPage />}
         />
 
         <Route
-          path="/reset-password"
+          path={ROUTES.auth.resetPassword}
           element={<ResetPasswordPage />}
         />
 
+        {/*STUDENT*/}
+
         <Route
-          path="/dashboard/estudiante"
+          path={ROUTES.dashboard.student}
           element={
             <ProtectedRoute>
               <StudentDashboard />
@@ -125,8 +143,10 @@ function AppRouter() {
           }
         />
 
+        {/*MANAGER*/}
+
         <Route
-          path="/dashboard/gestor"
+          path={ROUTES.dashboard.manager}
           element={
             <ProtectedRoute>
               <ManagerDashboard />
@@ -152,8 +172,10 @@ function AppRouter() {
           }
         />
 
+        {/*ADMIN*/}
+
         <Route
-          path="/dashboard/admin"
+          path={ROUTES.dashboard.admin}
           element={
             <ProtectedRoute>
               <AdminDashboard />

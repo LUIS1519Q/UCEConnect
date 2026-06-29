@@ -1,4 +1,4 @@
-import api from "./authService";
+import api from "./client";
 
 export const incidentService = {
   async getIncidents(params?: { status?: string; categoryId?: number }) {
