@@ -3,6 +3,7 @@ import { StatusBadge } from "../../components/ui/atoms/StatusBadge";
 import { FileChip } from "../../components/ui/atoms/FileChip";
 import { Avatar } from "../../components/ui/atoms/Avatar";
 import { SearchBar } from "../../components/ui/molecules/SearchBar";
+import { IncidentCard } from "../../components/ui/molecules/IncidentCard";
 
 export default function StudentShowcase() {
   return (
@@ -85,6 +86,19 @@ export default function StudentShowcase() {
               </h3>
 
               <SearchBar placeholder="Search incidents..." />
+            </div>
+
+            <div>
+              <h3 className="mb-4 text-lg font-medium text-textPrimary">
+                Incident Card
+              </h3>
+
+              <IncidentCard
+                title="Internet connection issue"
+                location="Building A - Lab 3"
+                status="open"
+                createdAt="Jun 29, 2026"
+              />
             </div>
 
         </section>
