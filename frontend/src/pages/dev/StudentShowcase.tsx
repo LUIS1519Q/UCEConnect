@@ -1,3 +1,5 @@
+import { Textarea } from "../../components/ui/atoms/Textarea";
+
 export default function StudentShowcase() {
   return (
     <main className="min-h-screen bg-background p-6">
@@ -8,7 +10,7 @@ export default function StudentShowcase() {
           </h1>
 
           <p className="mt-2 text-textSecondary">
-            Página de pruebas para todos los componentes del módulo Student.
+            Playground for Student UI components.
           </p>
         </header>
 
@@ -16,6 +18,16 @@ export default function StudentShowcase() {
         <section className="rounded-xl border border-border bg-surface p-6 shadow-sm">
           <h2 className="text-2xl font-semibold text-textPrimary">
             Atoms
+            <div className="mt-6 space-y-6">
+                <div>
+                    <h3 className="mb-2 text-lg font-medium text-textPrimary">
+                    Textarea
+                    </h3>
+
+                    <Textarea placeholder="Describe el problema..." />
+                </div>
+                </div>
+
           </h2>
 
           <div className="mt-6">
