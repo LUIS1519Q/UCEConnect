@@ -14,19 +14,19 @@ class RegisterUser {
     this.bcrypt = bcrypt;
   }
 
-  async execute({ name, email, password, role }) {
+  async execute({ firstName, lastName, email, password, role }) {
     logger.info(`Intento de registro: ${email}`);
 
     try {
       if (!email.endsWith('@uce.edu.ec')) {
         logger.warn(`Registro rechazado — email no institucional: ${email}`);
-        throw new Error('Solo se permiten correos institucionales @uce.edu.ec');
+        throw new Error('Only institutional emails are allowed (@uce.edu.ec).');
       }
 
       const existingUser = await this.userRepo.findByEmail(email);
       if (existingUser) {
         logger.warn(`Registro fallido — email ya registrado: ${email}`);
-        throw new Error('El correo ya está registrado');
+        throw new Error('Email is already registered.');
       }
 
       const passwordHash = await this.bcrypt.hash(password, 10);
@@ -39,7 +39,7 @@ class RegisterUser {
       logger.info(`Enviando código de verificación a: ${email}`);
       await this.emailNotifier.sendVerificationCode(email, code);
 
-      const user = User.create({ name, email, passwordHash, roleId });
+      const user = User.create({ firstName, lastName, email, passwordHash, roleId });
       const savedUser = await this.userRepo.save(user);
       await this.userRepo.saveVerifyCode(savedUser.id, code, expiresAt);
 
