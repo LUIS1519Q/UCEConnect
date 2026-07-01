@@ -8,6 +8,7 @@ import { EvidenceItem } from "../../components/ui/molecules/EvidenceItem";
 import { NotificationItem } from "../../components/ui/molecules/NotificationItem";
 import { ProfileInfoItem } from "../../components/ui/molecules/ProfileInfoItem";
 import { FAQItem } from "../../components/ui/molecules/FAQItem";
+import { IncidentList } from "../../components/ui/organisms/IncidentList";
 
 export default function StudentShowcase() {
   return (
@@ -166,11 +167,25 @@ export default function StudentShowcase() {
             Organisms
           </h2>
 
-          <div className="mt-6">
-            <p className="text-textSecondary">
-              Próximamente...
-            </p>
+          <div>
+            <IncidentList
+              incidents={[
+                {
+                  title: "Internet connection issue",
+                  location: "Building A - Lab 3",
+                  status: "open",
+                  createdAt: "Jun 29, 2026",
+                },
+                {
+                  title: "Projector not working",
+                  location: "Building B - Room 201",
+                  status: "inProgress",
+                  createdAt: "Jun 28, 2026",
+                },
+              ]}
+            />
           </div>
+
         </section>
 
         {/* ===================== TEMPLATES ===================== */}
