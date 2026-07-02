@@ -11,12 +11,11 @@ export function useRegister() {
   const mutation = useMutation({
     mutationFn: (data: RegisterFormData) =>
       authService.register({
-        firstName: data.firstName,
-        lastName: data.lastName,
+        name: `${data.firstName} ${data.lastName}`,
         email: data.email,
         password: data.password,
         confirmPassword: data.confirmPassword,
-        role: "student",
+        role: "STUDENT",
       }),
 
     onSuccess: (_, variables) => {
