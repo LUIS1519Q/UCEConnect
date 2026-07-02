@@ -10,6 +10,7 @@ import { ProfileInfoItem } from "../../components/ui/molecules/ProfileInfoItem";
 import { FAQItem } from "../../components/ui/molecules/FAQItem";
 import { IncidentList } from "../../components/ui/organisms/IncidentList";
 import { ProfileCard } from "../../components/ui/organisms/ProfileCard";
+import { NotificationList } from "../../components/ui/organisms/NotificationList";
 
 export default function StudentShowcase() {
   return (
@@ -197,6 +198,28 @@ export default function StudentShowcase() {
               email="john.doe@uce.edu.ec"
               studentId="2023123456"
               career="Software Engineering"
+            />
+          </div>
+
+          <div>
+            <h2 className="mb-4 text-xl font-semibold text-textPrimary">
+              Notification List
+            </h2>
+
+            <NotificationList
+              notifications={[
+                {
+                  title: "Incident Updated",
+                  message: "Your incident is now in progress.",
+                  date: "2 hours ago",
+                  unread: true,
+                },
+                {
+                  title: "Incident Resolved",
+                  message: "Your incident has been resolved.",
+                  date: "Yesterday",
+                },
+              ]}
             />
           </div>
 
