@@ -9,6 +9,7 @@ import { NotificationItem } from "../../components/ui/molecules/NotificationItem
 import { ProfileInfoItem } from "../../components/ui/molecules/ProfileInfoItem";
 import { FAQItem } from "../../components/ui/molecules/FAQItem";
 import { IncidentList } from "../../components/ui/organisms/IncidentList";
+import { ProfileCard } from "../../components/ui/organisms/ProfileCard";
 
 export default function StudentShowcase() {
   return (
@@ -183,6 +184,19 @@ export default function StudentShowcase() {
                   createdAt: "Jun 28, 2026",
                 },
               ]}
+            />
+          </div>
+
+          <div>
+            <h2 className="mb-4 text-xl font-semibold text-textPrimary">
+              Profile Card
+            </h2>
+
+            <ProfileCard
+              name="John Doe"
+              email="john.doe@uce.edu.ec"
+              studentId="2023123456"
+              career="Software Engineering"
             />
           </div>
 
