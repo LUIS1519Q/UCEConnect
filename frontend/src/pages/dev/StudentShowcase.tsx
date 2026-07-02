@@ -17,6 +17,7 @@ import { DashboardLayout } from "../../components/ui/templates/DashboardLayout";
 import { FormLayout } from "../../components/ui/templates/FormLayout";
 import { Button } from "../../components/ui/atoms";
 import { TextInput } from "../../components/ui/atoms";
+import { DetailLayout } from "../../components/ui/templates/DetailLayout";
 
 export default function StudentShowcase() {
   return (
@@ -309,6 +310,13 @@ export default function StudentShowcase() {
               <Textarea placeholder="Description" />
             </FormLayout>
           </section>
+
+          <DetailLayout
+            title="Incident Details"
+            subtitle="Review all information about the incident."
+          >
+            <p>Incident content goes here.</p>
+          </DetailLayout>
 
         </section>
       </div>
