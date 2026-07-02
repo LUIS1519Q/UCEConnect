@@ -1,7 +1,7 @@
 import api from "./client";
 
 import type { ApiMessageResponse } from "../types/common";
-import type { User, Role } from "../types/user";
+import type { User} from "../types/user";
 
 import type {
   AuthResponse,
@@ -15,7 +15,7 @@ import type {
   MeResponse,
 } from "../types/auth";
 
-const AUTH_BASE = "/api/v1/auth";
+const AUTH_BASE = "/api/v1/auth"; 
 
 export const authService = {
   // ---------------- LOGIN ----------------
@@ -36,14 +36,10 @@ export const authService = {
   async register(
     payload: RegisterPayload
   ): Promise<ApiMessageResponse> {
-    const registerPayload: RegisterPayload = {
-      ...payload,
-      role: payload.role as Role,
-    };
 
     const response = await api.post<ApiMessageResponse>(
       `${AUTH_BASE}/register`,
-      registerPayload
+      payload
     );
 
     return response.data;
