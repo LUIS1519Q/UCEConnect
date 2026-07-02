@@ -27,6 +27,7 @@ describe("ProtectedRoute", () => {
         accessToken: null,
         refreshToken: null,
         setSession: vi.fn(),
+        setTokens: vi.fn(),
         logout: vi.fn(),
       })
     );
@@ -51,6 +52,7 @@ describe("ProtectedRoute", () => {
         accessToken: null,
         refreshToken: null,
         setSession: vi.fn(),
+        setTokens: vi.fn(),
         logout: vi.fn(),
       })
     );
