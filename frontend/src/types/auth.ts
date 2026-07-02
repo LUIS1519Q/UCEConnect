@@ -1,5 +1,9 @@
 import type { Role, User } from "./user";
 
+export interface MeResponse {
+  user: User;
+}
+
 export interface AuthResponse {
   accessToken: string;
   refreshToken: string;
