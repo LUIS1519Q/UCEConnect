@@ -13,6 +13,7 @@ import { ProfileCard } from "../../components/ui/organisms/ProfileCard";
 import { NotificationList } from "../../components/ui/organisms/NotificationList";
 import { FAQSection } from "../../components/ui/organisms/FAQSection";
 import { EvidenceSection } from "../../components/ui/organisms/EvidenceSection";
+import { DashboardLayout } from "../../components/ui/templates/DashboardLayout";
 
 export default function StudentShowcase() {
   return (
@@ -272,11 +273,24 @@ export default function StudentShowcase() {
             Templates
           </h2>
 
-          <div className="mt-6">
-            <p className="text-textSecondary">
-              Próximamente...
-            </p>
-          </div>
+          <section className="space-y-4">
+
+            <DashboardLayout
+              header={
+                <div className="p-4 font-semibold">
+                  Student Dashboard
+                </div>
+              }
+              sidebar={
+                <div className="p-4">
+                  Sidebar
+                </div>
+              }
+            >
+              <p>Main Content</p>
+            </DashboardLayout>
+          </section>
+
         </section>
       </div>
     </main>
