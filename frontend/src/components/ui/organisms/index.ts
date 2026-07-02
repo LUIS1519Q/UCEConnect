@@ -4,3 +4,4 @@ export * from "./ForgotPasswordForm";
 export * from "./VerifyCodeForm";
 export * from "./ResetPasswordForm";
 export * from "./IncidentList";
+export * from "./ProfileCard";
