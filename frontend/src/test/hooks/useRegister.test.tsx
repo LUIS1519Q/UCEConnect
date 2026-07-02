@@ -67,6 +67,7 @@ describe("useRegister", () => {
         lastName: "Doe",
         email: "john@uce.edu.ec",
         password: "Password123!",
+        confirmPassword: "Password123!",
         role: "student",
       });
     });
@@ -105,3 +106,4 @@ describe("useRegister", () => {
     });
   });
 });
+
