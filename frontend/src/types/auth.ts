@@ -20,6 +20,7 @@ export interface RegisterPayload {
   lastName: string;
   email: string;
   password: string;
+  confirmPassword: string;
   role: Role;
 }
 
