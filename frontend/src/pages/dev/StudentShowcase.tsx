@@ -18,6 +18,7 @@ import { FormLayout } from "../../components/ui/templates/FormLayout";
 import { Button } from "../../components/ui/atoms";
 import { TextInput } from "../../components/ui/atoms";
 import { DetailLayout } from "../../components/ui/templates/DetailLayout";
+import { ProfileLayout } from "../../components/ui/templates/ProfileLayout";
 
 export default function StudentShowcase() {
   return (
@@ -317,6 +318,13 @@ export default function StudentShowcase() {
           >
             <p>Incident content goes here.</p>
           </DetailLayout>
+
+          <ProfileLayout
+            title="My Profile"
+            sidebar={<p>Profile Menu</p>}
+          >
+            <p>Profile content...</p>
+          </ProfileLayout>
 
         </section>
       </div>
