@@ -14,6 +14,9 @@ import { NotificationList } from "../../components/ui/organisms/NotificationList
 import { FAQSection } from "../../components/ui/organisms/FAQSection";
 import { EvidenceSection } from "../../components/ui/organisms/EvidenceSection";
 import { DashboardLayout } from "../../components/ui/templates/DashboardLayout";
+import { FormLayout } from "../../components/ui/templates/FormLayout";
+import { Button } from "../../components/ui/atoms";
+import { TextInput } from "../../components/ui/atoms";
 
 export default function StudentShowcase() {
   return (
@@ -289,6 +292,22 @@ export default function StudentShowcase() {
             >
               <p>Main Content</p>
             </DashboardLayout>
+          </section>
+
+          <section>
+            <FormLayout
+              title="Create Incident"
+              description="Complete the following information."
+              actions={
+                <Button>
+                  Submit
+                </Button>
+              }
+            >
+              <TextInput placeholder="Title" />
+
+              <Textarea placeholder="Description" />
+            </FormLayout>
           </section>
 
         </section>
