@@ -1,3 +1,4 @@
+import { useMicrosoftLogin } from "../../../../hooks/useMicrosoftLogin";
 import { ROUTES } from "../../../../constants/routes";
 
 import {
@@ -23,6 +24,9 @@ export default function RegisterForm({
   isPending,
   error,
 }: RegisterFormProps) {
+
+  const { login: microsoftLogin } = useMicrosoftLogin();
+
   return (
     <form
       onSubmit={onSubmit}
@@ -120,7 +124,11 @@ export default function RegisterForm({
 
       <Divider />
 
-      <SocialButton provider="microsoft">
+      <SocialButton
+        provider="microsoft"
+        type="button"
+        onClick={microsoftLogin}
+      >
         Continue with Microsoft
       </SocialButton>
 

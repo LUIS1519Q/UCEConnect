@@ -74,11 +74,13 @@ describe("authService", () => {
   it("gets current user", async () => {
     vi.mocked(api.get).mockResolvedValue({
       data: {
-        id: "1",
-        firstName: "John",
-        lastName: "Doe",
-        email: "john@test.com",
-        role: "student",
+        user: {
+          id: "1",
+          firstName: "John",
+          lastName: "Doe",
+          email: "john@test.com",
+          role: "student",
+        }
       },
     });
 

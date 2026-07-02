@@ -2,6 +2,7 @@ export const ROUTES = {
   auth: {
     login: "/login",
     register: "/register",
+    microsoftCallback: "/auth/microsoft/callback",
     forgotPassword: "/forgot-password",
     verifyCode: "/verify-code",
     resetPassword: "/reset-password",
