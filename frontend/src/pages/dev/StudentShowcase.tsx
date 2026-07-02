@@ -11,6 +11,7 @@ import { FAQItem } from "../../components/ui/molecules/FAQItem";
 import { IncidentList } from "../../components/ui/organisms/IncidentList";
 import { ProfileCard } from "../../components/ui/organisms/ProfileCard";
 import { NotificationList } from "../../components/ui/organisms/NotificationList";
+import { FAQSection } from "../../components/ui/organisms/FAQSection";
 
 export default function StudentShowcase() {
   return (
@@ -218,6 +219,27 @@ export default function StudentShowcase() {
                   title: "Incident Resolved",
                   message: "Your incident has been resolved.",
                   date: "Yesterday",
+                },
+              ]}
+            />
+          </div>
+
+          <div>
+            <h2 className="mb-4 text-xl font-semibold text-textPrimary">
+              FAQ Section
+            </h2>
+
+            <FAQSection
+              faqs={[
+                {
+                  question: "How do I create an incident?",
+                  answer:
+                    "Go to Create Incident, complete the form and submit it.",
+                },
+                {
+                  question: "Can I edit an incident?",
+                  answer:
+                    "Yes, while it has not been resolved.",
                 },
               ]}
             />
