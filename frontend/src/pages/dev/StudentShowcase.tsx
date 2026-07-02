@@ -12,6 +12,7 @@ import { IncidentList } from "../../components/ui/organisms/IncidentList";
 import { ProfileCard } from "../../components/ui/organisms/ProfileCard";
 import { NotificationList } from "../../components/ui/organisms/NotificationList";
 import { FAQSection } from "../../components/ui/organisms/FAQSection";
+import { EvidenceSection } from "../../components/ui/organisms/EvidenceSection";
 
 export default function StudentShowcase() {
   return (
@@ -242,6 +243,24 @@ export default function StudentShowcase() {
                     "Yes, while it has not been resolved.",
                 },
               ]}
+            />
+          </div>
+
+          <div>
+            <h2 className="mb-4 text-xl font-semibold text-textPrimary">
+              Evidence Section
+            </h2>
+
+            <EvidenceSection
+              files={[
+                {
+                  fileName: "incident-photo.jpg",
+                },
+                {
+                  fileName: "report.pdf",
+                },
+              ]}
+              onAddFile={() => {}}
             />
           </div>
 
