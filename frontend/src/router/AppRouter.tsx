@@ -3,6 +3,7 @@ import { ROUTES } from "../constants/routes";
 
 import LoginPage from "../pages/auth/LoginPage";
 import RegisterPage from "../pages/auth/RegisterPage";
+import MicrosoftCallbackPage from "../pages/auth/MicrosoftCallbackPage";
 import VerifyEmailPage from "../pages/auth/VerifyCodePage";
 import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage";
 import StudentDashboard from "../pages/dashboard/StudentDashboard";
@@ -52,6 +53,11 @@ function AppRouter() {
         <Route
           path={ROUTES.auth.register}
           element={<RegisterPage />}
+        />
+
+        <Route
+          path={ROUTES.auth.microsoftCallback}
+          element={<MicrosoftCallbackPage />}
         />
 
         <Route

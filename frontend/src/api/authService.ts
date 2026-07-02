@@ -12,6 +12,7 @@ import type {
   ForgotPasswordPayload,
   ResetPasswordPayload,
   VerifyResetCodeResponse,
+  MeResponse,
 } from "../types/auth";
 
 const AUTH_BASE = "/api/v1/auth";
@@ -51,11 +52,11 @@ export const authService = {
   // ---------------- CURRENT USER ----------------
 
   async me(): Promise<User> {
-    const response = await api.get<User>(
+    const response = await api.get<MeResponse>(
       `${AUTH_BASE}/me`
     );
 
-    return response.data;
+    return response.data.user;
   },
 
   // ---------------- FORGOT PASSWORD ----------------
