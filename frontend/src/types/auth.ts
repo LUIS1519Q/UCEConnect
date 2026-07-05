@@ -1,4 +1,9 @@
-import type { Role, User } from "./user";
+import type { User } from "./user";
+
+export type RegisterRole =
+  | "STUDENT"
+  | "MANAGER"
+  | "ADMIN";
 
 export interface MeResponse {
   user: User;
@@ -16,12 +21,11 @@ export interface LoginPayload {
 }
 
 export interface RegisterPayload {
-  firstName: string;
-  lastName: string;
+  name: string;
   email: string;
   password: string;
   confirmPassword: string;
-  role: Role;
+  role: RegisterRole;
 }
 
 export interface VerifyCodePayload {
