@@ -65,7 +65,7 @@ import {
   type ResetPasswordFormData,
 } from "../../schemas/auth/resetPasswordSchema";
 
-export default function DesignSystemPage() {
+export default function AuthShowcase() {
 
     const {
       register: registerLogin,
@@ -296,6 +296,14 @@ export default function DesignSystemPage() {
 
                 <Button disabled>
                 Disabled
+                </Button>
+
+                <Button>
+                  Default Button
+                </Button>
+
+                <Button type="submit">
+                  Submit Button
                 </Button>
 
             </div>

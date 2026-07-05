@@ -11,4 +11,25 @@ describe("Button", () => {
       screen.getByRole("button", { name: /log in/i })
     ).toBeInTheDocument();
   });
+
+  it("uses button as the default type", () => {
+    render(<Button>Click me</Button>);
+
+    expect(
+      screen.getByRole("button")
+    ).toHaveAttribute("type", "button");
+  });
+
+  it("allows overriding the button type", () => {
+    render(
+      <Button type="submit">
+        Submit
+      </Button>
+    );
+
+    expect(
+      screen.getByRole("button")
+    ).toHaveAttribute("type", "submit");
+  });
+
 });
