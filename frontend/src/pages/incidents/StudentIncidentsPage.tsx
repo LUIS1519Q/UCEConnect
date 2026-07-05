@@ -1,4 +1,4 @@
-import DashboardLayout from "../../components/DashboardLayout";
+import DashboardLayout from "../../components/ui/templates/DashboardLayout";
 import { Link } from "react-router-dom";
 
 function StudentIncidentsPage() {
