@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-import { useAuthStore } from "../store/authStore";
+import { useAuthStore } from "../../../store/authStore";
 
 interface DashboardLayoutProps {
   title: string;
@@ -11,6 +11,7 @@ function DashboardLayout({
   title,
   children,
 }: DashboardLayoutProps) {
+  
   const navigate = useNavigate();
 
   const user = useAuthStore((state) => state.user);

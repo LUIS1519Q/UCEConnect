@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { incidentService } from "../../api/incidentService";
-import DashboardLayout from "../../components/DashboardLayout";
+import DashboardLayout from "../../components/ui/templates/DashboardLayout";
 
 type Incident = {
   id: number;
