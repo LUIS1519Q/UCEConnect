@@ -46,6 +46,8 @@ jobs:
           context: ./frontend
           file: ./frontend/Dockerfile
           push: true
+          build-args: |
+            VITE_API_URL=https://uceconnectqa.programacionwebuce.net
           tags: |
             uceconnect/frontend:qa
             uceconnect/frontend:${{ steps.tag.outputs.IMAGE_TAG }}
