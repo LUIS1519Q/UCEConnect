@@ -58,6 +58,7 @@ describe("authService", () => {
       lastName: "Doe",
       email: "john@test.com",
       password: "123456",
+      confirmPassword: "123456",
       role: "student" as Role,
     };
 
