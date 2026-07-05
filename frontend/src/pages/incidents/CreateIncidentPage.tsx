@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { incidentService } from "../../api/incidentService";
-import DashboardLayout from "../../components/DashboardLayout";
+import DashboardLayout from "../../components/ui/templates/DashboardLayout";
 
 function CreateIncidentPage() {
 

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import DashboardLayout from "../../components/DashboardLayout";
+import DashboardLayout from "../../components/ui/templates/DashboardLayout";
 
 function ProfilePage() {
   const profile = JSON.parse(
