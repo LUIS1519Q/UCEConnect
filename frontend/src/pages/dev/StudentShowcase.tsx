@@ -13,6 +13,7 @@ import { FAQItem } from "../../components/ui/molecules/FAQItem";
 import { Tabs } from "../../components/ui/molecules";
 import { ChatBubble } from "../../components/ui/molecules/ChatBubble";
 import { SimilarIncidentBanner } from "../../components/ui/molecules/SimilarIncidentBanner";
+import { Pagination } from "../../components/ui/molecules/Pagination";
 import { IncidentList } from "../../components/ui/organisms/IncidentList";
 import { ProfileCard } from "../../components/ui/organisms/ProfileCard";
 import { NotificationList } from "../../components/ui/organisms/NotificationList";
@@ -272,7 +273,17 @@ export default function StudentShowcase() {
               />
             </section>           
 
-           
+           <section className="space-y-4">
+              <h2 className="text-2xl font-bold">
+                Pagination
+              </h2>
+
+              <Pagination
+                currentPage={2}
+                totalPages={5}
+                onPageChange={() => {}}
+              />
+            </section>
 
         </section>
 
