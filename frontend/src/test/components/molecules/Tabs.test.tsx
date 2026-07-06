@@ -35,11 +35,33 @@ describe("Tabs", () => {
     );
 
     fireEvent.click(
-      screen.getByRole("button", {
+      screen.getByRole("tab", {
         name: /resolved/i,
       })
     );
 
     expect(onChange).toHaveBeenCalledWith("resolved");
+    });
+
+    it("marks the active tab", () => {
+    render(
+      <Tabs
+        tabs={[
+          { label: "Open", value: "open" },
+          { label: "Resolved", value: "resolved" },
+        ]}
+        value="resolved"
+        onChange={vi.fn()}
+      />
+    );
+
+    expect(
+      screen.getByRole("tab", {
+        name: /resolved/i,
+      })
+    ).toHaveAttribute(
+      "aria-selected",
+      "true"
+    );
   });
 });
