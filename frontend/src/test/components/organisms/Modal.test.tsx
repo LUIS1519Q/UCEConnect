@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
-import { Modal } from "../../../components/ui/molecules";
+import { Modal } from "../../../components/ui/organisms";
 
 describe("Modal", () => {
   it("renders title and content when open", () => {
