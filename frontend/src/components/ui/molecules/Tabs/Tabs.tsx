@@ -8,7 +8,10 @@ export default function Tabs({
   onChange,
 }: TabsProps) {
   return (
-    <div className="flex gap-2 border-b border-border">
+    <div
+      role="tablist"
+      className="flex gap-2 border-b border-border"
+    >
       {tabs.map((tab) => {
         const active = value === tab.value;
 
@@ -16,6 +19,8 @@ export default function Tabs({
           <button
             key={tab.value}
             type="button"
+            role="tab"
+            aria-selected={active}
             onClick={() => onChange(tab.value)}
             className={cn(
               "border-b-2 px-4 py-3 text-sm font-medium transition-colors",
