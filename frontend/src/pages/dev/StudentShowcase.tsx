@@ -22,6 +22,7 @@ import { EvidenceSection } from "../../components/ui/organisms/EvidenceSection";
 //import { Modal } from "../../components/ui/organisms";
 import { Timeline } from "../../components/ui/organisms/Timeline";
 import { ConversationThread } from "../../components/ui/organisms";
+import { AppHeader } from "../../components/ui/organisms/AppHeader";
 import { DashboardLayout } from "../../components/ui/templates/DashboardLayout";
 import { FormLayout } from "../../components/ui/templates/FormLayout";
 import { Button } from "../../components/ui/atoms";
@@ -489,6 +490,21 @@ export default function StudentShowcase() {
                   },
                 ]}
               />
+            </section>
+
+            <section className="space-y-4">
+              <h2 className="text-2xl font-bold">
+                AppHeader
+              </h2>
+
+              <div className="overflow-hidden rounded-xl border border-border bg-surface">
+                <AppHeader
+                  studentName="John Doe"
+                  notificationCount={3}
+                  onNotificationsClick={() => {}}
+                  onProfileClick={() => {}}
+                />
+              </div>
             </section>
 
         </section>

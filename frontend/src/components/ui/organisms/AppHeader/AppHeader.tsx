@@ -1,0 +1,92 @@
+import { Bell } from "../../icons";
+
+import { Avatar } from "../../atoms/Avatar";
+import { Button } from "../../atoms/Button";
+
+import type { AppHeaderProps } from "./AppHeader.types";
+
+export default function AppHeader({
+  studentName,
+  avatarUrl,
+  notificationCount = 0,
+  onNotificationsClick,
+  onProfileClick,
+}: AppHeaderProps) {
+  return (
+    <header
+      className="
+        flex
+        h-16
+        items-center
+        justify-end
+        border-b
+        border-border
+        bg-surface
+        px-6
+        shadow-sm
+      "
+    >
+      <div className="flex items-center gap-4">
+
+        <div className="relative">
+          <Button
+            variant="ghost"
+            size="sm"
+            aria-label="Notifications"
+            onClick={onNotificationsClick}
+          >
+            <Bell size={20} />
+          </Button>
+
+          {notificationCount > 0 && (
+            <span
+              className="
+                absolute
+                -right-1
+                -top-1
+                flex
+                h-5
+                w-5
+                items-center
+                justify-center
+                rounded-full
+                bg-danger
+                text-xs
+                font-semibold
+                text-white
+              "
+            >
+              {notificationCount}
+            </span>
+          )}
+        </div>
+
+        <button
+            type="button"
+            aria-label="Profile"
+            onClick={onProfileClick}
+            className="
+                flex
+                items-center
+                gap-3
+                rounded-lg
+                px-2
+                py-1
+                transition-colors
+                hover:bg-background
+            "
+        >
+          <span className="font-medium text-textPrimary">
+            {studentName}
+          </span>
+
+          <Avatar
+            src={avatarUrl}
+            alt={studentName}
+          />
+        </button>
+
+      </div>
+    </header>
+  );
+}
