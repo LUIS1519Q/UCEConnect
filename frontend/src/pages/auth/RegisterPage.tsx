@@ -1,4 +1,4 @@
-gitlates";
+import { AuthCenteredLayout } from "../../components/ui/templates";
 import { RegisterForm } from "../../components/ui/organisms";
 
 import { useForm } from "react-hook-form";
