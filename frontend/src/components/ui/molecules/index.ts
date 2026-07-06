@@ -9,4 +9,3 @@ export * from "./NotificationItem";
 export * from "./ProfileInfoItem";
 export * from "./FAQItem";
 export * from "./Tabs";
-export * from "./Modal";

@@ -11,12 +11,12 @@ import { NotificationItem } from "../../components/ui/molecules/NotificationItem
 import { ProfileInfoItem } from "../../components/ui/molecules/ProfileInfoItem";
 import { FAQItem } from "../../components/ui/molecules/FAQItem";
 import { Tabs } from "../../components/ui/molecules";
-//import { Modal } from "../../components/ui/molecules";
 import { IncidentList } from "../../components/ui/organisms/IncidentList";
 import { ProfileCard } from "../../components/ui/organisms/ProfileCard";
 import { NotificationList } from "../../components/ui/organisms/NotificationList";
 import { FAQSection } from "../../components/ui/organisms/FAQSection";
 import { EvidenceSection } from "../../components/ui/organisms/EvidenceSection";
+//import { Modal } from "../../components/ui/organisms";
 import { DashboardLayout } from "../../components/ui/templates/DashboardLayout";
 import { FormLayout } from "../../components/ui/templates/FormLayout";
 import { Button } from "../../components/ui/atoms";
@@ -200,30 +200,7 @@ export default function StudentShowcase() {
               />
             </section>
 
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold">Modal</h2>
-
-              {/*<Modal
-                open
-                title="Cancel incident"
-                footer={
-                  <div className="flex flex-col gap-3">
-                    <Button variant="secondary">
-                      Keep incident
-                    </Button>
-
-                    <Button variant="danger">
-                      Yes, cancel incident
-                    </Button>
-                  </div>
-                }
-              >
-                <p className="text-textSecondary">
-                  Are you sure you want to cancel this incident?
-                  This action cannot be undone.
-                </p>
-              </Modal>*/}
-            </section>
+            
 
         </section>
 
@@ -328,6 +305,31 @@ export default function StudentShowcase() {
               onAddFile={() => {}}
             />
           </div>
+
+          <section className="space-y-4">
+              <h2 className="text-2xl font-bold">Modal</h2>
+
+              {/*<Modal
+                open
+                title="Cancel incident"
+                footer={
+                  <div className="flex flex-col gap-3">
+                    <Button variant="secondary">
+                      Keep incident
+                    </Button>
+
+                    <Button variant="danger">
+                      Yes, cancel incident
+                    </Button>
+                  </div>
+                }
+              >
+                <p className="text-textSecondary">
+                  Are you sure you want to cancel this incident?
+                  This action cannot be undone.
+                </p>
+              </Modal>*/}
+            </section>
 
         </section>
 
