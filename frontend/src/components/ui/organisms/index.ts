@@ -9,3 +9,4 @@ export * from "./NotificationList";
 export * from "./FAQSection";
 export * from "./EvidenceSection";
 export * from "./Modal";
+export * from "./Timeline";
