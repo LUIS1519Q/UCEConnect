@@ -32,4 +32,5 @@ export {
   FileImage,
   FileSpreadsheet,
   AlertTriangle,
+  ChevronLeft,
 } from "lucide-react";
