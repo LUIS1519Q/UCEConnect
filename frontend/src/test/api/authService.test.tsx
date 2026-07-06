@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 
 import api from "../../api/client";
 import { authService } from "../../api/authService";
-import type { RegisterRole } from "../../types/auth";
+import type { Role } from "../../types/user";
 
 vi.mock("../../api/client", () => ({
   default: {
@@ -54,11 +54,12 @@ describe("authService", () => {
     });
 
     const payload = {
-      name: "John Doe",
+      firstName: "John",
+      lastName: "Doe",
       email: "john@test.com",
-      password: "Password123!",
-      confirmPassword: "Password123!",
-      role: "STUDENT" as RegisterRole,
+      password: "123456",
+      confirmPassword: "123456",
+      role: "student" as Role,
     };
 
     const result = await authService.register(payload);
