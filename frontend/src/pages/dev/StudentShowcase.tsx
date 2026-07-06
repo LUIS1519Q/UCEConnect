@@ -432,128 +432,128 @@ export default function StudentShowcase() {
                   This action cannot be undone.
                 </p>
               </Modal>*/}
-            </section>
+          </section>
 
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold">
-                Timeline
-              </h2>
+          <section className="space-y-4">
+            <h2 className="text-2xl font-bold">
+              Timeline
+            </h2>
 
-              <Timeline
+            <Timeline
+              items={[
+                {
+                  id: "1",
+                  title: "Incident created",
+                  description: "The incident was submitted.",
+                  timestamp: "Jun 24, 2026 • 10:30 AM",
+                },
+                {
+                  id: "2",
+                  title: "Manager requested evidence",
+                  description: "Please attach your transcript.",
+                  timestamp: "Jun 25, 2026 • 09:15 AM",
+                },
+                {
+                  id: "3",
+                  title: "Student responded",
+                  description: "Transcript attached.",
+                  timestamp: "Jun 25, 2026 • 11:40 AM",
+                },
+                {
+                  id: "4",
+                  title: "Incident resolved",
+                  timestamp: "Jun 26, 2026 • 04:20 PM",
+                },
+              ]}
+            />
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-2xl font-bold">
+              ConversationThread
+            </h2>
+
+            <ConversationThread
+              messages={[
+                {
+                  sender: "Case Manager",
+                  senderType: "manager",
+                  message:
+                    "Please upload your academic transcript.",
+                  timestamp: "Jun 24, 2026 • 10:35 AM",
+                },
+                {
+                  sender: "John Doe",
+                  senderType: "student",
+                  message:
+                    "Sure. I have attached the requested document.",
+                  timestamp: "Jun 24, 2026 • 10:42 AM",
+                },
+                {
+                  sender: "Case Manager",
+                  senderType: "manager",
+                  message:
+                    "Thank you. We will review it shortly.",
+                  timestamp: "Jun 24, 2026 • 11:05 AM",
+                },
+              ]}
+            />
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-2xl font-bold">
+              AppHeader
+            </h2>
+
+            <div className="overflow-hidden rounded-xl border border-border bg-surface">
+              <AppHeader
+                studentName="John Doe"
+                notificationCount={3}
+                onNotificationsClick={() => {}}
+                onProfileClick={() => {}}
+              />
+            </div>
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-2xl font-bold">
+              AppSidebar
+            </h2>
+
+            <div className="h-screen overflow-hidden rounded-xl border border-border">
+              <AppSidebar
+                primaryAction={{
+                  label: "New Incident",
+                  icon: FilePlus2,
+                }}
                 items={[
                   {
-                    id: "1",
-                    title: "Incident created",
-                    description: "The incident was submitted.",
-                    timestamp: "Jun 24, 2026 • 10:30 AM",
+                    label: "My Incidents",
+                    icon: FileText,
+                    active: true,
                   },
                   {
-                    id: "2",
-                    title: "Manager requested evidence",
-                    description: "Please attach your transcript.",
-                    timestamp: "Jun 25, 2026 • 09:15 AM",
+                    label: "Profile",
+                    icon: User,
                   },
                   {
-                    id: "3",
-                    title: "Student responded",
-                    description: "Transcript attached.",
-                    timestamp: "Jun 25, 2026 • 11:40 AM",
+                    label: "Help",
+                    icon: CircleHelp,
                   },
                   {
-                    id: "4",
-                    title: "Incident resolved",
-                    timestamp: "Jun 26, 2026 • 04:20 PM",
+                    label: "About",
+                    icon: Info,
+                  },
+                ]}
+                bottomItems={[
+                  {
+                    label: "Logout",
+                    icon: LogOut,
                   },
                 ]}
               />
-            </section>
-
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold">
-                ConversationThread
-              </h2>
-
-              <ConversationThread
-                messages={[
-                  {
-                    sender: "Case Manager",
-                    senderType: "manager",
-                    message:
-                      "Please upload your academic transcript.",
-                    timestamp: "Jun 24, 2026 • 10:35 AM",
-                  },
-                  {
-                    sender: "John Doe",
-                    senderType: "student",
-                    message:
-                      "Sure. I have attached the requested document.",
-                    timestamp: "Jun 24, 2026 • 10:42 AM",
-                  },
-                  {
-                    sender: "Case Manager",
-                    senderType: "manager",
-                    message:
-                      "Thank you. We will review it shortly.",
-                    timestamp: "Jun 24, 2026 • 11:05 AM",
-                  },
-                ]}
-              />
-            </section>
-
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold">
-                AppHeader
-              </h2>
-
-              <div className="overflow-hidden rounded-xl border border-border bg-surface">
-                <AppHeader
-                  studentName="John Doe"
-                  notificationCount={3}
-                  onNotificationsClick={() => {}}
-                  onProfileClick={() => {}}
-                />
-              </div>
-            </section>
-
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold">
-                AppSidebar
-              </h2>
-
-              <div className="h-screen overflow-hidden rounded-xl border border-border">
-                <AppSidebar
-                  primaryAction={{
-                    label: "New Incident",
-                    icon: FilePlus2,
-                  }}
-                  items={[
-                    {
-                      label: "My Incidents",
-                      icon: FileText,
-                      active: true,
-                    },
-                    {
-                      label: "Profile",
-                      icon: User,
-                    },
-                    {
-                      label: "Help",
-                      icon: CircleHelp,
-                    },
-                    {
-                      label: "About",
-                      icon: Info,
-                    },
-                  ]}
-                  bottomItems={[
-                    {
-                      label: "Logout",
-                      icon: LogOut,
-                    },
-                  ]}
-                />
-              </div>
-            </section>
+            </div>
+          </section>
 
         </section>
 
@@ -563,78 +563,96 @@ export default function StudentShowcase() {
             Templates
           </h2>
 
-          <AppLayout
-            title="My Incidents"
-            studentName="John Doe"
-            notificationCount={3}
-            primaryAction={{
-              label: "New Incident",
-              icon: FilePlus2,
-            }}
-            sidebarItems={[
-              {
-                label: "My Incidents",
-                icon: FileText,
-                active: true,
-              },
-              {
-                label: "Profile",
-                icon: User,
-              },
-              {
-                label: "Help",
-                icon: CircleHelp,
-              },
-              {
-                label: "About",
-                icon: Info,
-              },
-            ]}
-            bottomItems={[
-              {
-                label: "Logout",
-                icon: LogOut,
-              },
-            ]}
-          >
-            <div className="space-y-6">
-              <SearchBar placeholder="Search incidents..." />
+          <section className="space-y-4">
+            <h2 className="text-2xl font-bold">
+              AppLayout
+            </h2>
 
-              <IncidentList
-                incidents={[
+            <div
+              className="
+                h-[850px]
+                overflow-auto
+                rounded-xl
+                border
+                border-border
+                bg-surface
+                shadow-sm
+              "
+            >
+              <AppLayout
+                title="My Incidents"
+                studentName="John Doe"
+                notificationCount={3}
+                primaryAction={{
+                  label: "New Incident",
+                  icon: FilePlus2,
+                }}
+                sidebarItems={[
                   {
-                    id: "INC-0001",
-                    title: "Projector not working",
-                    location: "Building A - Room 204",
-                    status: "open",
-                    createdAt: "05 Jul 2026",
+                    label: "My Incidents",
+                    icon: FileText,
+                    active: true,
                   },
                   {
-                    id: "INC-0002",
-                    title: "Broken chair",
-                    location: "Building C - Room 102",
-                    status: "inProgress",
-                    createdAt: "04 Jul 2026",
+                    label: "Profile",
+                    icon: User,
                   },
                   {
-                    id: "INC-0003",
-                    title: "Internet outage",
-                    location: "Computer Lab",
-                    status: "resolved",
-                    createdAt: "02 Jul 2026",
+                    label: "Help",
+                    icon: CircleHelp,
+                  },
+                  {
+                    label: "About",
+                    icon: Info,
                   },
                 ]}
-              />
+                bottomItems={[
+                  {
+                    label: "Logout",
+                    icon: LogOut,
+                  },
+                ]}
+              >
+                <div className="space-y-6">
+                  <SearchBar
+                    placeholder="Search incidents..."
+                  />
 
-              <Pagination
-                currentPage={1}
-                totalPages={5}
-                onPrevious={() => {}}
-                onNext={() => {}}
-              />
+                  <IncidentList
+                    incidents={[
+                      {
+                        id: "INC-0001",
+                        title: "Projector not working",
+                        location: "Building A - Room 204",
+                        status: "open",
+                        createdAt: "05 Jul 2026",
+                      },
+                      {
+                        id: "INC-0002",
+                        title: "Broken chair",
+                        location: "Building C - Room 102",
+                        status: "inProgress",
+                        createdAt: "04 Jul 2026",
+                      },
+                      {
+                        id: "INC-0003",
+                        title: "Internet outage",
+                        location: "Computer Lab",
+                        status: "resolved",
+                        createdAt: "02 Jul 2026",
+                      },
+                    ]}
+                  />
+
+                  <Pagination
+                    currentPage={1}
+                    totalPages={5}
+                    onPageChange={() => {}}
+                  />
+                </div>
+              </AppLayout>
             </div>
-          </AppLayout>
-
+          </section>
         </section>
       </div>
     </main>
