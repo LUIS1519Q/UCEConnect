@@ -12,6 +12,7 @@ import { ProfileInfoItem } from "../../components/ui/molecules/ProfileInfoItem";
 import { FAQItem } from "../../components/ui/molecules/FAQItem";
 import { Tabs } from "../../components/ui/molecules";
 import { ChatBubble } from "../../components/ui/molecules/ChatBubble";
+import { SimilarIncidentBanner } from "../../components/ui/molecules/SimilarIncidentBanner";
 import { IncidentList } from "../../components/ui/organisms/IncidentList";
 import { ProfileCard } from "../../components/ui/organisms/ProfileCard";
 import { NotificationList } from "../../components/ui/organisms/NotificationList";
@@ -254,7 +255,20 @@ export default function StudentShowcase() {
                   message="Sure. I have attached the requested document."
                 />
               </div>
-            </section>            
+            </section> 
+
+            <section className="space-y-4">
+              <h2 className="text-2xl font-bold">
+                SimilarIncidentBanner
+              </h2>
+
+              <SimilarIncidentBanner
+                title="Similar incident detected"
+                description="A similar incident has already been reported. Please review it before submitting a new one."
+                onViewDetails={() => alert("View details")}
+                onDismiss={() => alert("Dismiss")}
+              />
+            </section>           
 
         </section>
 
