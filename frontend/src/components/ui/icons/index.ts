@@ -28,4 +28,7 @@ export {
   Calendar,
   MapPin,
   Phone,
+  File,
+  FileImage,
+  FileSpreadsheet,
 } from "lucide-react";

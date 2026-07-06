@@ -11,6 +11,7 @@ import { NotificationItem } from "../../components/ui/molecules/NotificationItem
 import { ProfileInfoItem } from "../../components/ui/molecules/ProfileInfoItem";
 import { FAQItem } from "../../components/ui/molecules/FAQItem";
 import { Tabs } from "../../components/ui/molecules";
+
 import { IncidentList } from "../../components/ui/organisms/IncidentList";
 import { ProfileCard } from "../../components/ui/organisms/ProfileCard";
 import { NotificationList } from "../../components/ui/organisms/NotificationList";
@@ -68,17 +69,33 @@ export default function StudentShowcase() {
                 </div>
             </div>
 
-            <div>
-                <h3 className="mb-4 text-lg font-medium text-textPrimary">
-                    File Chip
-                </h3>
+            <section className="space-y-4">
+              <h2 className="text-2xl font-bold">
+                FileChip
+              </h2>
 
-                <div className="flex flex-wrap gap-3">
-                    <FileChip fileName="incident-image.png" />
-                    <FileChip fileName="evidence.pdf" />
-                    <FileChip fileName="report.docx" />
-                </div>
-            </div>
+              <div className="flex flex-wrap gap-4">
+                <FileChip
+                  fileName="Complaint.pdf"
+                  fileType="pdf"
+                />
+
+                <FileChip
+                  fileName="Evidence.jpg"
+                  fileType="image"
+                />
+
+                <FileChip
+                  fileName="Grades.xlsx"
+                  fileType="xlsx"
+                />
+
+                <FileChip
+                  fileName="Unknown.zip"
+                  fileType="other"
+                />
+              </div>
+            </section>
 
             <div>
                 <h3 className="mb-4 text-lg font-medium text-textPrimary">
@@ -122,16 +139,33 @@ export default function StudentShowcase() {
               />
             </div>
 
-            <div>
-              <h3 className="mb-4 text-lg font-medium text-textPrimary">
-                Evidence Item
-              </h3>
+            <section className="space-y-4">
+              <h2 className="text-2xl font-bold">
+                EvidenceItem
+              </h2>
 
-              <EvidenceItem
-                fileName="incident-photo.jpg"
-                onRemove={() => {}}
-              />
-            </div>
+              <div className="space-y-3">
+                <EvidenceItem
+                  fileName="Complaint.pdf"
+                  fileType="pdf"
+                  fileSize="1.2 MB"
+                />
+
+                <EvidenceItem
+                  fileName="Evidence.jpg"
+                  fileType="image"
+                  fileSize="2.8 MB"
+                  onClick={() => alert("Open evidence")}
+                />
+
+                <EvidenceItem
+                  fileName="Grades.xlsx"
+                  fileType="xlsx"
+                  fileSize="180 KB"
+                  onRemove={() => alert("Remove")}
+                />
+              </div>
+            </section>
 
             <div>
               <h3 className="mb-4 text-lg font-medium text-textPrimary">
@@ -288,23 +322,34 @@ export default function StudentShowcase() {
             />
           </div>
 
-          <div>
-            <h2 className="mb-4 text-xl font-semibold text-textPrimary">
-              Evidence Section
+          <section className="space-y-4">
+            <h2 className="text-2xl font-bold">
+              EvidenceSection
             </h2>
 
             <EvidenceSection
+              title="Attached Evidence"
+              onAddFile={() => alert("Add evidence")}
               files={[
                 {
-                  fileName: "incident-photo.jpg",
+                  fileName: "Complaint.pdf",
+                  fileType: "pdf",
+                  fileSize: "1.2 MB",
                 },
                 {
-                  fileName: "report.pdf",
+                  fileName: "Evidence.jpg",
+                  fileType: "image",
+                  fileSize: "2.8 MB",
+                  onRemove: () => alert("Remove"),
+                },
+                {
+                  fileName: "Grades.xlsx",
+                  fileType: "xlsx",
+                  fileSize: "180 KB",
                 },
               ]}
-              onAddFile={() => {}}
             />
-          </div>
+          </section>
 
           <section className="space-y-4">
               <h2 className="text-2xl font-bold">Modal</h2>
