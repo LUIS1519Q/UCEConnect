@@ -10,3 +10,4 @@ export * from "./FAQSection";
 export * from "./EvidenceSection";
 export * from "./Modal";
 export * from "./Timeline";
+export * from "./ConversationThread";
