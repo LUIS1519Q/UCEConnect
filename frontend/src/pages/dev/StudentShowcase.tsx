@@ -16,6 +16,7 @@ import { SimilarIncidentBanner } from "../../components/ui/molecules/SimilarInci
 import { IncidentList } from "../../components/ui/organisms/IncidentList";
 import { ProfileCard } from "../../components/ui/organisms/ProfileCard";
 import { NotificationList } from "../../components/ui/organisms/NotificationList";
+import { Timeline } from "../../components/ui/organisms/Timeline";
 import { FAQSection } from "../../components/ui/organisms/FAQSection";
 import { EvidenceSection } from "../../components/ui/organisms/EvidenceSection";
 //import { Modal } from "../../components/ui/organisms";
@@ -269,6 +270,40 @@ export default function StudentShowcase() {
                 onDismiss={() => alert("Dismiss")}
               />
             </section>           
+
+            <section className="space-y-4">
+              <h2 className="text-2xl font-bold">
+                Timeline
+              </h2>
+
+              <Timeline
+                items={[
+                  {
+                    id: "1",
+                    title: "Incident created",
+                    description: "The incident was submitted.",
+                    timestamp: "Jun 24, 2026 • 10:30 AM",
+                  },
+                  {
+                    id: "2",
+                    title: "Manager requested evidence",
+                    description: "Please attach your transcript.",
+                    timestamp: "Jun 25, 2026 • 09:15 AM",
+                  },
+                  {
+                    id: "3",
+                    title: "Student responded",
+                    description: "Transcript attached.",
+                    timestamp: "Jun 25, 2026 • 11:40 AM",
+                  },
+                  {
+                    id: "4",
+                    title: "Incident resolved",
+                    timestamp: "Jun 26, 2026 • 04:20 PM",
+                  },
+                ]}
+              />
+            </section>
 
         </section>
 
