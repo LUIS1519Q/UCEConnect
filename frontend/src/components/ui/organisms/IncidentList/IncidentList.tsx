@@ -9,7 +9,7 @@ export default function IncidentList({
     <div className="space-y-4">
       {incidents.map((incident) => (
         <IncidentCard
-          key={`${incident.title}-${incident.createdAt}`}
+          key={incident.id}
           {...incident}
         />
       ))}

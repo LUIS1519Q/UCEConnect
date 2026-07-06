@@ -32,7 +32,8 @@ import { Timeline } from "../../components/ui/organisms/Timeline";
 import { ConversationThread } from "../../components/ui/organisms";
 import { AppHeader } from "../../components/ui/organisms/AppHeader";
 import { AppSidebar } from "../../components/ui/organisms";
-
+import { AppLayout } from "../../components/ui/templates";
+//import { Button } from "../../components/ui/atoms";
 
 export default function StudentShowcase() {
   const [selectedTab, setSelectedTab] =
@@ -54,6 +55,7 @@ export default function StudentShowcase() {
         <section className="rounded-xl border border-border bg-surface p-6 shadow-sm">
           <h2 className="text-2xl font-semibold text-textPrimary">
             Atoms
+          </h2>
 
             <div className="mt-6 space-y-6">
                 <div>
@@ -118,7 +120,6 @@ export default function StudentShowcase() {
                 </div>
             </div>
 
-          </h2>
         </section>
 
         {/* ===================== MOLECULES ===================== */}
@@ -141,6 +142,7 @@ export default function StudentShowcase() {
               </h3>
 
               <IncidentCard
+                id="INC-0001"
                 title="Internet connection issue"
                 location="Building A - Lab 3"
                 status="open"
@@ -305,12 +307,14 @@ export default function StudentShowcase() {
             <IncidentList
               incidents={[
                 {
+                  id: "INC-0001",
                   title: "Internet connection issue",
                   location: "Building A - Lab 3",
                   status: "open",
                   createdAt: "Jun 29, 2026",
                 },
                 {
+                  id: "INC-0002",
                   title: "Projector not working",
                   location: "Building B - Room 201",
                   status: "inProgress",
@@ -559,7 +563,52 @@ export default function StudentShowcase() {
             Templates
           </h2>
 
-          
+          <section className="space-y-4">
+            <h2 className="text-2xl font-bold">
+              AppLayout
+            </h2>
+
+            <div className="overflow-hidden rounded-xl border border-border">
+              <AppLayout
+                title="My Incidents"
+                studentName="John Doe"
+                notificationCount={3}
+                primaryAction={{
+                  label: "New Incident",
+                  icon: FilePlus2,
+                }}
+                sidebarItems={[
+                  {
+                    label: "My Incidents",
+                    icon: FileText,
+                    active: true,
+                  },
+                  {
+                    label: "Profile",
+                    icon: User,
+                  },
+                  {
+                    label: "Help",
+                    icon: CircleHelp,
+                  },
+                  {
+                    label: "About",
+                    icon: Info,
+                  },
+                ]}
+                bottomItems={[
+                  {
+                    label: "Logout",
+                    icon: LogOut,
+                  },
+                ]}
+              >
+                <div className="space-y-6">
+                 
+                </div>
+              </AppLayout>
+            </div>
+          </section>
 
         </section>
       </div>

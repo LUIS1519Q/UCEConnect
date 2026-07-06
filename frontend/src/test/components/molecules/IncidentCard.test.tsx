@@ -8,6 +8,7 @@ describe("IncidentCard", () => {
   it("renders incident information", () => {
     render(
       <IncidentCard
+        id="INC-0001"
         title="Internet Issue"
         location="Building A"
         status="open"
@@ -27,6 +28,7 @@ describe("IncidentCard", () => {
   it("renders the status badge", () => {
     render(
       <IncidentCard
+        id="INC-0001"
         title="Internet Issue"
         location="Building A"
         status="resolved"
@@ -45,6 +47,7 @@ describe("IncidentCard", () => {
 
     render(
       <IncidentCard
+        id="INC-0001"
         title="Internet Issue"
         location="Building A"
         status="open"
@@ -60,5 +63,21 @@ describe("IncidentCard", () => {
     );
 
     expect(onClick).toHaveBeenCalledOnce();
+  });
+
+  it("renders incident id", () => {
+    render(
+      <IncidentCard
+        id="INC-0001"
+        title="Projector not working"
+        location="Building A"
+        status="open"
+        createdAt="05 Jul 2026"
+      />
+    );
+
+    expect(
+      screen.getByText("INC-0001")
+    ).toBeInTheDocument();
   });
 });
