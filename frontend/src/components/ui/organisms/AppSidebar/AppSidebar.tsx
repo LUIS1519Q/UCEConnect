@@ -11,8 +11,8 @@ export default function AppSidebar({
     <aside
       className="
         flex
-        h-screen
-        w-64
+        min-h-screen
+        w-72
         shrink-0
         flex-col
         bg-primary
@@ -74,6 +74,7 @@ export default function AppSidebar({
 
       {/* Navigation */}
       <nav
+        aria-label="Sidebar Navigation"
         className="
           flex
           flex-1
