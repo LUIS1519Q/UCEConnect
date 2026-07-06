@@ -11,7 +11,7 @@ import { NotificationItem } from "../../components/ui/molecules/NotificationItem
 import { ProfileInfoItem } from "../../components/ui/molecules/ProfileInfoItem";
 import { FAQItem } from "../../components/ui/molecules/FAQItem";
 import { Tabs } from "../../components/ui/molecules";
-
+import { ChatBubble } from "../../components/ui/molecules/ChatBubble";
 import { IncidentList } from "../../components/ui/organisms/IncidentList";
 import { ProfileCard } from "../../components/ui/organisms/ProfileCard";
 import { NotificationList } from "../../components/ui/organisms/NotificationList";
@@ -234,7 +234,27 @@ export default function StudentShowcase() {
               />
             </section>
 
-            
+            <section className="space-y-4">
+              <h2 className="text-2xl font-bold">
+                ChatBubble
+              </h2>
+
+              <div className="space-y-4 rounded-xl border border-border p-6">
+                <ChatBubble
+                  sender="Case Manager"
+                  senderType="manager"
+                  timestamp="Jun 24, 2026 • 10:35 AM"
+                  message="Please upload your academic transcript to continue reviewing your incident."
+                />
+
+                <ChatBubble
+                  sender="John Doe"
+                  senderType="student"
+                  timestamp="Jun 24, 2026 • 10:42 AM"
+                  message="Sure. I have attached the requested document."
+                />
+              </div>
+            </section>            
 
         </section>
 
