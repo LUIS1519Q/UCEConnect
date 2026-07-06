@@ -178,6 +178,9 @@ export default function StudentShowcase() {
           </h2>
 
           <div>
+            <h2 className="mb-4 text-xl font-semibold text-textPrimary">
+              Incident List
+            </h2>
             <IncidentList
               incidents={[
                 {

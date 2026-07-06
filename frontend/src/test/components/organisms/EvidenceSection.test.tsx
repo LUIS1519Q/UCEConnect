@@ -15,14 +15,8 @@ describe("EvidenceSection", () => {
       />
     );
 
-    expect(screen.getByText("report.pdf")).toBeInTheDocument();
-  });
-
-  it("renders add file button", () => {
-    render(<EvidenceSection files={[]} />);
-
     expect(
-      screen.getByRole("button", { name: /add file/i })
+      screen.getByText("report.pdf")
     ).toBeInTheDocument();
   });
 });

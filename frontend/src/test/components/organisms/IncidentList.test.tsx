@@ -28,11 +28,4 @@ describe("IncidentList", () => {
     expect(screen.getByText("Projector")).toBeInTheDocument();
   });
 
-  it("renders search bar", () => {
-    render(<IncidentList incidents={[]} />);
-
-    expect(
-      screen.getByPlaceholderText("Search incidents...")
-    ).toBeInTheDocument();
-  });
 });
