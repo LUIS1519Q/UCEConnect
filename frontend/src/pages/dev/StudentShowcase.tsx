@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { Textarea } from "../../components/ui/atoms/Textarea";
 import { StatusBadge } from "../../components/ui/atoms/StatusBadge";
 import { FileChip } from "../../components/ui/atoms/FileChip";
@@ -8,6 +10,7 @@ import { EvidenceItem } from "../../components/ui/molecules/EvidenceItem";
 import { NotificationItem } from "../../components/ui/molecules/NotificationItem";
 import { ProfileInfoItem } from "../../components/ui/molecules/ProfileInfoItem";
 import { FAQItem } from "../../components/ui/molecules/FAQItem";
+import { Tabs } from "../../components/ui/molecules";
 import { IncidentList } from "../../components/ui/organisms/IncidentList";
 import { ProfileCard } from "../../components/ui/organisms/ProfileCard";
 import { NotificationList } from "../../components/ui/organisms/NotificationList";
@@ -21,6 +24,8 @@ import { DetailLayout } from "../../components/ui/templates/DetailLayout";
 import { ProfileLayout } from "../../components/ui/templates/ProfileLayout";
 
 export default function StudentShowcase() {
+  const [selectedTab, setSelectedTab] =
+    useState("open");
   return (
     <main className="min-h-screen bg-background p-6">
       <div className="mx-auto max-w-7xl space-y-10">
@@ -168,6 +173,31 @@ export default function StudentShowcase() {
                 answer="Go to the Create Incident page, fill out the form, attach any evidence if needed, and submit your report."
               />
             </div>
+
+            <section className="space-y-4">
+              <h2 className="text-xl font-semibold text-textPrimary">
+                Tabs
+              </h2>
+
+              <Tabs
+                tabs={[
+                  {
+                    label: "Open",
+                    value: "open",
+                  },
+                  {
+                    label: "In Progress",
+                    value: "progress",
+                  },
+                  {
+                    label: "Resolved",
+                    value: "resolved",
+                  },
+                ]}
+                value={selectedTab}
+                onChange={setSelectedTab}
+              />
+            </section>
 
         </section>
 
