@@ -12,3 +12,4 @@ export * from "./Modal";
 export * from "./Timeline";
 export * from "./ConversationThread";
 export * from "./AppHeader";
+export * from "./AppSidebar";

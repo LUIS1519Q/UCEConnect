@@ -1,4 +1,12 @@
 import { useState } from "react";
+import {
+  FileText,
+  FilePlus2,
+  User,
+  CircleHelp,
+  LogOut,
+  Info,
+} from "../../components/ui/icons";
 
 import { Textarea } from "../../components/ui/atoms/Textarea";
 import { StatusBadge } from "../../components/ui/atoms/StatusBadge";
@@ -23,6 +31,7 @@ import { EvidenceSection } from "../../components/ui/organisms/EvidenceSection";
 import { Timeline } from "../../components/ui/organisms/Timeline";
 import { ConversationThread } from "../../components/ui/organisms";
 import { AppHeader } from "../../components/ui/organisms/AppHeader";
+import { AppSidebar } from "../../components/ui/organisms";
 import { DashboardLayout } from "../../components/ui/templates/DashboardLayout";
 import { FormLayout } from "../../components/ui/templates/FormLayout";
 import { Button } from "../../components/ui/atoms";
@@ -503,6 +512,46 @@ export default function StudentShowcase() {
                   notificationCount={3}
                   onNotificationsClick={() => {}}
                   onProfileClick={() => {}}
+                />
+              </div>
+            </section>
+
+            <section className="space-y-4">
+              <h2 className="text-2xl font-bold">
+                AppSidebar
+              </h2>
+
+              <div className="h-screen overflow-hidden rounded-xl border border-border">
+                <AppSidebar
+                  primaryAction={{
+                    label: "New Incident",
+                    icon: FilePlus2,
+                  }}
+                  items={[
+                    {
+                      label: "My Incidents",
+                      icon: FileText,
+                      active: true,
+                    },
+                    {
+                      label: "Profile",
+                      icon: User,
+                    },
+                    {
+                      label: "Help",
+                      icon: CircleHelp,
+                    },
+                    {
+                      label: "About",
+                      icon: Info,
+                    },
+                  ]}
+                  bottomItems={[
+                    {
+                      label: "Logout",
+                      icon: LogOut,
+                    },
+                  ]}
                 />
               </div>
             </section>
