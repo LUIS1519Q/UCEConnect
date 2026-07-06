@@ -286,8 +286,8 @@ export default function StudentShowcase() {
               </h2>
 
               <Pagination
-                currentPage={2}
-                totalPages={5}
+                currentPage={3}
+                totalPages={12}
                 onPageChange={() => {}}
               />
             </section>
@@ -563,52 +563,77 @@ export default function StudentShowcase() {
             Templates
           </h2>
 
-          <section className="space-y-4">
-            <h2 className="text-2xl font-bold">
-              AppLayout
-            </h2>
+          <AppLayout
+            title="My Incidents"
+            studentName="John Doe"
+            notificationCount={3}
+            primaryAction={{
+              label: "New Incident",
+              icon: FilePlus2,
+            }}
+            sidebarItems={[
+              {
+                label: "My Incidents",
+                icon: FileText,
+                active: true,
+              },
+              {
+                label: "Profile",
+                icon: User,
+              },
+              {
+                label: "Help",
+                icon: CircleHelp,
+              },
+              {
+                label: "About",
+                icon: Info,
+              },
+            ]}
+            bottomItems={[
+              {
+                label: "Logout",
+                icon: LogOut,
+              },
+            ]}
+          >
+            <div className="space-y-6">
+              <SearchBar placeholder="Search incidents..." />
 
-            <div className="overflow-hidden rounded-xl border border-border">
-              <AppLayout
-                title="My Incidents"
-                studentName="John Doe"
-                notificationCount={3}
-                primaryAction={{
-                  label: "New Incident",
-                  icon: FilePlus2,
-                }}
-                sidebarItems={[
+              <IncidentList
+                incidents={[
                   {
-                    label: "My Incidents",
-                    icon: FileText,
-                    active: true,
+                    id: "INC-0001",
+                    title: "Projector not working",
+                    location: "Building A - Room 204",
+                    status: "open",
+                    createdAt: "05 Jul 2026",
                   },
                   {
-                    label: "Profile",
-                    icon: User,
+                    id: "INC-0002",
+                    title: "Broken chair",
+                    location: "Building C - Room 102",
+                    status: "inProgress",
+                    createdAt: "04 Jul 2026",
                   },
                   {
-                    label: "Help",
-                    icon: CircleHelp,
-                  },
-                  {
-                    label: "About",
-                    icon: Info,
+                    id: "INC-0003",
+                    title: "Internet outage",
+                    location: "Computer Lab",
+                    status: "resolved",
+                    createdAt: "02 Jul 2026",
                   },
                 ]}
-                bottomItems={[
-                  {
-                    label: "Logout",
-                    icon: LogOut,
-                  },
-                ]}
-              >
-                <div className="space-y-6">
-                 
-                </div>
-              </AppLayout>
+              />
+
+              <Pagination
+                currentPage={1}
+                totalPages={5}
+                onPrevious={() => {}}
+                onNext={() => {}}
+              />
             </div>
-          </section>
+          </AppLayout>
 
         </section>
       </div>

@@ -9,41 +9,68 @@ export default function Pagination({
   totalPages,
   onPageChange,
 }: PaginationProps) {
+  const maxVisiblePages = 5;
+
+  let startPage = Math.max(
+    1,
+    currentPage - Math.floor(maxVisiblePages / 2)
+  );
+
+  let endPage = startPage + maxVisiblePages - 1;
+
+  if (endPage > totalPages) {
+    endPage = totalPages;
+
+    startPage = Math.max(
+      1,
+      endPage - maxVisiblePages + 1
+    );
+  }
+
+  const pages = Array.from(
+    { length: endPage - startPage + 1 },
+    (_, index) => startPage + index
+  );
+
   return (
-    <div className="flex items-center justify-center gap-2">
+    <nav
+      className="flex items-center justify-center gap-2"
+      aria-label="Pagination"
+    >
       <Button
         variant="ghost"
         size="sm"
         disabled={currentPage === 1}
-        onClick={() => onPageChange(currentPage - 1)}
+        onClick={() =>
+          onPageChange(currentPage - 1)
+        }
       >
         <ChevronLeft size={18} />
-        Prev
+
+        <span>Previous</span>
       </Button>
 
-      {Array.from(
-        { length: totalPages },
-        (_, index) => {
-          const page = index + 1;
-
-          return (
-            <Button
-              key={page}
-              variant={
-                page === currentPage
-                  ? "primary"
-                  : "ghost"
-              }
-              size="sm"
-              onClick={() =>
-                onPageChange(page)
-              }
-            >
-              {page}
-            </Button>
-          );
-        }
-      )}
+      {pages.map((page) => (
+        <Button
+          key={page}
+          variant={
+            page === currentPage
+              ? "primary"
+              : "ghost"
+          }
+          size="sm"
+          aria-current={
+            page === currentPage
+              ? "page"
+              : undefined
+          }
+          onClick={() =>
+            onPageChange(page)
+          }
+        >
+          {page}
+        </Button>
+      ))}
 
       <Button
         variant="ghost"
@@ -55,9 +82,10 @@ export default function Pagination({
           onPageChange(currentPage + 1)
         }
       >
-        Next
+        <span>Next</span>
+
         <ChevronRight size={18} />
       </Button>
-    </div>
+    </nav>
   );
 }
