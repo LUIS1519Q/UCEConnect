@@ -32,12 +32,7 @@ import { Timeline } from "../../components/ui/organisms/Timeline";
 import { ConversationThread } from "../../components/ui/organisms";
 import { AppHeader } from "../../components/ui/organisms/AppHeader";
 import { AppSidebar } from "../../components/ui/organisms";
-import { DashboardLayout } from "../../components/ui/templates/DashboardLayout";
-import { FormLayout } from "../../components/ui/templates/FormLayout";
-import { Button } from "../../components/ui/atoms";
-import { TextInput } from "../../components/ui/atoms";
-import { DetailLayout } from "../../components/ui/templates/DetailLayout";
-import { ProfileLayout } from "../../components/ui/templates/ProfileLayout";
+
 
 export default function StudentShowcase() {
   const [selectedTab, setSelectedTab] =
@@ -564,53 +559,7 @@ export default function StudentShowcase() {
             Templates
           </h2>
 
-          <section className="space-y-4">
-
-            <DashboardLayout
-              header={
-                <div className="p-4 font-semibold">
-                  Student Dashboard
-                </div>
-              }
-              sidebar={
-                <div className="p-4">
-                  Sidebar
-                </div>
-              }
-            >
-              <p>Main Content</p>
-            </DashboardLayout>
-          </section>
-
-          <section>
-            <FormLayout
-              title="Create Incident"
-              description="Complete the following information."
-              actions={
-                <Button>
-                  Submit
-                </Button>
-              }
-            >
-              <TextInput placeholder="Title" />
-
-              <Textarea placeholder="Description" />
-            </FormLayout>
-          </section>
-
-          <DetailLayout
-            title="Incident Details"
-            subtitle="Review all information about the incident."
-          >
-            <p>Incident content goes here.</p>
-          </DetailLayout>
-
-          <ProfileLayout
-            title="My Profile"
-            sidebar={<p>Profile Menu</p>}
-          >
-            <p>Profile content...</p>
-          </ProfileLayout>
+          
 
         </section>
       </div>
