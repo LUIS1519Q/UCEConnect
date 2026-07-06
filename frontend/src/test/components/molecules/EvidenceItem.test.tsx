@@ -15,7 +15,7 @@ describe("EvidenceItem", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders remove button when onRemove exists", () => {
+  it("renders remove button when onRemove is provided", () => {
     render(
       <EvidenceItem
         fileName="report.pdf"
@@ -24,11 +24,25 @@ describe("EvidenceItem", () => {
     );
 
     expect(
-      screen.getByRole("button")
+      screen.getByRole("button", {
+        name: /remove file/i,
+      })
     ).toBeInTheDocument();
   });
 
-  it("calls onRemove", async () => {
+  it("does not render remove button when onRemove is not provided", () => {
+    render(
+      <EvidenceItem fileName="report.pdf" />
+    );
+
+    expect(
+      screen.queryByRole("button", {
+        name: /remove file/i,
+      })
+    ).not.toBeInTheDocument();
+  });
+
+  it("calls onRemove when remove button is clicked", async () => {
     const user = userEvent.setup();
     const onRemove = vi.fn();
 
@@ -40,7 +54,9 @@ describe("EvidenceItem", () => {
     );
 
     await user.click(
-      screen.getByRole("button")
+      screen.getByRole("button", {
+        name: /remove file/i,
+      })
     );
 
     expect(onRemove).toHaveBeenCalledOnce();
