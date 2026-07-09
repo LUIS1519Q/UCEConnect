@@ -1,11 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const { createServer } = require('http');
+const { Server } = require('socket.io');
 const logger = require('../logger/logger');
-
-const app = express();
-
-app.use(helmet());
 
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
   .split(',')
@@ -15,6 +13,18 @@ const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
 if (allowedOrigins.length === 0) {
   allowedOrigins.push('http://localhost:5173');
 }
+
+const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: allowedOrigins,
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
+});
+
+app.use(helmet());
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -65,4 +75,21 @@ app.use((err, req, res, next) => {
   });
 });
 
-module.exports = app;
+const { initChat } = require('../sockets/chatHandler');
+const db = require('../db/connection');
+const PostgresIncidentRepo = require('../repositories/PostgresIncidentRepo');
+const PostgresObservationRepo = require('../repositories/PostgresObservationRepo');
+const jwt = require('jsonwebtoken');
+
+const incidentRepo = new PostgresIncidentRepo(db);
+const observationRepo = new PostgresObservationRepo(db);
+
+initChat(io, {
+  incidentRepo,
+  observationRepo,
+  logger,
+  jwt,
+  JWT_SECRET: process.env.JWT_SECRET,
+});
+
+module.exports = { app, httpServer };
