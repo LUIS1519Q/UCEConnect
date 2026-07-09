@@ -18,16 +18,16 @@ describe("ROUTES", () => {
   });
 
   it("contains dashboard routes", () => {
-    expect(ROUTES.dashboard.student).toBe(
-      "/dashboard/student"
+    expect(ROUTES.student.myIncidents).toBe(
+      "/incidents"
     );
 
-    expect(ROUTES.dashboard.manager).toBe(
-      "/dashboard/manager"
+    expect(ROUTES.manager.incidents).toBe(
+      "/manager/incidents"
     );
 
-    expect(ROUTES.dashboard.admin).toBe(
-      "/dashboard/admin"
+    expect(ROUTES.admin.incidents).toBe(
+      "/admin/incidents"
     );
   });
 });
