@@ -10,5 +10,6 @@ class IUserRepo {
   findResetCode(email) { throw new Error('Not implemented') }
   markResetCodeAsUsed(email) { throw new Error('Not implemented') }
   updatePassword(userId, passwordHash) { throw new Error('Not implemented') }
+  async findByRole(role) { throw new Error('Not implemented') }
 }
 module.exports = IUserRepo
