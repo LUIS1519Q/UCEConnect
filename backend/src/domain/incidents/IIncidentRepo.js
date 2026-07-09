@@ -7,5 +7,6 @@ class IIncidentRepo {
   findHistoryByIncidentId(incidentId) { throw new Error('Not implemented') }
   countObservationsByIncidentId(incidentId) { throw new Error('Not implemented') }
   categoryExists(categoryId) { throw new Error('Not implemented') }
+  async findCategoryIdByName(name) { throw new Error('Not implemented') }
 }
 module.exports = IIncidentRepo

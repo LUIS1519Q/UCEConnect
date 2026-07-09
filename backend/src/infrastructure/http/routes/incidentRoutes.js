@@ -35,6 +35,13 @@ const updateIncidentSchema = z.object({
   categoryId: z.number().int().positive().optional(),
 });
 
+const similarPreviewSchema = z.object({
+  title: z.string()
+    .min(5, 'Title must contain between 5 and 200 characters.')
+    .max(200, 'Title must contain between 5 and 200 characters.'),
+  description: z.string().max(5000, 'Description must contain at most 5000 characters.').optional(),
+});
+
 function validate(schema) {
   return (req, res, next) => {
     const result = schema.safeParse(req.body);
@@ -78,6 +85,14 @@ router.get('/:id', authMiddleware, incidentController.getById);
 router.get('/:id/observations', authMiddleware, incidentController.getObservations);
 
 router.get('/:id/similar', authMiddleware, incidentController.getSimilarIncident);
+
+router.post(
+  '/similar',
+  authMiddleware,
+  roleMiddleware('student'),
+  validate(similarPreviewSchema),
+  incidentController.findSimilar
+);
 
 router.patch(
   '/:id',
