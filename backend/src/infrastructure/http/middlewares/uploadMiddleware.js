@@ -3,6 +3,21 @@ const { ATTACHMENT_POLICY, isAllowedMimeType } = require('../../../application/i
 
 const storage = multer.memoryStorage();
 
+const fileFilter = (req, file, cb) => {
+  const allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+  if (allowed.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error('Only JPG, JPEG, PNG and WEBP images are allowed.'), false);
+  }
+};
+
+const upload = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: 5 * 1024 * 1024 },
+});
+
 const attachmentFileFilter = (req, file, cb) => {
   if (isAllowedMimeType(file.mimetype)) {
     cb(null, true);
@@ -29,4 +44,4 @@ function uploadAttachments(req, res, next) {
   });
 }
 
-module.exports = { uploadAttachments };
+module.exports = { upload, uploadAttachments };
