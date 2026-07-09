@@ -1,27 +1,37 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ROUTES } from "../constants/routes";
 
+import ProtectedRoute from "./ProtectedRoute";
+
+import LandingPage from "../pages/public/LandingPage";
+
+import AuthShowcase from "../pages/dev/AuthShowcase";
+import StudentShowcase from "../pages/dev/StudentShowcase";
+
 import LoginPage from "../pages/auth/LoginPage";
 import RegisterPage from "../pages/auth/RegisterPage";
 import VerifyEmailPage from "../pages/auth/VerifyCodePage";
 import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage";
-import StudentDashboard from "../pages/dashboard/StudentDashboard";
-import ManagerDashboard from "../pages/dashboard/ManagerDashboard";
-import AdminDashboard from "../pages/dashboard/AdminDashboard";
-import ProtectedRoute from "./ProtectedRoute";
 import ResetPasswordPage from "../pages/auth/ResetPasswordPage";
-import ProfilePage from "../pages/profile/ProfilePage";
-import EditProfilePage from "../pages/profile/EditProfilePage";
+
 import MyIncidentsPage from "../pages/student/MyIncidentsPage";
 import CreateIncidentPage from "../pages/incidents/CreateIncidentPage";
 import EditIncidentPage from "../pages/student/EditIncidentPage";
 import IncidentDetailPage from "../pages/student/IncidentDetailPage";
 import AISuggestionPage from "../pages/student/AISuggestionPage";
+import NotificationsPage from "../pages/student/NotificationPage";
+import ProfilePage from "../pages/profile/ProfilePage";
+import EditProfilePage from "../pages/profile/EditProfilePage";
+import HelpPage from "../pages/student/HelpPage";
+import AboutPage from "../pages/student/AboutPage";
+
+import ManagerDashboard from "../pages/dashboard/ManagerDashboard";
+import AdminDashboard from "../pages/dashboard/AdminDashboard";
+
 import ManagerIncidentsPage from "../pages/manager/ManagerIncidentsPage";
 import ManagerIncidentDetailPage from "../pages/manager/ManagerIncidentDetailPage";
 
-import AuthShowcase from "../pages/dev/AuthShowcase";
-import StudentShowcase from "../pages/dev/StudentShowcase";
+
 
 function AppRouter() {
   return (
@@ -31,10 +41,15 @@ function AppRouter() {
           path="*"
           element={
               <Navigate
-                  to={ROUTES.auth.login}
+                  to={ROUTES.public.home}
                   replace
               />
           }
+        />
+
+        <Route
+          path={ROUTES.public.home}
+          element={< LandingPage />}
         />
 
         {/*DESIGN*/}
@@ -79,34 +94,16 @@ function AppRouter() {
         {/*STUDENT*/}
 
         <Route
-          path={ROUTES.dashboard.student}
+          path={ROUTES.student.myIncidents}
           element={
             <ProtectedRoute>
-              <StudentDashboard />
+              <MyIncidentsPage />
             </ProtectedRoute>
           }
         />
-
+        
         <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <ProfilePage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/profile/edit"
-          element={
-            <ProtectedRoute>
-              <EditProfilePage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/incidents/create"
+          path={ROUTES.student.createIncident}
           element={
             <ProtectedRoute>
               <CreateIncidentPage />
@@ -115,16 +112,7 @@ function AppRouter() {
         />
 
         <Route
-          path="/incidents"
-          element={
-            <ProtectedRoute>
-              <MyIncidentsPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/incidents/:id"
+          path={ROUTES.student.incidentDetail}
           element={
             <ProtectedRoute>
               <IncidentDetailPage />
@@ -133,7 +121,7 @@ function AppRouter() {
         />
 
         <Route
-          path="/incidents/:id/edit"
+          path={ROUTES.student.editIncident}
           element={
             <ProtectedRoute>
               <EditIncidentPage />
@@ -150,10 +138,55 @@ function AppRouter() {
           }
         />
 
+        <Route
+          path={ROUTES.student.notifications}
+          element={
+            <ProtectedRoute>
+              <NotificationsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.student.profile}
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.student.editProfile}
+          element={
+            <ProtectedRoute>
+              <EditProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.student.about}
+          element={
+            <ProtectedRoute>
+              <AboutPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.student.help}
+          element={
+            <ProtectedRoute>
+              <HelpPage />
+            </ProtectedRoute>
+          }
+        />
+
         {/*MANAGER*/}
 
         <Route
-          path={ROUTES.dashboard.manager}
+          path={ROUTES.manager.incidents}
           element={
             <ProtectedRoute>
               <ManagerDashboard />
@@ -182,7 +215,7 @@ function AppRouter() {
         {/*ADMIN*/}
 
         <Route
-          path={ROUTES.dashboard.admin}
+          path={ROUTES.admin.incidents}
           element={
             <ProtectedRoute>
               <AdminDashboard />

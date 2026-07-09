@@ -11,9 +11,8 @@ export interface ApiValidationError {
 
 export interface PaginationMeta {
   page: number;
-  pageSize: number;
-  totalItems: number;
-  totalPages: number;
+  limit: number;
+  total: number;
 }
 
 export interface PaginatedResponse<T> {

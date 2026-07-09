@@ -9,16 +9,18 @@ describe("IncidentList", () => {
       <IncidentList
         incidents={[
           {
-            id: "INC-0001",
+            id: 1,
+            ticket: "INC-0001",
             title: "Internet Issue",
-            location: "Building A",
+            category: "Technology",
             status: "open",
             createdAt: "Today",
           },
           {
-            id: "INC-0002",
+            id: 2,
+            ticket: "INC-0002",
             title: "Projector",
-            location: "Building B",
+            category: "Academic",
             status: "resolved",
             createdAt: "Yesterday",
           },

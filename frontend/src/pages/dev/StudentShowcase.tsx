@@ -77,9 +77,10 @@ export default function StudentShowcase() {
 
                 <div className="flex flex-wrap gap-3">
                     <StatusBadge status="open" />
-                    <StatusBadge status="inProgress" />
+                    <StatusBadge status="in_progress" />
                     <StatusBadge status="resolved" />
                     <StatusBadge status="rejected" />
+                    <StatusBadge status="cancelled" />
                 </div>
             </div>
 
@@ -145,12 +146,13 @@ export default function StudentShowcase() {
               </h3>
 
               <IncidentCard
-                id="INC-0001"
-                title="Internet connection issue"
-                location="Building A - Lab 3"
-                status="open"
-                createdAt="Jun 29, 2026"
-              />
+              id={1}
+              ticket="INC-2026-0001"
+              title="Internet connection issue"
+              category="Technology"
+              status="open"
+              createdAt="Jun 29, 2026"
+            />
             </div>
 
             <section className="space-y-4">
@@ -310,17 +312,19 @@ export default function StudentShowcase() {
             <IncidentList
               incidents={[
                 {
-                  id: "INC-0001",
+                  id: 1,
+                  ticket: "INC-2026-0001",
                   title: "Internet connection issue",
-                  location: "Building A - Lab 3",
+                  category: "Technology",
                   status: "open",
                   createdAt: "Jun 29, 2026",
                 },
                 {
-                  id: "INC-0002",
+                  id: 2,
+                  ticket: "INC-2026-0002",
                   title: "Projector not working",
-                  location: "Building B - Room 201",
-                  status: "inProgress",
+                  category: "Technology",
+                  status: "in_progress",
                   createdAt: "Jun 28, 2026",
                 },
               ]}
@@ -665,26 +669,42 @@ export default function StudentShowcase() {
                     placeholder="Search incidents..."
                   />
 
+                  <Tabs
+                    value="all"
+                    onChange={() => {}}
+                    tabs={[
+                      { label: "All", value: "all" },
+                      { label: "Open", value: "open" },
+                      { label: "In Progress", value: "in_progress" },
+                      { label: "Resolved", value: "resolved" },
+                      { label: "Rejected", value: "rejected" },
+                      { label: "Cancelled", value: "cancelled" },
+                    ]}
+                  />
+
                   <IncidentList
                     incidents={[
                       {
-                        id: "INC-0001",
+                        id: 1,
+                        ticket: "INC-2026-0001",
                         title: "Projector not working",
-                        location: "Building A - Room 204",
+                        category: "Technology",
                         status: "open",
                         createdAt: "05 Jul 2026",
                       },
                       {
-                        id: "INC-0002",
+                        id: 2,
+                        ticket: "INC-2026-0002",
                         title: "Broken chair",
-                        location: "Building C - Room 102",
-                        status: "inProgress",
+                        category: "Technology",
+                        status: "in_progress",
                         createdAt: "04 Jul 2026",
                       },
                       {
-                        id: "INC-0003",
+                        id: 3,
+                        ticket: "INC-2026-0003",
                         title: "Internet outage",
-                        location: "Computer Lab",
+                        category: "Technology",
                         status: "resolved",
                         createdAt: "02 Jul 2026",
                       },

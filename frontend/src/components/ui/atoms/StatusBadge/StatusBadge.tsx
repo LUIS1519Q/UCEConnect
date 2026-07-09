@@ -1,27 +1,46 @@
 import { cn } from "../../../../utils/cn";
 
+import type { IncidentStatus } from "../../../../types/incident";
 import type { StatusBadgeProps } from "./StatusBadge.types";
 
-const statusConfig = {
+const statusConfig: Record<
+  IncidentStatus,
+  {
+    label: string;
+    className: string;
+  }
+> = {
   open: {
     label: "Open",
     className:
       "bg-blue-100 text-blue-700 border-blue-200",
   },
-  inProgress: {
+
+  in_progress: {
     label: "In Progress",
     className:
       "bg-amber-100 text-amber-700 border-amber-200",
   },
+
   resolved: {
-    label: "Resolved",
+    label:
+      "Resolved",
     className:
       "bg-green-100 text-green-700 border-green-200",
   },
+
   rejected: {
-    label: "Rejected",
+    label:
+      "Rejected",
     className:
       "bg-red-100 text-red-700 border-red-200",
+  },
+
+  cancelled: {
+    label:
+      "Cancelled",
+    className:
+      "bg-gray-100 text-gray-700 border-gray-200",
   },
 };
 

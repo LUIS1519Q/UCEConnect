@@ -1,8 +1,11 @@
+import type { IncidentStatus } from "../../../../types/incident";
+
 export interface IncidentCardProps {
-  id: string;
+  id: number;
+  ticket: string;
   title: string;
-  location: string;
-  status: "open" | "inProgress" | "resolved" | "rejected";
+  category: string;
+  status: IncidentStatus;
   createdAt: string;
   onClick?: () => void;
 }
