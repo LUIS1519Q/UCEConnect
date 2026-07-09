@@ -17,8 +17,8 @@ class CancelIncident {
       throw new Error('Solo se pueden cancelar incidencias en estado open');
     }
 
-    const updated = await this.incidentRepo.updateStatus(id, 'rejected');
-    await this.incidentRepo.saveHistory(id, 'rejected', userId, 'Cancelada por el estudiante');
+    const updated = await this.incidentRepo.updateStatus(id, 'cancelled');
+    await this.incidentRepo.saveHistory(id, 'cancelled', userId, 'Cancelled by student');
 
     return updated.toJSON();
   }

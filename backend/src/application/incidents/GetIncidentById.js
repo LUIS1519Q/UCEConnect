@@ -13,34 +13,34 @@ class GetIncidentById {
       throw new Error('No tienes permiso para ver esta incidencia');
     }
 
-    const [history, observations] = await Promise.all([
+    const [history, conversationCount] = await Promise.all([
       this.incidentRepo.findHistoryByIncidentId(id),
-      this.incidentRepo.findObservationsByIncidentId(id),
+      this.incidentRepo.countObservationsByIncidentId(id),
     ]);
 
-    const historyEvents = history.map(h => ({
-      type: 'status_change',
-      timestamp: h.changedAt,
-      actor: h.changedByName,
-      actorRole: null,
-      content: h.status,
+    const timeline = history.map((h) => ({
+      id: h.id,
+      status: h.status,
+      changedBy: h.changedByName,
+      statusComment: h.note,
+      changedAt: h.changedAt,
     }));
-
-    const observationEvents = observations.map(o => ({
-      type: 'observation',
-      timestamp: o.createdAt,
-      actor: o.authorName,
-      actorRole: o.authorRole,
-      content: o.message,
-    }));
-
-    const timeline = [...historyEvents, ...observationEvents]
-      .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
     return {
-      ...incident.toJSON(),
-      history,
-      observations,
+      incident: {
+        id: incident.id,
+        ticket: incident.ticket,
+        title: incident.title,
+        description: incident.description,
+        status: incident.status,
+        statusReason: incident.statusReason,
+        priority: incident.priority,
+        aiSummary: incident.aiSummary,
+        createdAt: incident.createdAt,
+        updatedAt: incident.updatedAt,
+      },
+      attachments: [],
+      conversationCount,
       timeline,
     };
   }
