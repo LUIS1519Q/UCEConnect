@@ -8,12 +8,16 @@ const ClassifyIncident = require('../../../application/incidents/ClassifyInciden
 const DetectDuplicates = require('../../../application/incidents/DetectDuplicates');
 const GetObservations = require('../../../application/incidents/GetObservations');
 const GetSimilarIncident = require('../../../application/incidents/GetSimilarIncident');
+const UploadAttachments = require('../../../application/incidents/UploadAttachments');
+const attachmentPolicy = require('../../../application/incidents/attachmentPolicy');
 const PostgresIncidentRepo = require('../../repositories/PostgresIncidentRepo');
 const PostgresObservationRepo = require('../../repositories/PostgresObservationRepo');
 const PostgresNotificationRepo = require('../../repositories/PostgresNotificationRepo');
 const PostgresUserRepo = require('../../repositories/PostgresUserRepo');
+const PostgresAttachmentRepo = require('../../repositories/PostgresAttachmentRepo');
 const NotificationService = require('../../services/NotificationService');
 const GeminiClassifier = require('../../services/GeminiClassifier');
+const cloudinaryService = require('../../services/CloudinaryService');
 const db = require('../../db/connection');
 const logger = require('../../logger/logger');
 const { io } = require('../server');
@@ -23,6 +27,7 @@ const observationRepo = new PostgresObservationRepo(db);
 const notificationRepo = new PostgresNotificationRepo(db);
 const notificationService = new NotificationService(io, notificationRepo, logger);
 const userRepo = new PostgresUserRepo(db);
+const attachmentRepo = new PostgresAttachmentRepo(db);
 const classifier = new GeminiClassifier(process.env.OPENROUTER_API_KEY);
 const classifyIncidentUC = new ClassifyIncident(classifier, logger);
 const detectDuplicatesUC = new DetectDuplicates(incidentRepo, logger);
@@ -35,6 +40,8 @@ const mapIncidentError = (err, res, logger, context) => {
     return res.status(403).json({ message: err.message, errorCode: 'INSUFFICIENT_PERMISSION' });
   if (err.message.includes('open') || err.message.includes('Transición'))
     return res.status(400).json({ message: err.message, errorCode: 'BUSINESS_RULE_VIOLATION' });
+  if (err.message.includes('no permitido') || err.message.includes('excede'))
+    return res.status(400).json({ message: err.message, errorCode: 'VALIDATION_ERROR' });
   return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
 };
 
@@ -79,7 +86,7 @@ async function list(req, res) {
 
 async function getById(req, res) {
   try {
-    const result = await new GetIncidentById(incidentRepo).execute({
+    const result = await new GetIncidentById(incidentRepo, attachmentRepo).execute({
       id: Number(req.params.id),
       role: req.user.role,
       userId: req.user.id,
@@ -171,4 +178,43 @@ async function getSimilarIncident(req, res) {
   }
 }
 
-module.exports = { create, list, getById, updateStatus, update, cancel, getObservations, getSimilarIncident };
+async function uploadAttachments(req, res) {
+  try {
+    if (!req.files || req.files.length === 0)
+      return res.status(400).json({ message: 'Se requiere al menos un archivo.', errorCode: 'VALIDATION_ERROR' });
+
+    const attachments = await new UploadAttachments(
+      incidentRepo,
+      attachmentRepo,
+      cloudinaryService,
+      attachmentPolicy,
+      logger
+    ).execute({
+      incidentId: Number(req.params.id),
+      userId: req.user.id,
+      role: req.user.role,
+      files: req.files.map((f) => ({
+        buffer: f.buffer,
+        mimetype: f.mimetype,
+        originalname: f.originalname,
+        size: f.size,
+      })),
+    });
+
+    return res.status(201).json({ message: 'Archivos adjuntados exitosamente.', attachments });
+  } catch (err) {
+    return mapIncidentError(err, res, logger, 'uploadAttachments');
+  }
+}
+
+module.exports = {
+  create,
+  list,
+  getById,
+  updateStatus,
+  update,
+  cancel,
+  getObservations,
+  getSimilarIncident,
+  uploadAttachments,
+};

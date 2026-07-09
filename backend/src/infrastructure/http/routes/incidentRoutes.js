@@ -4,6 +4,7 @@ const { z } = require('zod');
 const authMiddleware = require('../middlewares/authMiddleware');
 const roleMiddleware = require('../middlewares/roleMiddleware');
 const incidentController = require('../controllers/incidentController');
+const { uploadAttachments } = require('../middlewares/uploadMiddleware');
 
 const router = Router();
 
@@ -99,6 +100,14 @@ router.patch(
   roleMiddleware('manager', 'admin'),
   validate(updateStatusSchema),
   incidentController.updateStatus
+);
+
+router.post(
+  '/:id/attachments',
+  authMiddleware,
+  roleMiddleware('student', 'manager', 'admin'),
+  uploadAttachments,
+  incidentController.uploadAttachments
 );
 
 module.exports = router;
