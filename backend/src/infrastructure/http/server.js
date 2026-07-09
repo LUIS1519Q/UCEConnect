@@ -62,6 +62,7 @@ app.use('/api/v1/notifications', require('./routes/notificationRoutes'));
 app.use('/api/v1/dashboard', require('./routes/dashboardRoutes'));
 app.use('/api/v1/users', require('./routes/userRoutes'));
 app.use('/api/v1/categories', require('./routes/categoryRoutes'));
+app.use('/api/v1/reports', require('./routes/reportRoutes'));
 
 app.get('/api/v1/help', authMiddleware, helpController.getHelp);
 app.get('/api/v1/about', authMiddleware, helpController.getAbout);
