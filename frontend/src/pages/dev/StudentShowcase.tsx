@@ -32,8 +32,11 @@ import { Timeline } from "../../components/ui/organisms/Timeline";
 import { ConversationThread } from "../../components/ui/organisms";
 import { AppHeader } from "../../components/ui/organisms/AppHeader";
 import { AppSidebar } from "../../components/ui/organisms";
+import { LoadingState } from "../../components/ui/organisms";
+import { EmptyState } from "../../components/ui/organisms";
+import { ErrorState } from "../../components/ui/organisms";
 import { AppLayout } from "../../components/ui/templates";
-//import { Button } from "../../components/ui/atoms";
+import { Button } from "../../components/ui/atoms";
 
 export default function StudentShowcase() {
   const [selectedTab, setSelectedTab] =
@@ -554,6 +557,50 @@ export default function StudentShowcase() {
               />
             </div>
           </section>
+
+          {/* ===========================================
+                STATES
+          =========================================== */}
+
+          <section className="space-y-8">
+            <h2 className="text-2xl font-bold">
+              States
+            </h2>
+
+            <div className="rounded-xl border bg-white p-8">
+              <h3 className="mb-4 text-lg font-semibold">
+                LoadingState
+              </h3>
+
+              <LoadingState />
+            </div>
+          </section>
+
+          <div className="rounded-xl border bg-white p-8">
+            <h3 className="mb-4 text-lg font-semibold">
+              EmptyState
+            </h3>
+
+            <EmptyState
+              title="No incidents found"
+              description="You haven't created any incidents yet."
+              action={
+                <Button>
+                  Create Incident
+                </Button>
+              }
+            />
+          </div>
+
+          <div className="rounded-xl border bg-white p-8">
+            <h3 className="mb-4 text-lg font-semibold">
+              ErrorState
+            </h3>
+
+            <ErrorState
+              onRetry={() => alert("Retry")}
+            />
+          </div>
 
         </section>
 
