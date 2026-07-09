@@ -3,6 +3,7 @@ const { z } = require('zod');
 
 const authController = require('../controllers/authController');
 const authMiddleware = require('../middlewares/authMiddleware');
+const { upload } = require('../middlewares/uploadMiddleware');
 
 const router = Router();
 
@@ -71,6 +72,27 @@ const resendResetCodeSchema = z.object({
   email: z.string().email().endsWith('@uce.edu.ec'),
 });
 
+const updateProfileSchema = z.object({
+  firstName: z
+    .string()
+    .min(2, 'First name must contain between 2 and 50 characters.')
+    .max(50, 'First name must contain between 2 and 50 characters.')
+    .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, 'First name must contain only letters and spaces.')
+    .optional(),
+  lastName: z
+    .string()
+    .min(2, 'Last name must contain between 2 and 50 characters.')
+    .max(50, 'Last name must contain between 2 and 50 characters.')
+    .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, 'Last name must contain only letters and spaces.')
+    .optional(),
+  phone: z
+    .string()
+    .regex(/^\+?[\d\s\-()]{7,15}$/, 'Invalid phone number format.')
+    .optional(),
+  facultyId: z.coerce.number().int().positive().optional(),
+  careerId: z.coerce.number().int().positive().optional(),
+});
+
 function validate(schema) {
   return (req, res, next) => {
     const result = schema.safeParse(req.body);
@@ -100,5 +122,7 @@ router.get('/microsoft', authController.microsoftLogin);
 router.get('/microsoft/callback', authController.microsoftCallback);
 
 router.get('/me', authMiddleware, authController.getProfile);
+router.patch('/me', authMiddleware, validate(updateProfileSchema), authController.updateProfileHandler);
+router.patch('/me/avatar', authMiddleware, upload.single('avatar'), authController.updateAvatarHandler);
 
 module.exports = router;
