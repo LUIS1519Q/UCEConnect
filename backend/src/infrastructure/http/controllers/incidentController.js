@@ -19,6 +19,7 @@ const PostgresNotificationRepo = require('../../repositories/PostgresNotificatio
 const PostgresUserRepo = require('../../repositories/PostgresUserRepo');
 const PostgresAttachmentRepo = require('../../repositories/PostgresAttachmentRepo');
 const PostgresInternalNoteRepo = require('../../repositories/PostgresInternalNoteRepo');
+const PostgresCategoryRepo = require('../../repositories/PostgresCategoryRepo');
 const NotificationService = require('../../services/NotificationService');
 const GeminiClassifier = require('../../services/GeminiClassifier');
 const cloudinaryService = require('../../services/CloudinaryService');
@@ -33,8 +34,9 @@ const notificationService = new NotificationService(io, notificationRepo, logger
 const userRepo = new PostgresUserRepo(db);
 const attachmentRepo = new PostgresAttachmentRepo(db);
 const internalNoteRepo = new PostgresInternalNoteRepo(db);
+const categoryRepo = new PostgresCategoryRepo(db);
 const classifier = new GeminiClassifier(process.env.OPENROUTER_API_KEY);
-const classifyIncidentUC = new ClassifyIncident(classifier, logger);
+const classifyIncidentUC = new ClassifyIncident(classifier, logger, categoryRepo);
 const detectDuplicatesUC = new DetectDuplicates(incidentRepo, logger);
 
 const mapIncidentError = (err, res, logger, context) => {

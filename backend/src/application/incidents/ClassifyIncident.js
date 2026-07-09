@@ -1,12 +1,15 @@
 class ClassifyIncident {
-  constructor(classifier, logger) {
+  constructor(classifier, logger, categoryRepo) {
     this.classifier = classifier;
     this.logger = logger || { info: () => {}, warn: () => {}, error: () => {} };
+    this.categoryRepo = categoryRepo || null;
   }
 
   async execute({ title, description }) {
     try {
-      const result = await this.classifier.classify(title, description);
+      const categories = this.categoryRepo ? await this.categoryRepo.findAll({ isActive: true }) : [];
+      const categoryNames = categories.map((category) => category.name);
+      const result = await this.classifier.classify(title, description, categoryNames);
       this.logger.info(`Incidencia clasificada por Gemini: priority=${result.priority}, category=${result.category}`);
       return { ...result, aiClassified: true };
     } catch (err) {
