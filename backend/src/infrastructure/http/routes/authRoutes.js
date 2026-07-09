@@ -27,7 +27,6 @@ const registerSchema = z
       .min(8)
       .regex(/\d/, 'Password must contain at least one number.'),
     confirmPassword: z.string().min(1, 'Confirm password is required.'),
-    role: z.enum(['student', 'manager', 'admin']).default('student'),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Passwords do not match.',

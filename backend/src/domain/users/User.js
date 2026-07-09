@@ -15,6 +15,7 @@ class User {
     avatarUrl,
     facultyName,
     careerName,
+    roleName,
   }) {
     this.id = id;
     this.firstName = firstName;
@@ -31,9 +32,10 @@ class User {
     this.avatarUrl = avatarUrl || null;
     this.facultyName = facultyName || null;
     this.careerName = careerName || null;
+    this.roleName = roleName || null;
   }
 
-  static create({ firstName, lastName, email, passwordHash, roleId }) {
+  static create({ firstName, lastName, email, passwordHash, roleId, isVerified }) {
     return new User({
       firstName,
       lastName,
@@ -41,7 +43,7 @@ class User {
       passwordHash,
       roleId,
       isActive: true,
-      isVerified: false,
+      isVerified: isVerified || false,
     });
   }
 
@@ -52,6 +54,7 @@ class User {
       lastName: this.lastName,
       email: this.email,
       roleId: this.roleId,
+      roleName: this.roleName,
       isActive: this.isActive,
       isVerified: this.isVerified,
       createdAt: this.createdAt,
