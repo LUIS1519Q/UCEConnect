@@ -50,6 +50,8 @@ router.post(
 
 router.get('/:id', authMiddleware, incidentController.getById);
 
+router.get('/:id/observations', authMiddleware, incidentController.getObservations);
+
 router.patch(
   '/:id',
   authMiddleware,

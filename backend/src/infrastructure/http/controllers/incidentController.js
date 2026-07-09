@@ -6,12 +6,15 @@ const UpdateIncident = require('../../../application/incidents/UpdateIncident');
 const CancelIncident = require('../../../application/incidents/CancelIncident');
 const ClassifyIncident = require('../../../application/incidents/ClassifyIncident');
 const DetectDuplicates = require('../../../application/incidents/DetectDuplicates');
+const GetObservations = require('../../../application/incidents/GetObservations');
 const PostgresIncidentRepo = require('../../repositories/PostgresIncidentRepo');
+const PostgresObservationRepo = require('../../repositories/PostgresObservationRepo');
 const GeminiClassifier = require('../../services/GeminiClassifier');
 const db = require('../../db/connection');
 const logger = require('../../logger/logger');
 
 const incidentRepo = new PostgresIncidentRepo(db);
+const observationRepo = new PostgresObservationRepo(db);
 const classifier = new GeminiClassifier(process.env.OPENROUTER_API_KEY);
 const classifyIncidentUC = new ClassifyIncident(classifier, logger);
 const detectDuplicatesUC = new DetectDuplicates(incidentRepo, logger);
@@ -114,4 +117,21 @@ async function cancel(req, res) {
   }
 }
 
-module.exports = { create, list, getById, updateStatus, update, cancel };
+async function getObservations(req, res) {
+  try {
+    const useCase = new GetObservations(incidentRepo, observationRepo, logger);
+    const observations = await useCase.execute({
+      incidentId: Number(req.params.id),
+      role: req.user.role,
+      userId: req.user.id,
+    });
+    return res.status(200).json({ observations });
+  } catch (err) {
+    logger.warn(`Error en getObservations: ${err.message}`);
+    if (err.message.includes('no encontrada')) return res.status(404).json({ message: err.message });
+    if (err.message.includes('permiso')) return res.status(403).json({ message: err.message });
+    return res.status(500).json({ message: err.message });
+  }
+}
+
+module.exports = { create, list, getById, updateStatus, update, cancel, getObservations };
