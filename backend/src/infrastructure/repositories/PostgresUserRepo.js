@@ -175,6 +175,18 @@ class PostgresUserRepo {
       [userId]
     );
   }
+
+  async findByRole(role) {
+    const result = await this.db.query(
+      `SELECT u.id, u.first_name, u.last_name, u.email,
+              r.name as role
+       FROM users u
+       JOIN roles r ON u.role_id = r.id
+       WHERE r.name = $1 AND u.is_active = true`,
+      [role]
+    );
+    return result.rows;
+  }
 }
 
 module.exports = PostgresUserRepo;

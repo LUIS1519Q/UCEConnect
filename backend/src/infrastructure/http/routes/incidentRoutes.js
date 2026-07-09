@@ -7,10 +7,20 @@ const incidentController = require('../controllers/incidentController');
 
 const router = Router();
 
-const createSchema = z.object({
-  title: z.string().min(5).max(200),
-  description: z.string().min(10),
-  categoryId: z.number().int().positive(),
+const createIncidentSchema = z.object({
+  title: z.string()
+    .min(5, 'Title must contain between 5 and 200 characters.')
+    .max(200, 'Title must contain between 5 and 200 characters.'),
+  description: z.string()
+    .min(10, 'Description must contain between 10 and 5000 characters.')
+    .max(5000, 'Description must contain between 10 and 5000 characters.'),
+});
+
+const listIncidentsSchema = z.object({
+  status: z.enum(['open', 'in_progress', 'resolved', 'rejected', 'cancelled']).optional(),
+  category_id: z.coerce.number().int().positive().optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(50).default(10),
 });
 
 const updateStatusSchema = z.object({
@@ -38,19 +48,35 @@ function validate(schema) {
   };
 }
 
-router.get('/', authMiddleware, incidentController.list);
+function validateQuery(schema) {
+  return (req, res, next) => {
+    const result = schema.safeParse(req.query);
+    if (!result.success) {
+      return res.status(400).json({
+        message: 'Validation error',
+        errors: result.error.flatten().fieldErrors,
+      });
+    }
+    req.query = result.data;
+    next();
+  };
+}
+
+router.get('/', authMiddleware, validateQuery(listIncidentsSchema), incidentController.list);
 
 router.post(
   '/',
   authMiddleware,
   roleMiddleware('student'),
-  validate(createSchema),
+  validate(createIncidentSchema),
   incidentController.create
 );
 
 router.get('/:id', authMiddleware, incidentController.getById);
 
 router.get('/:id/observations', authMiddleware, incidentController.getObservations);
+
+router.get('/:id/similar', authMiddleware, incidentController.getSimilarIncident);
 
 router.patch(
   '/:id',

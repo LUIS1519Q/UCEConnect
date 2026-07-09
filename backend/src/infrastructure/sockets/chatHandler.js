@@ -18,6 +18,9 @@ function initChat(io, deps) {
   io.on('connection', (socket) => {
     deps.logger.info(`Socket conectado: userId=${socket.user.id}`);
 
+    socket.join(`user_${socket.user.id}`);
+    deps.logger.info(`userId=${socket.user.id} joined personal room user_${socket.user.id}`);
+
     socket.on('join_incident', async ({ incidentId }) => {
       deps.logger.info(`join_incident recibido: incidentId=${incidentId} userId=${socket.user.id}`);
       try {
@@ -33,6 +36,20 @@ function initChat(io, deps) {
         socket.join(`incident_${incidentId}`);
         deps.logger.info(`userId=${socket.user.id} joined incident_${incidentId}`);
         socket.emit('joined', { incidentId });
+
+        const observations = await deps.observationRepo.findByIncidentId(incidentId);
+        const conversationEnabled = incident.status === 'in_progress';
+        const isLocked = ['resolved', 'rejected', 'cancelled'].includes(incident.status);
+
+        socket.emit('conversationLoaded', {
+          conversationEnabled,
+          messages: observations,
+          ...(isLocked && {
+            locked: true,
+            status: incident.status,
+            lockMessage: 'This conversation is now read-only.',
+          }),
+        });
       } catch (err) {
         deps.logger.error(`Error en join_incident: ${err.message} stack: ${err.stack}`);
         socket.emit('error', { message: err.message });
@@ -41,7 +58,40 @@ function initChat(io, deps) {
 
     socket.on('send_message', async ({ incidentId, message }) => {
       try {
-        const sendObservation = new SendObservation(deps.incidentRepo, deps.observationRepo, deps.logger);
+        const incident = await deps.incidentRepo.findById(Number(incidentId));
+        if (!incident) {
+          socket.emit('error', { message: 'Incidencia no encontrada' });
+          return;
+        }
+
+        if (incident.status !== 'in_progress') {
+          socket.emit('error', {
+            event: 'error',
+            message: incident.status === 'open'
+              ? 'Conversation is not available yet.'
+              : 'This conversation is read-only.',
+          });
+          return;
+        }
+
+        if (socket.user.role === 'student') {
+          const observations = await deps.observationRepo.findByIncidentId(incidentId);
+          const managerReplied = observations.some((o) => o.authorRole === 'manager');
+          if (!managerReplied) {
+            socket.emit('error', {
+              event: 'error',
+              message: 'Conversation is not available yet.',
+            });
+            return;
+          }
+        }
+
+        const sendObservation = new SendObservation(
+          deps.incidentRepo,
+          deps.observationRepo,
+          deps.logger,
+          deps.notificationService
+        );
         const observation = await sendObservation.execute({
           incidentId: Number(incidentId),
           authorId: socket.user.id,

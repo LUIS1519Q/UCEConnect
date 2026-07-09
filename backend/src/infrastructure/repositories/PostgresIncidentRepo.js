@@ -4,12 +4,14 @@ function rowToIncident(row) {
   if (!row) return null;
   return new Incident({
     id: row.id,
+    ticket: row.ticket,
     title: row.title,
     description: row.description,
     categoryId: row.category_id,
     priority: row.priority,
     aiSummary: row.ai_summary,
     status: row.status,
+    statusReason: row.status_reason,
     createdBy: row.created_by,
     assignedTo: row.assigned_to,
     createdAt: row.created_at,
@@ -42,7 +44,18 @@ class PostgresIncidentRepo {
         incident.assignedTo,
       ]
     );
-    return rowToIncident(result.rows[0]);
+
+    const row = result.rows[0];
+    const ticketResult = await this.db.query(
+      `UPDATE incidents
+       SET ticket = 'INC-' || TO_CHAR(created_at, 'YYYY') || '-' || LPAD(id::TEXT, 4, '0')
+       WHERE id = $1
+       RETURNING ticket`,
+      [row.id]
+    );
+    row.ticket = ticketResult.rows[0].ticket;
+
+    return rowToIncident(row);
   }
 
   async findById(id) {
@@ -62,7 +75,7 @@ class PostgresIncidentRepo {
   }
 
   async findAll({ userId, status, categoryId, page, limit }) {
-    const VALID_STATUSES = ['open', 'in_progress', 'resolved', 'rejected'];
+    const VALID_STATUSES = ['open', 'in_progress', 'resolved', 'rejected', 'cancelled'];
     const params = [];
     const conditions = [];
 
@@ -188,6 +201,14 @@ class PostgresIncidentRepo {
       authorId: row.author_id,
       authorRole: row.author_role,
     }));
+  }
+
+  async countObservationsByIncidentId(incidentId) {
+    const result = await this.db.query(
+      `SELECT COUNT(*) FROM observations WHERE incident_id = $1`,
+      [incidentId]
+    );
+    return parseInt(result.rows[0].count, 10);
   }
 
   async categoryExists(categoryId) {
