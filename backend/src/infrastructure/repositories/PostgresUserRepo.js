@@ -19,6 +19,7 @@ function rowToUser(row) {
     avatarUrl: row.avatar_url,
     facultyName: row.faculty_name,
     careerName: row.career_name,
+    roleName: row.role_name,
   });
 }
 
@@ -41,7 +42,7 @@ class PostgresUserRepo {
     const result = await this.db.query(
       `SELECT u.id, u.first_name, u.last_name, u.email,
               u.phone, u.avatar_url, u.faculty_id, u.career_id,
-              r.name as role,
+              r.name as role_name,
               f.name as faculty_name,
               c.name as career_name
        FROM users u
@@ -236,6 +237,68 @@ class PostgresUserRepo {
       [facultyId]
     );
     return result.rows;
+  }
+
+  async findAllUsers({ role, isActive, search, page = 1, limit = 10 } = {}) {
+    const params = [];
+    const conditions = [];
+
+    if (role !== undefined) {
+      params.push(role);
+      conditions.push(`r.name = $${params.length}`);
+    }
+    if (isActive !== undefined) {
+      params.push(isActive);
+      conditions.push(`u.is_active = $${params.length}`);
+    }
+    if (search !== undefined) {
+      params.push(`%${search}%`);
+      conditions.push(
+        `(u.first_name ILIKE $${params.length} OR u.last_name ILIKE $${params.length} OR u.email ILIKE $${params.length})`
+      );
+    }
+
+    const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+
+    const offset = (page - 1) * limit;
+    params.push(limit);
+    const limitIdx = params.length;
+    params.push(offset);
+    const offsetIdx = params.length;
+
+    const dataResult = await this.db.query(
+      `SELECT u.id, u.first_name, u.last_name, u.email, u.phone, u.is_active, u.is_verified, u.created_at,
+              r.name as role_name
+       FROM users u
+       JOIN roles r ON u.role_id = r.id
+       ${where}
+       ORDER BY u.created_at DESC
+       LIMIT $${limitIdx} OFFSET $${offsetIdx}`,
+      params
+    );
+
+    const countResult = await this.db.query(
+      `SELECT COUNT(*) FROM users u JOIN roles r ON u.role_id = r.id ${where}`,
+      params.slice(0, params.length - 2)
+    );
+
+    return {
+      data: dataResult.rows.map(rowToUser),
+      total: parseInt(countResult.rows[0].count, 10),
+    };
+  }
+
+  async updateRole(id, roleId) {
+    await this.db.query('UPDATE users SET role_id = $2 WHERE id = $1', [id, roleId]);
+  }
+
+  async updateActiveStatus(id, isActive) {
+    await this.db.query('UPDATE users SET is_active = $2 WHERE id = $1', [id, isActive]);
+  }
+
+  async findRoleIdByName(name) {
+    const result = await this.db.query('SELECT id FROM roles WHERE name = $1', [name]);
+    return result.rows[0] ? result.rows[0].id : null;
   }
 }
 
