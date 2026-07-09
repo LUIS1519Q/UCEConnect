@@ -15,7 +15,16 @@ export default function AppLayout({
   onProfileClick,
 }: AppLayoutProps) {
   return (
-    <div className="flex min-h-screen flex-col bg-background lg:flex-row">
+    <div
+      className="
+        flex
+        h-screen
+        overflow-hidden
+        flex-col
+        bg-background
+        lg:flex-row
+      "
+    >
 
       <AppSidebar
         primaryAction={primaryAction}
@@ -23,7 +32,14 @@ export default function AppLayout({
         bottomItems={bottomItems}
       />
 
-      <div className="flex flex-1 flex-col">
+      <div
+        className="
+          flex
+          min-h-0
+          flex-1
+          flex-col
+        "
+      >
 
         <AppHeader
           studentName={studentName}
@@ -32,8 +48,27 @@ export default function AppLayout({
           onProfileClick={onProfileClick}
         />
 
-        <main className="flex-1 bg-background p-8">
-          <div className="mx-auto w-full max-w-7xl">
+        <main
+          className="
+            flex
+            min-h-0
+            flex-1
+            flex-col
+            bg-background
+            p-8
+          "
+        >
+          <div
+            className="
+              mx-auto
+              flex
+              min-h-0
+              w-full
+              max-w-7xl
+              flex-1
+              flex-col
+            "
+          >
 
             <h1 className="mb-6 text-3xl font-bold text-textPrimary">
               {title}

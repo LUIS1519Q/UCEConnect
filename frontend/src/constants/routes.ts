@@ -1,4 +1,8 @@
 export const ROUTES = {
+  public: {
+    home: "/",
+  },
+
   auth: {
     login: "/login",
     register: "/register",
@@ -7,9 +11,27 @@ export const ROUTES = {
     resetPassword: "/reset-password",
   },
 
-  dashboard: {
-    student: "/dashboard/student",
-    manager: "/dashboard/manager",
-    admin: "/dashboard/admin",
+  student: {
+    myIncidents: "/incidents",
+    createIncident: "/incidents/create",
+    incidentDetail: "/incidents/:id",
+    editIncident: "/incidents/:id/edit",
+    
+    notifications: "/notifications",
+
+    profile: "/profile",
+    editProfile: "/profile/edit",
+
+    about: "/about",
+    help: "/help",
+  },
+
+  manager: {
+    incidents: "/manager/incidents",
+    incidentDetail: "/manager/incidents/:id",
+  },
+
+  admin: {
+    incidents: "/admin/incidents",
   },
 } as const;

@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+import { ROUTES } from "../../../../constants/routes";
+
 import { Logo } from "../../atoms/Logo";
 
 import type { AppSidebarProps } from "./AppSidebar.types";
@@ -31,10 +34,12 @@ export default function AppSidebar({
           px-6
         "
       >
-        <Logo
-          variant="horizontal-white"
-          className="w-40"
-        />
+        <Link to={ROUTES.public.home}>
+          <Logo
+            variant="horizontal-white"
+            className="w-40 cursor-pointer"
+          />
+        </Link>
       </div>
 
       {/* Primary Action */}

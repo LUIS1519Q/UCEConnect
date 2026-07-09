@@ -1,5 +1,4 @@
-import type { IncidentCardProps }
-  from "../../molecules/IncidentCard";
+import type { IncidentCardProps } from "../../molecules/IncidentCard";
 
 export interface IncidentListProps {
   incidents: IncidentCardProps[];

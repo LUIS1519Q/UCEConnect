@@ -1,3 +1,5 @@
+import type { GetIncidentsParams } from "../types/incident";
+
 export const queryKeys = {
   auth: {
     me: ["auth", "me"] as const,
@@ -6,7 +8,7 @@ export const queryKeys = {
   incidents: {
     all: ["incidents"] as const,
 
-    list: (filters?: Record<string, unknown>) =>
+    list: (filters?: GetIncidentsParams) =>
       [...queryKeys.incidents.all, "list", filters] as const,
 
     detail: (id: number | string) =>

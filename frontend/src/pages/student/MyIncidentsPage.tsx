@@ -1,165 +1,205 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { incidentService } from "../../api/incidentService";
-import DashboardLayout from "../../components/DashboardLayout";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../../store/authStore";
 
-type Incident = {
-  id: number;
-  title: string;
-  category?: string;
-  categoryName?: string;
-  status: string;
-  createdAt?: string;
-  date?: string;
-};
+import {
+  FilePlus2,
+  FileText,
+  User,
+  CircleHelp,
+  Info,
+  LogOut,
+} from "../../components/ui/icons";
 
-const STATUS_OPTIONS: { label: string; value: string | undefined }[] = [
-  { label: "All", value: undefined },
-  { label: "Open", value: "open" },
-  { label: "In Progress", value: "in_progress" },
-  { label: "Resolved", value: "resolved" },
-  { label: "Rejected", value: "rejected" },
-];
+import { useLogout } from "../../hooks/useLogout";
 
-function MyIncidentsPage() {
+import { ROUTES } from "../../constants/routes";
 
+import { AppLayout } from "../../components/ui/templates/AppLayout";
+import { SearchBar } from "../../components/ui/molecules/SearchBar";
+import { Tabs } from "../../components/ui/molecules/Tabs";
+import { IncidentList } from "../../components/ui/organisms/IncidentList";
+import { Pagination } from "../../components/ui/molecules/Pagination";
+import { LoadingState } from "../../components/ui/organisms/LoadingState";
+import { ErrorState } from "../../components/ui/organisms/ErrorState";
+import { EmptyState } from "../../components/ui/organisms/EmptyState";
+
+import { useMyIncidents } from "../../hooks/useIncidents";
+
+export default function MyIncidentsPage() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
-  const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
+  const { logout } = useLogout();
+
+  const user = useAuthStore((state) => state.user);
 
   const {
-    data: incidents = [],
+    incidents,
+    currentPage,
+    totalPages,
+    setCurrentPage,
+    statusFilter,
+    setStatusFilter,
+    search,
+    setSearch,
     isLoading,
-  } = useQuery<Incident[]>({
-    queryKey: ["incidents", statusFilter],
-    queryFn: () =>
-      incidentService.getIncidents({ status: statusFilter }),
-  });
-
-  const { mutate: cancelIncident } = useMutation({
-    mutationFn: (incidentId: number) =>
-      incidentService.cancelIncident(incidentId),
-
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["incidents"] });
-      alert("Incident cancelled successfully.");
-    },
-
-    onError: (error: any) => {
-      alert(
-        error?.response?.data?.message ?? "Failed to cancel incident."
-      );
-    },
-  });
-
-  if (isLoading) {
-    return (
-      <DashboardLayout title="My Incidents">
-        <p>Loading incidents...</p>
-      </DashboardLayout>
-    );
-  }
-
+    isError,
+    refetch,
+  } = useMyIncidents();
+  
   return (
-    <DashboardLayout title="My Incidents">
-      <div className="space-y-6">
+    <AppLayout
+      title="My Incidents"
+      studentName={`${user?.firstName ?? ""} ${user?.lastName ?? ""}`}
+      notificationCount={0}
+      onProfileClick={() => navigate("/profile")}
+      onNotificationsClick={() => navigate("/notifications")}
+      primaryAction={{
+        label: "New Incident",
+        icon: FilePlus2,
+        onClick: () => navigate(ROUTES.student.createIncident),
+      }}
+      sidebarItems={[
+        {
+          label: "My Incidents",
+          icon: FileText,
+          active: true,
+          onClick: () => navigate(ROUTES.student.myIncidents),
+        },
+        {
+          label: "Profile",
+          icon: User,
+          onClick: () => navigate(ROUTES.student.profile),
+        },
+        {
+          label: "Help",
+          icon: CircleHelp,
+          onClick: () => navigate(ROUTES.student.help),
+        },
+        {
+          label: "About",
+          icon: Info,
+          onClick: () => navigate(ROUTES.student.about),
+        },
+      ]}
+      bottomItems={[
+        {
+          label: "Logout",
+          icon: LogOut,
+          onClick: logout,
+        },
+      ]}
+    >
+      <div
+        className="
+          flex
+          min-h-0
+          flex-1
+          flex-col
+        "
+      >
 
-        <div className="flex justify-end">
-        <Link
-            to="/incidents/create"
-            className="rounded-lg bg-blue-600 px-4 py-2 text-white"
-        >
-            Create Incident
-        </Link>
-        </div>
+        {isLoading ? (
 
-        <div className="flex flex-wrap gap-3">
-          {STATUS_OPTIONS.map((opt) => (
-            <button
-              key={opt.label}
-              onClick={() => setStatusFilter(opt.value)}
-              className={
-                statusFilter === opt.value
-                  ? "rounded-full bg-blue-600 px-4 py-2 text-white"
-                  : "rounded-full border px-4 py-2"
+          <LoadingState
+            title="Loading incidents..."
+          />
+
+        ) : isError ? (
+
+          <ErrorState
+            title="Failed to load incidents"
+            description="Please try again."
+            onRetry={refetch}
+          />
+
+        ) : (
+
+          <>
+            <SearchBar
+              placeholder="Search incidents..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)
               }
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
+            />
+            
+            <Tabs
+              value={statusFilter}
+              onChange={(value) =>
+                setStatusFilter(
+                  value as typeof statusFilter
+                )
+              }
+              tabs={[
+                {
+                  label: "All",
+                  value: "all",
+                },
+                {
+                  label: "Open",
+                  value: "open",
+                },
+                {
+                  label: "In Progress",
+                  value: "in_progress",
+                },
+                {
+                  label: "Resolved",
+                  value: "resolved",
+                },
+                {
+                  label: "Rejected",
+                  value: "rejected",
+                },
+                {
+                  label: "Cancelled",
+                  value: "cancelled",
+                },
+              ]}
+            />
+            
+            {incidents.length === 0 ? (
 
-        <div className="space-y-4">
+              <EmptyState
+                title="No incidents found"
+                description="Create your first incident."
+              />
 
-          {incidents.map((incident) => (
-            <div
-              key={incident.id}
-              onClick={() => navigate(`/incidents/${incident.id}`)}
-              className="block rounded-xl bg-white p-5 shadow hover:shadow-md cursor-pointer"
-            >
-              <h3 className="text-xl font-semibold">
-                {incident.title}
-              </h3>
+            ) : (
 
-              <p className="mt-1 text-gray-500">
-                {incident.categoryName ?? incident.category}
-              </p>
+              <div
+                className="
+                  mt-6
+                  min-h-0
+                  flex-1
+                  overflow-y-auto
+                "
+              >
+                <IncidentList
+                  incidents={incidents.map((incident) => ({
+                    ...incident,
+                    onClick: () =>
+                      navigate(
+                        `${ROUTES.student.incidentDetail}/${incident.id}`
+                      ),
+                  }))}
+                />
+              </div>
 
-        <div className="mt-4 flex items-center justify-between">
+            )}
 
-          <span className="rounded-full bg-gray-100 px-3 py-1 text-sm">
-            {incident.status}
-          </span>
-
-          <div className="flex items-center gap-3">
-
-            <span className="text-sm text-gray-500">
-              {incident.createdAt ?? incident.date}
-            </span>
-
-          {incident.status === "open" && (
-            <Link
-              to={`/incidents/${incident.id}/edit`}
-              className="rounded-lg bg-yellow-500 px-3 py-2 text-white"
-              onClick={(e) => e.stopPropagation()}
-            >
-              Edit
-            </Link>
-          )}
-
-          {incident.status === "open" && (
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-
-                const confirmed = window.confirm(
-                  "Are you sure you want to cancel this incident?"
-                );
-
-                if (confirmed) {
-                  cancelIncident(incident.id);
-                }
-              }}
-              className="rounded-lg bg-red-600 px-3 py-2 text-white"
-            >
-              Cancel
-            </button>
-          )}
-
-          </div>
-
-        </div>
+            <div className="pt-6">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
             </div>
-          ))}
+            
+          </>
 
-        </div>
+        )}
 
       </div>
-    </DashboardLayout>
+    </AppLayout>
   );
 }
-
-export default MyIncidentsPage;
