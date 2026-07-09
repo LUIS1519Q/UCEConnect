@@ -13,6 +13,12 @@ function rowToUser(row) {
     isActive: row.is_active,
     isVerified: row.is_verified,
     createdAt: row.created_at,
+    phone: row.phone,
+    facultyId: row.faculty_id,
+    careerId: row.career_id,
+    avatarUrl: row.avatar_url,
+    facultyName: row.faculty_name,
+    careerName: row.career_name,
   });
 }
 
@@ -33,8 +39,15 @@ class PostgresUserRepo {
 
   async findById(id) {
     const result = await this.db.query(
-      `SELECT u.*, r.name as role_name FROM users u
-       JOIN roles r ON u.role_id = r.id
+      `SELECT u.id, u.first_name, u.last_name, u.email,
+              u.phone, u.avatar_url, u.faculty_id, u.career_id,
+              r.name as role,
+              f.name as faculty_name,
+              c.name as career_name
+       FROM users u
+       LEFT JOIN roles r ON u.role_id = r.id
+       LEFT JOIN faculties f ON u.faculty_id = f.id
+       LEFT JOIN careers c ON u.career_id = c.id
        WHERE u.id = $1`,
       [id]
     );
@@ -184,6 +197,43 @@ class PostgresUserRepo {
        JOIN roles r ON u.role_id = r.id
        WHERE r.name = $1 AND u.is_active = true`,
       [role]
+    );
+    return result.rows;
+  }
+
+  async updateProfile(userId, data) {
+    await this.db.query(
+      `UPDATE users SET
+         first_name = COALESCE($2, first_name),
+         last_name = COALESCE($3, last_name),
+         phone = COALESCE($4, phone),
+         faculty_id = COALESCE($5, faculty_id),
+         career_id = COALESCE($6, career_id)
+       WHERE id = $1`,
+      [
+        userId,
+        data.firstName ?? null,
+        data.lastName ?? null,
+        data.phone ?? null,
+        data.facultyId ?? null,
+        data.careerId ?? null,
+      ]
+    );
+  }
+
+  async updateAvatar(userId, avatarUrl) {
+    await this.db.query('UPDATE users SET avatar_url = $2 WHERE id = $1', [userId, avatarUrl]);
+  }
+
+  async findFaculties() {
+    const result = await this.db.query('SELECT id, name FROM faculties ORDER BY name ASC');
+    return result.rows;
+  }
+
+  async findCareersByFaculty(facultyId) {
+    const result = await this.db.query(
+      'SELECT id, name FROM careers WHERE faculty_id = $1 ORDER BY name ASC',
+      [facultyId]
     );
     return result.rows;
   }

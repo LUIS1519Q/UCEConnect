@@ -28,6 +28,7 @@ module.exports = { app, httpServer, io };
 
 const authMiddleware = require('./middlewares/authMiddleware');
 const helpController = require('./controllers/helpController');
+const authController = require('./controllers/authController');
 
 app.use(helmet());
 
@@ -61,6 +62,9 @@ app.use('/api/v1/notifications', require('./routes/notificationRoutes'));
 
 app.get('/api/v1/help', authMiddleware, helpController.getHelp);
 app.get('/api/v1/about', authMiddleware, helpController.getAbout);
+
+app.get('/api/v1/faculties', authMiddleware, authController.getFacultiesHandler);
+app.get('/api/v1/careers', authMiddleware, authController.getCareersHandler);
 
 app.use((req, res) => {
   logger.warn(`Ruta no encontrada: ${req.method} ${req.path}`);
