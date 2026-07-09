@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const app = require('./infrastructure/http/server');
+const { httpServer } = require('./infrastructure/http/server');
 const { pool } = require('./infrastructure/db/connection');
 const logger = require('./infrastructure/logger/logger');
 
@@ -11,7 +11,7 @@ async function startServer() {
     await pool.query('SELECT NOW()');
     logger.info('✅ Base de datos conectada');
 
-    app.listen(PORT, () => {
+    httpServer.listen(PORT, () => {
       logger.info(`🚀 UCEConnect Backend | Puerto: ${PORT} | Entorno: ${process.env.NODE_ENV || 'development'} | Health: http://localhost:${PORT}/health`);
     });
   } catch (error) {
