@@ -1,9 +1,10 @@
 const IncidentStatus = require('../../domain/incidents/IncidentStatus');
 
 class UpdateStatus {
-  constructor(incidentRepo, logger) {
+  constructor(incidentRepo, logger, notificationService = null) {
     this.incidentRepo = incidentRepo;
     this.logger = logger;
+    this.notificationService = notificationService;
   }
 
   async execute({ id, newStatus, changedBy, note }) {
@@ -21,6 +22,24 @@ class UpdateStatus {
     await this.incidentRepo.saveHistory(id, newStatus, changedBy, note);
 
     this.logger.info(`Incidencia ${id} actualizada a ${newStatus}`);
+
+    if (this.notificationService) {
+      const statusLabels = {
+        in_progress: 'Your incident is now being reviewed.',
+        resolved: 'Your incident has been resolved.',
+        rejected: 'Your incident has been rejected.',
+        cancelled: 'Your incident has been cancelled.',
+      };
+
+      await this.notificationService.notify({
+        userId: updated.createdBy,
+        incidentId: updated.id,
+        ticket: updated.ticket,
+        type: 'status_updated',
+        title: statusLabels[newStatus] || `Incident status updated to ${newStatus}.`,
+      });
+    }
+
     return updated.toJSON();
   }
 }

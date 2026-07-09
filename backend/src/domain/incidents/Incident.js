@@ -3,12 +3,14 @@ const IncidentStatus = require('./IncidentStatus');
 class Incident {
   constructor({
     id,
+    ticket,
     title,
     description,
     categoryId,
     priority,
     aiSummary,
     status,
+    statusReason,
     createdBy,
     assignedTo,
     createdAt,
@@ -18,12 +20,14 @@ class Incident {
     assignedToName,
   }) {
     this.id = id;
+    this.ticket = ticket || null;
     this.title = title;
     this.description = description;
     this.categoryId = categoryId;
     this.priority = priority;
     this.aiSummary = aiSummary;
     this.status = status;
+    this.statusReason = statusReason || null;
     this.createdBy = createdBy;
     this.assignedTo = assignedTo;
     this.createdAt = createdAt;
@@ -55,6 +59,7 @@ class Incident {
   toJSON() {
     return {
       id: this.id,
+      ticket: this.ticket,
       title: this.title,
       description: this.description,
       categoryId: this.categoryId,
@@ -62,6 +67,7 @@ class Incident {
       priority: this.priority,
       aiSummary: this.aiSummary,
       status: this.status,
+      statusReason: this.statusReason,
       createdBy: this.createdBy,
       createdByName: this.createdByName,
       assignedTo: this.assignedTo,

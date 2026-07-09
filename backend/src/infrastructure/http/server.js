@@ -24,6 +24,11 @@ const io = new Server(httpServer, {
   },
 });
 
+module.exports = { app, httpServer, io };
+
+const authMiddleware = require('./middlewares/authMiddleware');
+const helpController = require('./controllers/helpController');
+
 app.use(helmet());
 
 app.use(cors({
@@ -52,6 +57,10 @@ app.get('/health', (req, res) => {
 
 app.use('/api/v1/auth', require('./routes/authRoutes'));
 app.use('/api/v1/incidents', require('./routes/incidentRoutes'));
+app.use('/api/v1/notifications', require('./routes/notificationRoutes'));
+
+app.get('/api/v1/help', authMiddleware, helpController.getHelp);
+app.get('/api/v1/about', authMiddleware, helpController.getAbout);
 
 app.use((req, res) => {
   logger.warn(`Ruta no encontrada: ${req.method} ${req.path}`);
@@ -79,10 +88,14 @@ const { initChat } = require('../sockets/chatHandler');
 const db = require('../db/connection');
 const PostgresIncidentRepo = require('../repositories/PostgresIncidentRepo');
 const PostgresObservationRepo = require('../repositories/PostgresObservationRepo');
+const PostgresNotificationRepo = require('../repositories/PostgresNotificationRepo');
+const NotificationService = require('../services/NotificationService');
 const jwt = require('jsonwebtoken');
 
 const incidentRepo = new PostgresIncidentRepo(db);
 const observationRepo = new PostgresObservationRepo(db);
+const notificationRepo = new PostgresNotificationRepo(db);
+const notificationService = new NotificationService(io, notificationRepo, logger);
 
 initChat(io, {
   incidentRepo,
@@ -90,6 +103,5 @@ initChat(io, {
   logger,
   jwt,
   JWT_SECRET: process.env.JWT_SECRET,
+  notificationService,
 });
-
-module.exports = { app, httpServer };

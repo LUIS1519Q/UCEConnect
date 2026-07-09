@@ -48,9 +48,9 @@ async function register(req, res) {
       return res.status(400).json({ message: error.message, errorCode: 'EMAIL_ALREADY_REGISTERED' });
     }
     if (error.message.includes('institutional')) {
-      return res.status(400).json({ message: error.message });
+      return res.status(400).json({ message: error.message, errorCode: 'INVALID_EMAIL_DOMAIN' });
     }
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message, errorCode: 'INTERNAL_ERROR' });
   }
 }
 
@@ -71,7 +71,7 @@ async function verifyCodeHandler(req, res) {
     if (error.message.includes('Invalid verification')) {
       return res.status(400).json({ message: error.message, errorCode: 'INVALID_CODE' });
     }
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message, errorCode: 'INTERNAL_ERROR' });
   }
 }
 
@@ -84,12 +84,32 @@ async function login(req, res) {
       return res.status(401).json({ message: error.message, errorCode: 'INVALID_CREDENTIALS' });
     }
     if (error.message.includes('verify your email')) {
-      return res.status(400).json({ message: error.message, errorCode: 'EMAIL_NOT_VERIFIED' });
+      return res.status(403).json({ message: error.message, errorCode: 'EMAIL_NOT_VERIFIED' });
     }
     if (error.message.includes('deactivated')) {
-      return res.status(400).json({ message: error.message, errorCode: 'USER_DISABLED' });
+      return res.status(403).json({ message: error.message, errorCode: 'USER_DISABLED' });
     }
     res.status(500).json({ message: error.message });
+  }
+}
+
+async function getProfile(req, res) {
+  try {
+    const user = await userRepo.findById(req.user.id);
+    return res.status(200).json({
+      user: {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        faculty: null,
+        career: null,
+        avatarUrl: null,
+      },
+    });
+  } catch (error) {
+    logger.error(`Error en getProfile: ${error.message}`);
+    return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
 
@@ -99,12 +119,12 @@ async function resendCode(req, res) {
     res.status(200).json(result);
   } catch (error) {
     if (error.message.includes('not found')) {
-      return res.status(404).json({ message: error.message });
+      return res.status(404).json({ message: error.message, errorCode: 'USER_NOT_FOUND' });
     }
     if (error.message.includes('already verified')) {
-      return res.status(400).json({ message: error.message });
+      return res.status(400).json({ message: error.message, errorCode: 'ALREADY_VERIFIED' });
     }
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message, errorCode: 'INTERNAL_ERROR' });
   }
 }
 
@@ -119,7 +139,7 @@ async function forgotPasswordHandler(req, res) {
     if (error.message.includes('deactivated')) {
       return res.status(400).json({ message: error.message, errorCode: 'USER_DISABLED' });
     }
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message, errorCode: 'INTERNAL_ERROR' });
   }
 }
 
@@ -140,7 +160,7 @@ async function verifyResetCodeHandler(req, res) {
     if (error.message.includes('Invalid verification')) {
       return res.status(400).json({ message: error.message, errorCode: 'INVALID_CODE' });
     }
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message, errorCode: 'INTERNAL_ERROR' });
   }
 }
 
@@ -150,12 +170,12 @@ async function resendResetCodeHandler(req, res) {
     res.status(200).json(result);
   } catch (error) {
     if (error.message.includes('not found')) {
-      return res.status(404).json({ message: error.message });
+      return res.status(404).json({ message: error.message, errorCode: 'USER_NOT_FOUND' });
     }
     if (error.message.includes('deactivated')) {
-      return res.status(400).json({ message: error.message });
+      return res.status(400).json({ message: error.message, errorCode: 'USER_DISABLED' });
     }
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message, errorCode: 'INTERNAL_ERROR' });
   }
 }
 
@@ -179,7 +199,7 @@ async function resetPasswordHandler(req, res) {
     if (error.message.includes('different from')) {
       return res.status(400).json({ message: error.message, errorCode: 'SAME_PASSWORD' });
     }
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message, errorCode: 'INTERNAL_ERROR' });
   }
 }
 
@@ -189,7 +209,7 @@ async function microsoftLogin(req, res) {
     res.redirect(authUrl);
   } catch (error) {
     logger.error(`Error en Microsoft login: ${error.message}`);
-    res.status(500).json({ message: 'Error al iniciar sesión con Microsoft' });
+    res.status(500).json({ message: 'Error al iniciar sesión con Microsoft', errorCode: 'MICROSOFT_AUTH_ERROR' });
   }
 }
 
@@ -197,7 +217,7 @@ async function microsoftCallback(req, res) {
   try {
     const { code } = req.query;
     if (!code) {
-      return res.status(400).json({ message: 'Código de autorización requerido' });
+      return res.status(400).json({ message: 'Código de autorización requerido', errorCode: 'AUTH_CODE_REQUIRED' });
     }
 
     const result = await loginWithMicrosoft.execute({ code });
@@ -213,12 +233,12 @@ async function microsoftCallback(req, res) {
     logger.error(`Error en Microsoft callback: ${error.message}`);
 
     if (error.message.includes('@uce.edu.ec')) {
-      return res.status(403).json({ message: error.message });
+      return res.status(403).json({ message: error.message, errorCode: 'INVALID_EMAIL_DOMAIN' });
     }
     if (error.message.includes('desactivada')) {
-      return res.status(400).json({ message: error.message });
+      return res.status(400).json({ message: error.message, errorCode: 'USER_DISABLED' });
     }
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message, errorCode: 'INTERNAL_ERROR' });
   }
 }
 
@@ -233,4 +253,5 @@ module.exports = {
   resetPassword: resetPasswordHandler,
   microsoftLogin,
   microsoftCallback,
+  getProfile,
 };
