@@ -59,6 +59,7 @@ app.get('/health', (req, res) => {
 app.use('/api/v1/auth', require('./routes/authRoutes'));
 app.use('/api/v1/incidents', require('./routes/incidentRoutes'));
 app.use('/api/v1/notifications', require('./routes/notificationRoutes'));
+app.use('/api/v1/dashboard', require('./routes/dashboardRoutes'));
 
 app.get('/api/v1/help', authMiddleware, helpController.getHelp);
 app.get('/api/v1/about', authMiddleware, helpController.getAbout);

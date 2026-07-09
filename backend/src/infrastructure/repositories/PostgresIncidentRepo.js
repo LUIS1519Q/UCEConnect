@@ -234,6 +234,26 @@ class PostgresIncidentRepo {
     );
     return result.rows[0] ? result.rows[0].id : null;
   }
+
+  async countByStatus() {
+    const result = await this.db.query(`SELECT status, COUNT(*) FROM incidents GROUP BY status`);
+    return result.rows.reduce((acc, row) => {
+      acc[row.status] = parseInt(row.count, 10);
+      return acc;
+    }, {});
+  }
+
+  async countByDay(days) {
+    const result = await this.db.query(
+      `SELECT TO_CHAR(d.day, 'YYYY-MM-DD') AS date, COUNT(i.id) AS count
+       FROM generate_series(CURRENT_DATE - ($1::int - 1), CURRENT_DATE, interval '1 day') AS d(day)
+       LEFT JOIN incidents i ON DATE(i.created_at) = d.day
+       GROUP BY d.day
+       ORDER BY d.day ASC`,
+      [days]
+    );
+    return result.rows.map((row) => ({ date: row.date, count: parseInt(row.count, 10) }));
+  }
 }
 
 module.exports = PostgresIncidentRepo;
