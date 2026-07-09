@@ -5,6 +5,7 @@ class IIncidentRepo {
   updateStatus(id, status) { throw new Error('Not implemented') }
   saveHistory(incidentId, status, changedBy, note) { throw new Error('Not implemented') }
   findHistoryByIncidentId(incidentId) { throw new Error('Not implemented') }
+  countObservationsByIncidentId(incidentId) { throw new Error('Not implemented') }
   categoryExists(categoryId) { throw new Error('Not implemented') }
 }
 module.exports = IIncidentRepo
