@@ -37,7 +37,7 @@ class Incident {
     this.assignedToName = assignedToName || null;
   }
 
-  static create({ title, description, categoryId, createdBy }) {
+  static create({ title, description, categoryId, createdBy, priority, aiSummary }) {
     if (!IncidentStatus.isValid('open')) {
       throw new Error('Estado inicial inválido');
     }
@@ -46,8 +46,8 @@ class Incident {
       title,
       description,
       categoryId,
-      priority: 'medium',
-      aiSummary: null,
+      priority: priority || 'medium',
+      aiSummary: aiSummary || null,
       status: 'open',
       createdBy,
       assignedTo: null,

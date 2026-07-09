@@ -127,13 +127,21 @@ class PostgresIncidentRepo {
     };
   }
 
-  async updateStatus(id, status) {
+  async updateStatus(id, status, statusReason) {
     const result = await this.db.query(
       `UPDATE incidents
-       SET status = $1, updated_at = NOW()
-       WHERE id = $2
+       SET status = $1, status_reason = $2, updated_at = NOW()
+       WHERE id = $3
        RETURNING *`,
-      [status, id]
+      [status, statusReason, id]
+    );
+    return rowToIncident(result.rows[0]);
+  }
+
+  async updateCategory(id, categoryId) {
+    const result = await this.db.query(
+      `UPDATE incidents SET category_id = $2, updated_at = NOW() WHERE id = $1 RETURNING *`,
+      [id, categoryId]
     );
     return rowToIncident(result.rows[0]);
   }
