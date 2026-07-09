@@ -99,8 +99,6 @@ router.post('/reset-password', validate(resetSchema), authController.resetPasswo
 router.get('/microsoft', authController.microsoftLogin);
 router.get('/microsoft/callback', authController.microsoftCallback);
 
-router.get('/me', authMiddleware, (req, res) => {
-  res.json({ user: req.user });
-});
+router.get('/me', authMiddleware, authController.getProfile);
 
 module.exports = router;
