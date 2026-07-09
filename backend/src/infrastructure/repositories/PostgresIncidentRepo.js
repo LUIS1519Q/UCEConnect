@@ -254,6 +254,30 @@ class PostgresIncidentRepo {
     );
     return result.rows.map((row) => ({ date: row.date, count: parseInt(row.count, 10) }));
   }
+
+  async countByStatusInRange(startDate, endDate) {
+    const result = await this.db.query(
+      `SELECT status, COUNT(*) FROM incidents WHERE created_at >= $1 AND created_at < $2 GROUP BY status`,
+      [startDate, endDate]
+    );
+    return result.rows.reduce((acc, row) => {
+      acc[row.status] = parseInt(row.count, 10);
+      return acc;
+    }, {});
+  }
+
+  async countByCategoryInRange(startDate, endDate) {
+    const result = await this.db.query(
+      `SELECT COALESCE(c.name, 'Sin categoría') as category_name, COUNT(i.id) as count
+       FROM incidents i
+       LEFT JOIN categories c ON i.category_id = c.id
+       WHERE i.created_at >= $1 AND i.created_at < $2
+       GROUP BY c.name
+       ORDER BY count DESC`,
+      [startDate, endDate]
+    );
+    return result.rows.map((row) => ({ category: row.category_name, count: parseInt(row.count, 10) }));
+  }
 }
 
 module.exports = PostgresIncidentRepo;
