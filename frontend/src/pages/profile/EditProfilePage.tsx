@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import DashboardLayout from "../../components/DashboardLayout";
+import DashboardLayout from "../../components/ui/templates/DashboardLayout";
 
 function EditProfilePage() {
   const navigate = useNavigate();

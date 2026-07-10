@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const logger = require('../../infrastructure/logger/logger');
 
 class ResetPassword {
@@ -6,40 +7,42 @@ class ResetPassword {
     this.bcrypt = bcrypt;
   }
 
-  async execute({ email, code, newPassword }) {
+  async execute({ resetToken, newPassword }) {
+    let decoded;
+    try {
+      decoded = jwt.verify(resetToken, process.env.JWT_SECRET);
+    } catch (error) {
+      logger.warn(`Restablecimiento fallido — token inválido o expirado: ${error.message}`);
+      throw new Error('Invalid or expired reset token.');
+    }
+
+    if (decoded.purpose !== 'reset_password') {
+      logger.warn('Restablecimiento fallido — token con propósito inválido');
+      throw new Error('Invalid reset token.');
+    }
+
+    const { email } = decoded;
     logger.info(`Intento de restablecimiento de contraseña: ${email}`);
 
     try {
-      const resetCode = await this.userRepo.findResetCode(email);
-      if (!resetCode) {
-        logger.warn(`Restablecimiento fallido — código no encontrado: ${email}`);
-        throw new Error('Código no encontrado');
-      }
-
-      if (resetCode.used) {
-        logger.warn(`Restablecimiento fallido — código ya utilizado: ${email}`);
-        throw new Error('El código ya fue utilizado');
-      }
-
-      if (new Date() > new Date(resetCode.expiresAt)) {
-        logger.warn(`Restablecimiento fallido — código expirado: ${email}`);
-        throw new Error('El código ha expirado');
-      }
-
-      if (resetCode.code !== code) {
-        logger.warn(`Restablecimiento fallido — código incorrecto: ${email}`);
-        throw new Error('Código incorrecto');
-      }
-
       const user = await this.userRepo.findByEmail(email);
+      if (!user) {
+        logger.warn(`Restablecimiento fallido — usuario no encontrado: ${email}`);
+        throw new Error('User not found.');
+      }
+
+      const samePassword = await this.bcrypt.compare(newPassword, user.passwordHash);
+      if (samePassword) {
+        logger.warn(`Restablecimiento fallido — misma contraseña: ${email}`);
+        throw new Error('New password must be different from the current password.');
+      }
 
       const passwordHash = await this.bcrypt.hash(newPassword, 10);
       await this.userRepo.updatePassword(user.id, passwordHash);
-      await this.userRepo.markResetCodeAsUsed(email);
 
       logger.info(`Contraseña actualizada para: ${email}`);
 
-      return { message: 'Contraseña actualizada exitosamente' };
+      return { message: 'Password updated successfully' };
     } catch (error) {
       logger.error(`Error en restablecimiento de contraseña: ${error.message}`);
       throw error;

@@ -1,5 +1,9 @@
 import type { Role, User } from "./user";
 
+export interface MeResponse {
+  user: User;
+}
+
 export interface AuthResponse {
   accessToken: string;
   refreshToken: string;
@@ -16,6 +20,7 @@ export interface RegisterPayload {
   lastName: string;
   email: string;
   password: string;
+  confirmPassword: string;
   role: Role;
 }
 
@@ -34,7 +39,11 @@ export interface ForgotPasswordPayload {
 }
 
 export interface ResetPasswordPayload {
-  email: string;
-  code: string;
+  resetToken: string;
   newPassword: string;
+}
+
+export interface VerifyResetCodeResponse {
+  message: string;
+  resetToken: string;
 }

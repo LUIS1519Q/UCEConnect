@@ -14,32 +14,32 @@ class RegisterUser {
     this.bcrypt = bcrypt;
   }
 
-  async execute({ name, email, password, role }) {
+  async execute({ firstName, lastName, email, password }) {
     logger.info(`Intento de registro: ${email}`);
 
     try {
       if (!email.endsWith('@uce.edu.ec')) {
         logger.warn(`Registro rechazado — email no institucional: ${email}`);
-        throw new Error('Solo se permiten correos institucionales @uce.edu.ec');
+        throw new Error('Only institutional emails are allowed (@uce.edu.ec).');
       }
 
       const existingUser = await this.userRepo.findByEmail(email);
       if (existingUser) {
         logger.warn(`Registro fallido — email ya registrado: ${email}`);
-        throw new Error('El correo ya está registrado');
+        throw new Error('Email is already registered.');
       }
 
       const passwordHash = await this.bcrypt.hash(password, 10);
 
-      const roleId = ROLE_IDS[role] || ROLE_IDS.student;
+      const roleId = ROLE_IDS.student;
 
-      const code = Math.floor(100000 + Math.random() * 900000).toString();
+      const code = require('crypto').randomInt(100000, 999999).toString();
       const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
 
       logger.info(`Enviando código de verificación a: ${email}`);
       await this.emailNotifier.sendVerificationCode(email, code);
 
-      const user = User.create({ name, email, passwordHash, roleId });
+      const user = User.create({ firstName, lastName, email, passwordHash, roleId });
       const savedUser = await this.userRepo.save(user);
       await this.userRepo.saveVerifyCode(savedUser.id, code, expiresAt);
 

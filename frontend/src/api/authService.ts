@@ -11,6 +11,8 @@ import type {
   VerifyResetCodePayload,
   ForgotPasswordPayload,
   ResetPasswordPayload,
+  VerifyResetCodeResponse,
+  MeResponse,
 } from "../types/auth";
 
 const AUTH_BASE = "/api/v1/auth";
@@ -34,11 +36,11 @@ export const authService = {
   async register(
     payload: RegisterPayload
   ): Promise<ApiMessageResponse> {
-    const registerPayload: RegisterPayload = {
+     const registerPayload: RegisterPayload = {
       ...payload,
       role: payload.role as Role,
     };
-
+    
     const response = await api.post<ApiMessageResponse>(
       `${AUTH_BASE}/register`,
       registerPayload
@@ -50,11 +52,11 @@ export const authService = {
   // ---------------- CURRENT USER ----------------
 
   async me(): Promise<User> {
-    const response = await api.get<User>(
+    const response = await api.get<MeResponse>(
       `${AUTH_BASE}/me`
     );
 
-    return response.data;
+    return response.data.user;
   },
 
   // ---------------- FORGOT PASSWORD ----------------
@@ -96,11 +98,12 @@ export const authService = {
 
   async verifyResetCode(
     payload: VerifyResetCodePayload
-  ): Promise<ApiMessageResponse> {
-    const response = await api.post<ApiMessageResponse>(
-      `${AUTH_BASE}/verify-reset-code`,
-      payload
-    );
+  ): Promise<VerifyResetCodeResponse> {
+    const response =
+      await api.post<VerifyResetCodeResponse>(
+        `${AUTH_BASE}/verify-reset-code`,
+        payload
+      );
 
     return response.data;
   },

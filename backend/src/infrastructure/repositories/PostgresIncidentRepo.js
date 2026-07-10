@@ -4,12 +4,14 @@ function rowToIncident(row) {
   if (!row) return null;
   return new Incident({
     id: row.id,
+    ticket: row.ticket,
     title: row.title,
     description: row.description,
     categoryId: row.category_id,
     priority: row.priority,
     aiSummary: row.ai_summary,
     status: row.status,
+    statusReason: row.status_reason,
     createdBy: row.created_by,
     assignedTo: row.assigned_to,
     createdAt: row.created_at,
@@ -42,7 +44,18 @@ class PostgresIncidentRepo {
         incident.assignedTo,
       ]
     );
-    return rowToIncident(result.rows[0]);
+
+    const row = result.rows[0];
+    const ticketResult = await this.db.query(
+      `UPDATE incidents
+       SET ticket = 'INC-' || TO_CHAR(created_at, 'YYYY') || '-' || LPAD(id::TEXT, 4, '0')
+       WHERE id = $1
+       RETURNING ticket`,
+      [row.id]
+    );
+    row.ticket = ticketResult.rows[0].ticket;
+
+    return rowToIncident(row);
   }
 
   async findById(id) {
@@ -62,7 +75,7 @@ class PostgresIncidentRepo {
   }
 
   async findAll({ userId, status, categoryId, page, limit }) {
-    const VALID_STATUSES = ['open', 'in_progress', 'resolved', 'rejected'];
+    const VALID_STATUSES = ['open', 'in_progress', 'resolved', 'rejected', 'cancelled'];
     const params = [];
     const conditions = [];
 
@@ -114,13 +127,21 @@ class PostgresIncidentRepo {
     };
   }
 
-  async updateStatus(id, status) {
+  async updateStatus(id, status, statusReason) {
     const result = await this.db.query(
       `UPDATE incidents
-       SET status = $1, updated_at = NOW()
-       WHERE id = $2
+       SET status = $1, status_reason = $2, updated_at = NOW()
+       WHERE id = $3
        RETURNING *`,
-      [status, id]
+      [status, statusReason, id]
+    );
+    return rowToIncident(result.rows[0]);
+  }
+
+  async updateCategory(id, categoryId) {
+    const result = await this.db.query(
+      `UPDATE incidents SET category_id = $2, updated_at = NOW() WHERE id = $1 RETURNING *`,
+      [id, categoryId]
     );
     return rowToIncident(result.rows[0]);
   }
@@ -190,12 +211,72 @@ class PostgresIncidentRepo {
     }));
   }
 
+  async countObservationsByIncidentId(incidentId) {
+    const result = await this.db.query(
+      `SELECT COUNT(*) FROM observations WHERE incident_id = $1`,
+      [incidentId]
+    );
+    return parseInt(result.rows[0].count, 10);
+  }
+
   async categoryExists(categoryId) {
     const result = await this.db.query(
       `SELECT id FROM categories WHERE id = $1 AND is_active = true`,
       [categoryId]
     );
     return result.rows.length > 0;
+  }
+
+  async findCategoryIdByName(name) {
+    const result = await this.db.query(
+      `SELECT id FROM categories WHERE name = $1 AND is_active = true`,
+      [name]
+    );
+    return result.rows[0] ? result.rows[0].id : null;
+  }
+
+  async countByStatus() {
+    const result = await this.db.query(`SELECT status, COUNT(*) FROM incidents GROUP BY status`);
+    return result.rows.reduce((acc, row) => {
+      acc[row.status] = parseInt(row.count, 10);
+      return acc;
+    }, {});
+  }
+
+  async countByDay(days) {
+    const result = await this.db.query(
+      `SELECT TO_CHAR(d.day, 'YYYY-MM-DD') AS date, COUNT(i.id) AS count
+       FROM generate_series(CURRENT_DATE - ($1::int - 1), CURRENT_DATE, interval '1 day') AS d(day)
+       LEFT JOIN incidents i ON DATE(i.created_at) = d.day
+       GROUP BY d.day
+       ORDER BY d.day ASC`,
+      [days]
+    );
+    return result.rows.map((row) => ({ date: row.date, count: parseInt(row.count, 10) }));
+  }
+
+  async countByStatusInRange(startDate, endDate) {
+    const result = await this.db.query(
+      `SELECT status, COUNT(*) FROM incidents WHERE created_at >= $1 AND created_at < $2 GROUP BY status`,
+      [startDate, endDate]
+    );
+    return result.rows.reduce((acc, row) => {
+      acc[row.status] = parseInt(row.count, 10);
+      return acc;
+    }, {});
+  }
+
+  async countByCategoryInRange(startDate, endDate) {
+    const result = await this.db.query(
+      `SELECT COALESCE(c.name, 'Sin categoría') as category_name, COUNT(i.id) as count
+       FROM incidents i
+       LEFT JOIN categories c ON i.category_id = c.id
+       WHERE i.created_at >= $1 AND i.created_at < $2
+       GROUP BY c.name
+       ORDER BY count DESC`,
+      [startDate, endDate]
+    );
+    return result.rows.map((row) => ({ category: row.category_name, count: parseInt(row.count, 10) }));
   }
 }
 

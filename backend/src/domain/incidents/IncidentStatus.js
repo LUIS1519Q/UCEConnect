@@ -1,9 +1,10 @@
 class IncidentStatus {
   static TRANSITIONS = {
-    open: ['in_progress', 'rejected'],
+    open: ['in_progress', 'rejected', 'cancelled'],
     in_progress: ['resolved', 'rejected'],
     resolved: [],
     rejected: [],
+    cancelled: [],
   };
 
   constructor(status) {

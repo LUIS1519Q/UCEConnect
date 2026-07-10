@@ -11,22 +11,22 @@ class VerifyCode {
     const verifyCode = await this.userRepo.findVerifyCode(email);
     if (!verifyCode) {
       logger.warn(`Verificación fallida — código no encontrado: ${email}`);
-      throw new Error('Código no encontrado');
+      throw new Error('Verification code not found.');
     }
 
     if (verifyCode.used) {
       logger.warn(`Verificación fallida — código no encontrado: ${email}`);
-      throw new Error('El código ya fue utilizado');
+      throw new Error('Verification code has already been used.');
     }
 
     if (new Date(verifyCode.expiresAt) < new Date()) {
       logger.warn(`Verificación fallida — código expirado: ${email}`);
-      throw new Error('El código ha expirado');
+      throw new Error('Verification code has expired.');
     }
 
     if (verifyCode.code !== code) {
       logger.warn(`Verificación fallida — código incorrecto: ${email}`);
-      throw new Error('Código incorrecto');
+      throw new Error('Invalid verification code.');
     }
 
     const user = await this.userRepo.findByEmail(email);
