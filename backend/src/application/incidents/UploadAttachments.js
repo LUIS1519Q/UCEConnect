@@ -28,6 +28,10 @@ class UploadAttachments {
       throw new Error('Se requiere al menos un archivo');
     }
 
+    if (files.length > this.attachmentPolicy.maxFilesPerUpload) {
+      throw new Error('Se excede la cantidad máxima de archivos permitida');
+    }
+
     for (const file of files) {
       const category = this.attachmentPolicy.resolveCategory(file.mimetype);
       if (!category) {
