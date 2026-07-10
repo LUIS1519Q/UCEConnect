@@ -218,6 +218,14 @@ class PostgresIncidentRepo {
     );
     return result.rows.length > 0;
   }
+
+  async findCategoryIdByName(name) {
+    const result = await this.db.query(
+      `SELECT id FROM categories WHERE name = $1 AND is_active = true`,
+      [name]
+    );
+    return result.rows[0] ? result.rows[0].id : null;
+  }
 }
 
 module.exports = PostgresIncidentRepo;

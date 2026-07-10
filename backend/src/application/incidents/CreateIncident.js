@@ -28,10 +28,9 @@ class CreateIncident {
       }
     }
 
-    let categoryId = classificationResult.categoryId || null;
-    if (categoryId) {
-      const exists = await this.incidentRepo.categoryExists(categoryId);
-      if (!exists) categoryId = null;
+    let categoryId = null;
+    if (classificationResult.category) {
+      categoryId = await this.incidentRepo.findCategoryIdByName(classificationResult.category);
     }
 
     const incident = Incident.create({ title, description, categoryId, createdBy });
