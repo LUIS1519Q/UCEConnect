@@ -1,5 +1,4 @@
 const multer = require('multer');
-const { ATTACHMENT_POLICY, isAllowedMimeType } = require('../../../application/incidents/attachmentPolicy');
 
 const storage = multer.memoryStorage();
 
@@ -18,22 +17,13 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 },
 });
 
-const attachmentFileFilter = (req, file, cb) => {
-  if (isAllowedMimeType(file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(new Error('Tipo de archivo no permitido.'), false);
-  }
-};
-
 const attachmentUpload = multer({
   storage,
-  fileFilter: attachmentFileFilter,
   limits: {
-    fileSize: ATTACHMENT_POLICY.categories.video.maxSizeBytes,
-    files: ATTACHMENT_POLICY.maxFilesPerUpload,
+    fileSize: 100 * 1024 * 1024,
+    files: 20,
   },
-}).array('files', ATTACHMENT_POLICY.maxFilesPerUpload);
+}).array('files', 20);
 
 function uploadAttachments(req, res, next) {
   attachmentUpload(req, res, (err) => {

@@ -1,16 +1,19 @@
+const PostgresHelpItemRepo = require('../../repositories/PostgresHelpItemRepo');
+const PostgresSettingsRepo = require('../../repositories/PostgresSettingsRepo');
 const db = require('../../db/connection');
 const logger = require('../../logger/logger');
 
+const helpItemRepo = new PostgresHelpItemRepo(db);
+const settingsRepo = new PostgresSettingsRepo(db);
+
 async function getHelp(req, res) {
   try {
-    const itemsResult = await db.query(
-      'SELECT id, question, answer, "order" FROM help_items ORDER BY "order" ASC'
-    );
+    const [items, settings] = await Promise.all([helpItemRepo.findAll(), settingsRepo.findSettings()]);
     return res.status(200).json({
       pageTitle: 'Help & FAQ',
       pageDescription: 'Frequently asked questions about UCEConnect.',
-      supportEmail: 'support@uceconnect.edu.ec',
-      items: itemsResult.rows,
+      supportEmail: settings.contactEmail,
+      items: items.map((item) => item.toJSON()),
     });
   } catch (err) {
     logger.error(`Error en getHelp: ${err.message}`);
@@ -20,19 +23,19 @@ async function getHelp(req, res) {
 
 async function getAbout(req, res) {
   try {
-    const result = await db.query('SELECT * FROM about_info LIMIT 1');
-    const info = result.rows[0] || {};
+    const settings = await settingsRepo.findSettings();
     return res.status(200).json({
-      applicationName: info.application_name || null,
-      version: info.version || null,
-      description: info.description || null,
-      institution: info.institution || null,
+      applicationName: settings.applicationName,
+      version: settings.version,
+      description: settings.description,
+      institution: settings.institution,
       contact: {
-        email: info.contact_email || null,
-        website: info.contact_website || null,
+        email: settings.contactEmail,
+        website: settings.contactWebsite,
       },
-      developedBy: info.developed_by || null,
-      copyright: info.copyright || null,
+      developedBy: settings.developedBy,
+      copyright: settings.copyright,
+      logoUrl: settings.logoUrl,
     });
   } catch (err) {
     logger.error(`Error en getAbout: ${err.message}`);

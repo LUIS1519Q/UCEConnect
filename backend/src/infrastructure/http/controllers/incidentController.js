@@ -10,7 +10,7 @@ const GetObservations = require('../../../application/incidents/GetObservations'
 const GetSimilarIncident = require('../../../application/incidents/GetSimilarIncident');
 const FindSimilarIncidents = require('../../../application/incidents/FindSimilarIncidents');
 const UploadAttachments = require('../../../application/incidents/UploadAttachments');
-const attachmentPolicy = require('../../../application/incidents/attachmentPolicy');
+const buildAttachmentPolicy = require('../../../application/incidents/buildAttachmentPolicy');
 const CorrectCategory = require('../../../application/incidents/CorrectCategory');
 const AddInternalNote = require('../../../application/incidents/AddInternalNote');
 const PostgresIncidentRepo = require('../../repositories/PostgresIncidentRepo');
@@ -20,6 +20,7 @@ const PostgresUserRepo = require('../../repositories/PostgresUserRepo');
 const PostgresAttachmentRepo = require('../../repositories/PostgresAttachmentRepo');
 const PostgresInternalNoteRepo = require('../../repositories/PostgresInternalNoteRepo');
 const PostgresCategoryRepo = require('../../repositories/PostgresCategoryRepo');
+const PostgresSettingsRepo = require('../../repositories/PostgresSettingsRepo');
 const NotificationService = require('../../services/NotificationService');
 const GeminiClassifier = require('../../services/GeminiClassifier');
 const cloudinaryService = require('../../services/CloudinaryService');
@@ -35,6 +36,7 @@ const userRepo = new PostgresUserRepo(db);
 const attachmentRepo = new PostgresAttachmentRepo(db);
 const internalNoteRepo = new PostgresInternalNoteRepo(db);
 const categoryRepo = new PostgresCategoryRepo(db);
+const settingsRepo = new PostgresSettingsRepo(db);
 const classifier = new GeminiClassifier(process.env.OPENROUTER_API_KEY);
 const classifyIncidentUC = new ClassifyIncident(classifier, logger, categoryRepo);
 const detectDuplicatesUC = new DetectDuplicates(incidentRepo, logger);
@@ -215,11 +217,14 @@ async function uploadAttachments(req, res) {
     if (!req.files || req.files.length === 0)
       return res.status(400).json({ message: 'Se requiere al menos un archivo.', errorCode: 'VALIDATION_ERROR' });
 
+    const settings = await settingsRepo.findSettings();
+    const dynamicPolicy = buildAttachmentPolicy(settings);
+
     const attachments = await new UploadAttachments(
       incidentRepo,
       attachmentRepo,
       cloudinaryService,
-      attachmentPolicy,
+      dynamicPolicy,
       logger
     ).execute({
       incidentId: Number(req.params.id),
