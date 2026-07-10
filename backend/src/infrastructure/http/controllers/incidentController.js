@@ -8,6 +8,7 @@ const ClassifyIncident = require('../../../application/incidents/ClassifyInciden
 const DetectDuplicates = require('../../../application/incidents/DetectDuplicates');
 const GetObservations = require('../../../application/incidents/GetObservations');
 const GetSimilarIncident = require('../../../application/incidents/GetSimilarIncident');
+const FindSimilarIncidents = require('../../../application/incidents/FindSimilarIncidents');
 const UploadAttachments = require('../../../application/incidents/UploadAttachments');
 const attachmentPolicy = require('../../../application/incidents/attachmentPolicy');
 const PostgresIncidentRepo = require('../../repositories/PostgresIncidentRepo');
@@ -178,6 +179,19 @@ async function getSimilarIncident(req, res) {
   }
 }
 
+async function findSimilar(req, res) {
+  try {
+    const results = await new FindSimilarIncidents(incidentRepo, logger).execute({
+      title: req.body.title,
+      description: req.body.description,
+    });
+    return res.status(200).json({ data: results });
+  } catch (err) {
+    logger.error(`Error en findSimilar: ${err.message}`);
+    return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
+  }
+}
+
 async function uploadAttachments(req, res) {
   try {
     if (!req.files || req.files.length === 0)
@@ -216,5 +230,6 @@ module.exports = {
   cancel,
   getObservations,
   getSimilarIncident,
+  findSimilar,
   uploadAttachments,
 };
