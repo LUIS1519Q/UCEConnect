@@ -1,5 +1,21 @@
 class User {
-  constructor({ id, firstName, lastName, email, passwordHash, roleId, isActive, isVerified, createdAt }) {
+  constructor({
+    id,
+    firstName,
+    lastName,
+    email,
+    passwordHash,
+    roleId,
+    isActive,
+    isVerified,
+    createdAt,
+    phone,
+    facultyId,
+    careerId,
+    avatarUrl,
+    facultyName,
+    careerName,
+  }) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -9,6 +25,12 @@ class User {
     this.isActive = isActive;
     this.isVerified = isVerified;
     this.createdAt = createdAt;
+    this.phone = phone || null;
+    this.facultyId = facultyId || null;
+    this.careerId = careerId || null;
+    this.avatarUrl = avatarUrl || null;
+    this.facultyName = facultyName || null;
+    this.careerName = careerName || null;
   }
 
   static create({ firstName, lastName, email, passwordHash, roleId }) {
@@ -33,6 +55,10 @@ class User {
       isActive: this.isActive,
       isVerified: this.isVerified,
       createdAt: this.createdAt,
+      phone: this.phone,
+      facultyId: this.facultyId,
+      careerId: this.careerId,
+      avatarUrl: this.avatarUrl,
     };
   }
 }

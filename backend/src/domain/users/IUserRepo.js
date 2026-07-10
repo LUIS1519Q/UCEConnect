@@ -11,5 +11,9 @@ class IUserRepo {
   markResetCodeAsUsed(email) { throw new Error('Not implemented') }
   updatePassword(userId, passwordHash) { throw new Error('Not implemented') }
   async findByRole(role) { throw new Error('Not implemented') }
+  async updateProfile(userId, data) { throw new Error('Not implemented') }
+  async updateAvatar(userId, avatarUrl) { throw new Error('Not implemented') }
+  async findFaculties() { throw new Error('Not implemented') }
+  async findCareersByFaculty(facultyId) { throw new Error('Not implemented') }
 }
 module.exports = IUserRepo

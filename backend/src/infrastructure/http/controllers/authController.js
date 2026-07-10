@@ -11,10 +11,15 @@ const ResetPassword = require('../../../application/users/ResetPassword');
 const VerifyResetCode = require('../../../application/users/VerifyResetCode');
 const ResendResetCode = require('../../../application/users/ResendResetCode');
 const LoginWithMicrosoft = require('../../../application/users/LoginWithMicrosoft');
+const UpdateProfile = require('../../../application/users/UpdateProfile');
+const UpdateAvatar = require('../../../application/users/UpdateAvatar');
+const GetFaculties = require('../../../application/users/GetFaculties');
+const GetCareers = require('../../../application/users/GetCareers');
 
 const PostgresUserRepo = require('../../repositories/PostgresUserRepo');
 const NodemailerEmailNotifier = require('../../services/NodemailerEmailNotifier');
 const MicrosoftAuthService = require('../../services/MicrosoftAuthService');
+const cloudinaryService = require('../../services/CloudinaryService');
 const db = require('../../db/connection');
 const logger = require('../../logger/logger');
 
@@ -38,6 +43,10 @@ const loginWithMicrosoft = new LoginWithMicrosoft(
   process.env.JWT_REFRESH_SECRET,
   bcrypt
 );
+const updateProfile = new UpdateProfile(userRepo, logger);
+const updateAvatar = new UpdateAvatar(userRepo, cloudinaryService, logger);
+const getFaculties = new GetFaculties(userRepo, logger);
+const getCareers = new GetCareers(userRepo, logger);
 
 async function register(req, res) {
   try {
@@ -102,13 +111,86 @@ async function getProfile(req, res) {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        faculty: null,
-        career: null,
-        avatarUrl: null,
+        phone: user.phone,
+        faculty: user.facultyName,
+        career: user.careerName,
+        avatarUrl: user.avatarUrl,
       },
     });
   } catch (error) {
     logger.error(`Error en getProfile: ${error.message}`);
+    return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
+  }
+}
+
+async function updateProfileHandler(req, res) {
+  try {
+    const { firstName, lastName, phone, facultyId, careerId } = req.body;
+    const user = await updateProfile.execute({
+      userId: req.user.id,
+      firstName,
+      lastName,
+      phone,
+      facultyId: facultyId ? Number(facultyId) : undefined,
+      careerId: careerId ? Number(careerId) : undefined,
+    });
+    return res.status(200).json({
+      message: 'Profile updated successfully.',
+      user: user.toJSON(),
+    });
+  } catch (err) {
+    logger.warn(`Error en updateProfile: ${err.message}`);
+    if (
+      err.message.includes('must contain')
+      || err.message.includes('Invalid')
+      || err.message.includes('does not exist')
+      || err.message.includes('does not belong')
+    )
+      return res.status(400).json({ message: err.message, errorCode: 'VALIDATION_ERROR' });
+    return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
+  }
+}
+
+async function updateAvatarHandler(req, res) {
+  try {
+    if (!req.file)
+      return res.status(400).json({ message: 'Avatar file is required.', errorCode: 'VALIDATION_ERROR' });
+    const result = await updateAvatar.execute({
+      userId: req.user.id,
+      fileBuffer: req.file.buffer,
+      mimetype: req.file.mimetype,
+    });
+    return res.status(200).json({
+      message: 'Profile picture updated successfully.',
+      avatarUrl: result.avatarUrl,
+    });
+  } catch (err) {
+    logger.warn(`Error en updateAvatar: ${err.message}`);
+    if (err.message.includes('allowed') || err.message.includes('required'))
+      return res.status(400).json({ message: err.message, errorCode: 'VALIDATION_ERROR' });
+    return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
+  }
+}
+
+async function getFacultiesHandler(req, res) {
+  try {
+    const data = await getFaculties.execute();
+    return res.status(200).json({ data });
+  } catch (err) {
+    logger.error(`Error en getFaculties: ${err.message}`);
+    return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
+  }
+}
+
+async function getCareersHandler(req, res) {
+  try {
+    const { facultyId } = req.query;
+    const data = await getCareers.execute({ facultyId: Number(facultyId) });
+    return res.status(200).json({ data });
+  } catch (err) {
+    logger.warn(`Error en getCareers: ${err.message}`);
+    if (err.message.includes('required') || err.message.includes('Invalid'))
+      return res.status(400).json({ message: err.message, errorCode: 'VALIDATION_ERROR' });
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
@@ -254,4 +336,8 @@ module.exports = {
   microsoftLogin,
   microsoftCallback,
   getProfile,
+  updateProfileHandler,
+  updateAvatarHandler,
+  getFacultiesHandler,
+  getCareersHandler,
 };
