@@ -1,6 +1,7 @@
 class GetIncidentById {
-  constructor(incidentRepo) {
+  constructor(incidentRepo, attachmentRepo) {
     this.incidentRepo = incidentRepo;
+    this.attachmentRepo = attachmentRepo;
   }
 
   async execute({ id, role, userId }) {
@@ -13,9 +14,10 @@ class GetIncidentById {
       throw new Error('No tienes permiso para ver esta incidencia');
     }
 
-    const [history, conversationCount] = await Promise.all([
+    const [history, conversationCount, attachments] = await Promise.all([
       this.incidentRepo.findHistoryByIncidentId(id),
       this.incidentRepo.countObservationsByIncidentId(id),
+      this.attachmentRepo.findByIncidentId(id),
     ]);
 
     const timeline = history.map((h) => ({
@@ -39,7 +41,7 @@ class GetIncidentById {
         createdAt: incident.createdAt,
         updatedAt: incident.updatedAt,
       },
-      attachments: [],
+      attachments: attachments.map((attachment) => attachment.toJSON()),
       conversationCount,
       timeline,
     };
