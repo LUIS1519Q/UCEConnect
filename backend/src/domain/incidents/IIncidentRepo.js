@@ -11,5 +11,7 @@ class IIncidentRepo {
   async findCategoryIdByName(name) { throw new Error('Not implemented') }
   async countByStatus() { throw new Error('Not implemented') }
   async countByDay(days) { throw new Error('Not implemented') }
+  async countByStatusInRange(startDate, endDate) { throw new Error('Not implemented') }
+  async countByCategoryInRange(startDate, endDate) { throw new Error('Not implemented') }
 }
 module.exports = IIncidentRepo
