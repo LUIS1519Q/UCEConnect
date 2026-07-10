@@ -21,23 +21,23 @@ class LoginUser {
     const user = await this.userRepo.findByEmail(email);
     if (!user) {
       logger.warn(`Login fallido — usuario no encontrado: ${email}`);
-      throw new Error('Credenciales inválidas');
+      throw new Error('Invalid credentials.');
     }
 
     if (!user.isVerified) {
       logger.warn(`Login fallido — cuenta no verificada: ${email}`);
-      throw new Error('Debes verificar tu correo antes de iniciar sesión');
+      throw new Error('You must verify your email before logging in.');
     }
 
     if (!user.isActive) {
       logger.warn(`Login fallido — cuenta desactivada: ${email}`);
-      throw new Error('Tu cuenta ha sido desactivada');
+      throw new Error('Your account has been deactivated.');
     }
 
     const passwordMatches = await this.bcrypt.compare(password, user.passwordHash);
     if (!passwordMatches) {
       logger.warn(`Login fallido — contraseña incorrecta: ${email}`);
-      throw new Error('Credenciales inválidas');
+      throw new Error('Invalid credentials.');
     }
 
     const role = ROLE_NAMES[user.roleId] || 'student';
@@ -54,7 +54,7 @@ class LoginUser {
     return {
       accessToken: token,
       refreshToken,
-      user: { id: user.id, name: user.name, email: user.email, role },
+      user: { id: user.id, firstName: user.firstName, lastName: user.lastName, email: user.email, role },
     };
   }
 }

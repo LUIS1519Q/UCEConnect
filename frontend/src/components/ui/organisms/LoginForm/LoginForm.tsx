@@ -1,5 +1,5 @@
+import { useMicrosoftLogin } from "../../../../hooks/useMicrosoftLogin"
 import { ROUTES } from "../../../../constants/routes";
-
 import {
   Button,
   Checkbox,
@@ -24,6 +24,9 @@ export default function LoginForm({
   isPending,
   error,
 }: LoginFormProps) {
+
+  const { login: microsoftLogin } = useMicrosoftLogin();
+
   return (
     <form
       onSubmit={onSubmit}
@@ -85,7 +88,11 @@ export default function LoginForm({
 
       <Divider />
 
-      <SocialButton provider="microsoft">
+      <SocialButton
+        provider="microsoft"
+        type="button"
+        onClick={microsoftLogin}
+      >
         Continue with Microsoft
       </SocialButton>
 

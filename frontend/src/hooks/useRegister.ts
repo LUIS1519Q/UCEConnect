@@ -15,6 +15,7 @@ export function useRegister() {
         lastName: data.lastName,
         email: data.email,
         password: data.password,
+        confirmPassword: data.confirmPassword,
         role: "student",
       }),
 

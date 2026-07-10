@@ -49,8 +49,7 @@ describe("useResetPassword", () => {
     const { result } = renderHook(
       () =>
         useResetPassword({
-          email: "test@uce.edu.ec",
-          code: "123456",
+          resetToken: "mock-reset-token",
         }),
       { wrapper }
     );
@@ -64,8 +63,7 @@ describe("useResetPassword", () => {
 
     await waitFor(() => {
       expect(resetSpy).toHaveBeenCalledWith({
-        email: "test@uce.edu.ec",
-        code: "123456",
+        resetToken: "mock-reset-token",
         newPassword: "Password123!",
       });
     });
@@ -79,8 +77,7 @@ describe("useResetPassword", () => {
     const { result } = renderHook(
       () =>
         useResetPassword({
-          email: "test@uce.edu.ec",
-          code: "123456",
+          resetToken: "mock-reset-token",
         }),
       { wrapper }
     );
@@ -99,27 +96,11 @@ describe("useResetPassword", () => {
     });
   });
 
-  it("redirects if email is missing", () => {
+  it("redirects if resetToken is missing", () => {
     renderHook(
       () =>
         useResetPassword({
-          email: "",
-          code: "123456",
-        }),
-      { wrapper }
-    );
-
-    expect(navigate).toHaveBeenCalledWith(
-      ROUTES.auth.forgotPassword
-    );
-  });
-
-  it("redirects if code is missing", () => {
-    renderHook(
-      () =>
-        useResetPassword({
-          email: "test@uce.edu.ec",
-          code: "",
+          resetToken: "",
         }),
       { wrapper }
     );
