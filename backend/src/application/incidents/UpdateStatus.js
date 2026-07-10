@@ -18,7 +18,7 @@ class UpdateStatus {
 
     this.logger.info(`Cambiando estado de incidencia ${id}: ${incident.status} → ${newStatus}`);
 
-    const updated = await this.incidentRepo.updateStatus(id, newStatus);
+    const updated = await this.incidentRepo.updateStatus(id, newStatus, note);
     await this.incidentRepo.saveHistory(id, newStatus, changedBy, note);
 
     this.logger.info(`Incidencia ${id} actualizada a ${newStatus}`);

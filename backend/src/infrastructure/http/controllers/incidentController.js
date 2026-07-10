@@ -11,11 +11,14 @@ const GetSimilarIncident = require('../../../application/incidents/GetSimilarInc
 const FindSimilarIncidents = require('../../../application/incidents/FindSimilarIncidents');
 const UploadAttachments = require('../../../application/incidents/UploadAttachments');
 const attachmentPolicy = require('../../../application/incidents/attachmentPolicy');
+const CorrectCategory = require('../../../application/incidents/CorrectCategory');
+const AddInternalNote = require('../../../application/incidents/AddInternalNote');
 const PostgresIncidentRepo = require('../../repositories/PostgresIncidentRepo');
 const PostgresObservationRepo = require('../../repositories/PostgresObservationRepo');
 const PostgresNotificationRepo = require('../../repositories/PostgresNotificationRepo');
 const PostgresUserRepo = require('../../repositories/PostgresUserRepo');
 const PostgresAttachmentRepo = require('../../repositories/PostgresAttachmentRepo');
+const PostgresInternalNoteRepo = require('../../repositories/PostgresInternalNoteRepo');
 const NotificationService = require('../../services/NotificationService');
 const GeminiClassifier = require('../../services/GeminiClassifier');
 const cloudinaryService = require('../../services/CloudinaryService');
@@ -29,6 +32,7 @@ const notificationRepo = new PostgresNotificationRepo(db);
 const notificationService = new NotificationService(io, notificationRepo, logger);
 const userRepo = new PostgresUserRepo(db);
 const attachmentRepo = new PostgresAttachmentRepo(db);
+const internalNoteRepo = new PostgresInternalNoteRepo(db);
 const classifier = new GeminiClassifier(process.env.OPENROUTER_API_KEY);
 const classifyIncidentUC = new ClassifyIncident(classifier, logger);
 const detectDuplicatesUC = new DetectDuplicates(incidentRepo, logger);
@@ -41,7 +45,7 @@ const mapIncidentError = (err, res, logger, context) => {
     return res.status(403).json({ message: err.message, errorCode: 'INSUFFICIENT_PERMISSION' });
   if (err.message.includes('open') || err.message.includes('Transición'))
     return res.status(400).json({ message: err.message, errorCode: 'BUSINESS_RULE_VIOLATION' });
-  if (err.message.includes('no permitido') || err.message.includes('excede'))
+  if (err.message.includes('no permitido') || err.message.includes('excede') || err.message.includes('no existe'))
     return res.status(400).json({ message: err.message, errorCode: 'VALIDATION_ERROR' });
   return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
 };
@@ -87,7 +91,7 @@ async function list(req, res) {
 
 async function getById(req, res) {
   try {
-    const result = await new GetIncidentById(incidentRepo, attachmentRepo).execute({
+    const result = await new GetIncidentById(incidentRepo, attachmentRepo, internalNoteRepo).execute({
       id: Number(req.params.id),
       role: req.user.role,
       userId: req.user.id,
@@ -95,6 +99,18 @@ async function getById(req, res) {
     return res.status(200).json(result);
   } catch (err) {
     return mapIncidentError(err, res, logger, 'getById');
+  }
+}
+
+async function correctCategory(req, res) {
+  try {
+    const incident = await new CorrectCategory(incidentRepo, logger).execute({
+      id: Number(req.params.id),
+      categoryId: req.body.categoryId,
+    });
+    return res.status(200).json({ message: 'Categoría corregida exitosamente', incident });
+  } catch (err) {
+    return mapIncidentError(err, res, logger, 'correctCategory');
   }
 }
 
@@ -221,6 +237,21 @@ async function uploadAttachments(req, res) {
   }
 }
 
+async function addInternalNote(req, res) {
+  try {
+    const note = await new AddInternalNote(incidentRepo, internalNoteRepo, logger).execute({
+      incidentId: Number(req.params.id),
+      authorId: req.user.id,
+      authorName: req.user.name || req.user.email,
+      authorRole: req.user.role,
+      message: req.body.message,
+    });
+    return res.status(201).json({ message: 'Nota interna agregada exitosamente', note });
+  } catch (err) {
+    return mapIncidentError(err, res, logger, 'addInternalNote');
+  }
+}
+
 module.exports = {
   create,
   list,
@@ -232,4 +263,6 @@ module.exports = {
   getSimilarIncident,
   findSimilar,
   uploadAttachments,
+  correctCategory,
+  addInternalNote,
 };
