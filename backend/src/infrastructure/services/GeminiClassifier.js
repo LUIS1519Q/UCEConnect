@@ -10,7 +10,9 @@ class GeminiClassifier extends IClassifier {
     });
   }
 
-  async classify(title, description) {
+  async classify(title, description, categoryNames = []) {
+    const categoryOptions = categoryNames.length > 0 ? `${categoryNames.join('|')}|null` : 'null';
+
     const response = await this.client.chat.completions.create({
       model: process.env.OPENROUTER_MODEL || 'google/gemini-flash-1.5',
       messages: [
@@ -28,7 +30,7 @@ Responde EXACTAMENTE con este JSON:
 {
   "priority": "low|medium|high|critical",
   "summary": "resumen en máximo 100 caracteres",
-  "category": "Académico|Administrativo|Infraestructura|Bienestar|null"
+  "category": "${categoryOptions}"
 }`
         }
       ],
