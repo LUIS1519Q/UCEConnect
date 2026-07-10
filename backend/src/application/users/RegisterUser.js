@@ -14,7 +14,7 @@ class RegisterUser {
     this.bcrypt = bcrypt;
   }
 
-  async execute({ firstName, lastName, email, password, role }) {
+  async execute({ firstName, lastName, email, password }) {
     logger.info(`Intento de registro: ${email}`);
 
     try {
@@ -31,7 +31,7 @@ class RegisterUser {
 
       const passwordHash = await this.bcrypt.hash(password, 10);
 
-      const roleId = ROLE_IDS[role] || ROLE_IDS.student;
+      const roleId = ROLE_IDS.student;
 
       const code = require('crypto').randomInt(100000, 999999).toString();
       const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
