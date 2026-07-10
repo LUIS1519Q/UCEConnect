@@ -21,7 +21,7 @@ const listIncidentsSchema = z.object({
   status: z.enum(['open', 'in_progress', 'resolved', 'rejected', 'cancelled']).optional(),
   category_id: z.coerce.number().int().positive().optional(),
   page: z.coerce.number().int().min(1).default(1),
-  limit: z.coerce.number().int().min(1).max(50).default(10),
+  limit: z.coerce.number().int().min(1).max(50).default(5),
 });
 
 const updateStatusSchema = z.object({
