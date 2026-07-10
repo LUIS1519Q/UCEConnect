@@ -1,7 +1,8 @@
 class GetIncidentById {
-  constructor(incidentRepo, attachmentRepo) {
+  constructor(incidentRepo, attachmentRepo, internalNoteRepo) {
     this.incidentRepo = incidentRepo;
     this.attachmentRepo = attachmentRepo;
+    this.internalNoteRepo = internalNoteRepo;
   }
 
   async execute({ id, role, userId }) {
@@ -14,10 +15,11 @@ class GetIncidentById {
       throw new Error('No tienes permiso para ver esta incidencia');
     }
 
-    const [history, conversationCount, attachments] = await Promise.all([
+    const [history, conversationCount, attachments, internalNotes] = await Promise.all([
       this.incidentRepo.findHistoryByIncidentId(id),
       this.incidentRepo.countObservationsByIncidentId(id),
       this.attachmentRepo.findByIncidentId(id),
+      role === 'student' ? Promise.resolve([]) : this.internalNoteRepo.findByIncidentId(id),
     ]);
 
     const timeline = history.map((h) => ({
@@ -34,16 +36,23 @@ class GetIncidentById {
         ticket: incident.ticket,
         title: incident.title,
         description: incident.description,
+        categoryId: incident.categoryId,
+        categoryName: incident.categoryName,
         status: incident.status,
         statusReason: incident.statusReason,
         priority: incident.priority,
         aiSummary: incident.aiSummary,
+        createdBy: incident.createdBy,
+        createdByName: incident.createdByName,
+        assignedTo: incident.assignedTo,
+        assignedToName: incident.assignedToName,
         createdAt: incident.createdAt,
         updatedAt: incident.updatedAt,
       },
       attachments: attachments.map((attachment) => attachment.toJSON()),
       conversationCount,
       timeline,
+      ...(role !== 'student' && { internalNotes: internalNotes.map((note) => note.toJSON()) }),
     };
   }
 }

@@ -33,7 +33,14 @@ class CreateIncident {
       categoryId = await this.incidentRepo.findCategoryIdByName(classificationResult.category);
     }
 
-    const incident = Incident.create({ title, description, categoryId, createdBy });
+    const incident = Incident.create({
+      title,
+      description,
+      categoryId,
+      createdBy,
+      priority: classificationResult.priority,
+      aiSummary: classificationResult.summary,
+    });
     const saved = await this.incidentRepo.create(incident);
     await this.incidentRepo.saveHistory(saved.id, 'open', createdBy, 'Incidencia creada');
 
@@ -65,8 +72,6 @@ class CreateIncident {
 
     return {
       ...saved.toJSON(),
-      priority: classificationResult.priority || 'medium',
-      aiSummary: classificationResult.summary || null,
       aiClassified: classificationResult.aiClassified || false,
       duplicateWarning: duplicateResult.isDuplicate || false,
       similarIncidents: duplicateResult.similar || [],
