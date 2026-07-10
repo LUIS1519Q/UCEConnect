@@ -10,7 +10,7 @@ class GetDashboardMetrics {
     const [statusCounts, trend, recent] = await Promise.all([
       this.incidentRepo.countByStatus(),
       this.incidentRepo.countByDay(days),
-      this.incidentRepo.findAll({ page: 1, limit: 10 }),
+      this.incidentRepo.findAll({ page: 1, limit: 10, paginate: true }),
     ]);
 
     const metrics = STATUSES.reduce((acc, status) => {

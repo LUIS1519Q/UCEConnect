@@ -6,8 +6,8 @@ class DetectDuplicates {
 
   async execute({ title, userId }) {
     const [openResult, inProgressResult] = await Promise.all([
-      this.incidentRepo.findAll({ userId, status: 'open', page: 1, limit: 50 }),
-      this.incidentRepo.findAll({ userId, status: 'in_progress', page: 1, limit: 50 }),
+      this.incidentRepo.findAll({ createdBy: userId, status: 'open', page: 1, limit: 50, paginate: true }),
+      this.incidentRepo.findAll({ createdBy: userId, status: 'in_progress', page: 1, limit: 50, paginate: true }),
     ]);
 
     const active = [...openResult.data, ...inProgressResult.data];
