@@ -1,4 +1,4 @@
-import { Bell } from "../../icons";
+import { Bell, Menu } from "../../icons";
 
 import { Avatar } from "../../atoms/Avatar";
 import { Button } from "../../atoms/Button";
@@ -11,14 +11,16 @@ export default function AppHeader({
   notificationCount = 0,
   onNotificationsClick,
   onProfileClick,
+  onMenuClick,
 }: AppHeaderProps) {
   return (
+    
     <header
       className="
         flex
         h-16
         items-center
-        justify-end
+        justify-between
         border-b
         border-border
         bg-surface
@@ -26,7 +28,20 @@ export default function AppHeader({
         shadow-sm
       "
     >
-      <div className="flex items-center gap-4">
+      <div className="lg:hidden">
+
+        <Button
+          variant="ghost"
+          size="sm"
+          aria-label="Open menu"
+          onClick={onMenuClick}
+        >
+          <Menu size={22} />
+        </Button>
+
+      </div>
+
+      <div className="ml-auto flex items-center gap-4">
 
         <div className="relative">
           <Button
@@ -76,7 +91,15 @@ export default function AppHeader({
                 hover:bg-background
             "
         >
-          <span className="font-medium text-textPrimary">
+          <span
+            className="
+              hidden
+              text-sm
+              font-medium
+              text-textPrimary
+              sm:block
+            "
+          >
             {studentName}
           </span>
 
