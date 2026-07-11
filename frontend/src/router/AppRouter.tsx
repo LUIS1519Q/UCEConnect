@@ -21,7 +21,7 @@ import EditIncidentPage from "../pages/student/EditIncidentPage";
 import IncidentDetailPage from "../pages/student/IncidentDetailPage";
 import RespondToManagerRequestPage from "../pages/student/RespondToManagerRequestPage";
 import NotificationsPage from "../pages/student/NotificationPage";
-import ProfilePage from "../pages/profile/ProfilePage";
+import ProfilePage from "../pages/student/ProfilePage";
 import EditProfilePage from "../pages/profile/EditProfilePage";
 import HelpPage from "../pages/student/HelpPage";
 import AboutPage from "../pages/student/AboutPage";
