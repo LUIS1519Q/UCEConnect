@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { AppHeader } from "../../organisms/AppHeader";
 import { AppSidebar } from "../../organisms/AppSidebar";
 
@@ -14,6 +16,9 @@ export default function AppLayout({
   onNotificationsClick,
   onProfileClick,
 }: AppLayoutProps) {
+
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
     <div
       className="
@@ -26,6 +31,29 @@ export default function AppLayout({
       "
     >
 
+    {sidebarOpen && (
+        <>
+          <div
+            className="
+              fixed
+              inset-0
+              z-40
+              bg-black/40
+              lg:hidden
+            "
+            onClick={() => setSidebarOpen(false)}
+          />
+
+          <AppSidebar
+            mobile
+            primaryAction={primaryAction}
+            items={sidebarItems}
+            bottomItems={bottomItems}
+            onItemClick={() => setSidebarOpen(false)}
+          />
+        </>
+      )}
+
       <AppSidebar
         primaryAction={primaryAction}
         items={sidebarItems}
@@ -35,6 +63,7 @@ export default function AppLayout({
       <div
         className="
           flex
+          min-w-0
           min-h-0
           flex-1
           flex-col
@@ -46,6 +75,7 @@ export default function AppLayout({
           notificationCount={notificationCount}
           onNotificationsClick={onNotificationsClick}
           onProfileClick={onProfileClick}
+          onMenuClick={() => setSidebarOpen(true)}
         />
 
         <main
@@ -54,8 +84,12 @@ export default function AppLayout({
             min-h-0
             flex-1
             flex-col
+            overflow-y-auto
             bg-background
-            p-8
+            p-4
+            sm:p-5
+            lg:p-6
+            xl:p-8
           "
         >
           <div
@@ -64,13 +98,21 @@ export default function AppLayout({
               flex
               min-h-0
               w-full
-              max-w-7xl
+              max-w-6xl
               flex-1
               flex-col
             "
           >
 
-            <h1 className="mb-6 text-3xl font-bold text-textPrimary">
+            <h1
+              className="
+                mb-5
+                text-2xl
+                font-semibold
+                text-textPrimary
+                sm:text-3xl
+              "
+            >
               {title}
             </h1>
 
