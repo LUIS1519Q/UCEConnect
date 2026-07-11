@@ -12,7 +12,9 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "electron:build": "npm run build && electron-builder"
+    "electron:build": "npm run build && electron-builder",
+    "cap:sync": "cross-env VITE_API_URL=https://uceconnectqa.programacionwebuce.net npm run build && npx cap sync android",
+    "cap:build:android": "npm run cap:sync && cd android && gradlew.bat assembleDebug"
   },
   "build": {
     "appId": "com.uceconnect.app",
@@ -36,6 +38,9 @@
     }
   },
   "dependencies": {
+    "@capacitor/android": "^8.4.1",
+    "@capacitor/cli": "^7.6.7",
+    "@capacitor/core": "^8.4.1",
     "@fontsource/dm-mono": "^5.2.7",
     "@fontsource/plus-jakarta-sans": "^5.2.8",
     "@hookform/resolvers": "^5.4.0",
@@ -52,6 +57,7 @@
     "zustand": "^5.0.14"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
     "@eslint/js": "^10.0.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -61,6 +67,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
     "autoprefixer": "^10.5.0",
+    "cross-env": "^10.1.0",
     "electron": "^41.7.1",
     "electron-builder": "^26.15.3",
     "eslint": "^10.3.0",
