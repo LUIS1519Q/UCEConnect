@@ -1,4 +1,6 @@
-import type { GetIncidentsParams } from "../types/incident";
+import type {
+  GetIncidentsParams,
+} from "../types/incident";
 
 export const queryKeys = {
   auth: {
@@ -13,6 +15,24 @@ export const queryKeys = {
 
     detail: (id: number | string) =>
       [...queryKeys.incidents.all, "detail", id] as const,
+
+    similar: (
+      title: string,
+      description?: string
+    ) =>
+      [
+        ...queryKeys.incidents.all,
+        "similar",
+        title,
+        description,
+      ] as const,
+
+    similarDetail: (id: number) =>
+      [
+        ...queryKeys.incidents.all,
+        "similar-detail",
+        id,
+      ] as const,
   },
 
   notifications: {
