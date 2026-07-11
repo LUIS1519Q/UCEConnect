@@ -83,3 +83,31 @@ export interface CreateIncidentResponse {
   ticket: string;
   aiClassified: boolean;
 }
+
+export interface IncidentTimeline {
+  id: number;
+  status: IncidentStatus;
+  changedBy: string;
+  statusComment: string;
+  changedAt: string;
+}
+
+export interface IncidentDetail {
+  id: number;
+  ticket: string;
+  title: string;
+  description: string;
+  status: IncidentStatus;
+  statusReason: string | null;
+  priority: string;
+  aiSummary: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GetIncidentByIdResponse {
+  incident: IncidentDetail;
+  attachments: IncidentAttachment[];
+  conversationCount: number;
+  timeline: IncidentTimeline[];
+}
