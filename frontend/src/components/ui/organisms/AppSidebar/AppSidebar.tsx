@@ -1,3 +1,7 @@
+import { cn } from "../../../../utils/cn";
+
+import { X,} from "../../icons";
+
 import { Link } from "react-router-dom";
 import { ROUTES } from "../../../../constants/routes";
 
@@ -9,18 +13,35 @@ export default function AppSidebar({
   primaryAction,
   items,
   bottomItems = [],
+  mobile = false,
+  onItemClick,
 }: AppSidebarProps) {
   return (
     <aside
-      className="
-        flex
-        min-h-screen
-        w-72
-        shrink-0
-        flex-col
-        bg-primary
-        text-white
-      "
+      className={cn(
+        `
+          bg-primary
+          text-white
+          flex
+          flex-col
+          w-64
+          sm:w-72
+        `,
+        mobile
+          ? `
+              fixed
+              left-0
+              top-0
+              h-screen
+              z-50
+            `
+          : `
+              hidden
+              lg:flex
+              min-h-screen
+              shrink-0
+            `
+      )}
     >
       {/* Logo */}
       <div
@@ -28,7 +49,7 @@ export default function AppSidebar({
           flex
           h-20
           items-center
-          justify-center
+          justify-between
           border-b
           border-white/10
           px-6
@@ -36,10 +57,26 @@ export default function AppSidebar({
       >
         <Link to={ROUTES.public.home}>
           <Logo
-            variant="horizontal-white"
-            className="w-40 cursor-pointer"
+              variant="horizontal-white"
+              className="w-40"
           />
         </Link>
+
+        {mobile && (
+            <button
+                type="button"
+                onClick={onItemClick}
+                className="
+                    rounded-lg
+                    p-2
+                    transition-colors
+                    hover:bg-white/10
+                    lg:hidden
+                "
+            >
+                <X size={22} />
+            </button>
+        )}
       </div>
 
       {/* Primary Action */}
@@ -47,7 +84,10 @@ export default function AppSidebar({
         <div className="p-4">
             <button
             type="button"
-            onClick={primaryAction.onClick}
+            onClick={() => {
+              primaryAction.onClick?.();
+              onItemClick?.();
+            }}
             className={`
                 flex
                 w-full
@@ -95,7 +135,10 @@ export default function AppSidebar({
             <button
               key={item.label}
               type="button"
-              onClick={item.onClick}
+              onClick={() => {
+                item.onClick?.();
+                onItemClick?.();
+              }}
               className={`
                 flex
                 w-full
@@ -141,7 +184,10 @@ export default function AppSidebar({
               <button
                 key={item.label}
                 type="button"
-                onClick={item.onClick}
+                onClick={() => {
+                  item.onClick?.();
+                  onItemClick?.();
+                }}
                 className="
                   flex
                   w-full
