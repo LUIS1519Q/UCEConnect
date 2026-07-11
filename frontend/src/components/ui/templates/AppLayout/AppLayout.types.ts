@@ -19,4 +19,6 @@ export interface AppLayoutProps {
 
   onNotificationsClick?: () => void;
   onProfileClick?: () => void;
+
+  isNotificationsActive?: boolean;
 }

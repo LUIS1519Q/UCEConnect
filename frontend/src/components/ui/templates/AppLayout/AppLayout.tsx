@@ -15,6 +15,7 @@ export default function AppLayout({
   bottomItems,
   onNotificationsClick,
   onProfileClick,
+  isNotificationsActive,
 }: AppLayoutProps) {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -76,6 +77,7 @@ export default function AppLayout({
           onNotificationsClick={onNotificationsClick}
           onProfileClick={onProfileClick}
           onMenuClick={() => setSidebarOpen(true)}
+          isNotificationsActive={isNotificationsActive}
         />
 
         <main
