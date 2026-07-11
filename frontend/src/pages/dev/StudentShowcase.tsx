@@ -278,11 +278,12 @@ export default function StudentShowcase() {
               </h2>
 
               <SimilarIncidentBanner
-                title="Similar incident detected"
-                description="A similar incident has already been reported. Please review it before submitting a new one."
-                onViewDetails={() => alert("View details")}
-                onDismiss={() => alert("Dismiss")}
-              />
+                incident={{
+                    ticket: "INC-00045",
+                    title: "Virtual classroom error",
+                    status: "resolved",
+                }}
+            />
             </section>           
 
            <section className="space-y-4">
