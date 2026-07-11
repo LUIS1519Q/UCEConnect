@@ -11,7 +11,6 @@ export interface IncidentSummary {
   id: number;
   ticket: string;
   title: string;
-  category: string;
   status: IncidentStatus;
   createdAt: string;
 }
@@ -38,21 +37,20 @@ export interface SimilarIncident {
 
 export interface SimilarIncidentRequest {
   title: string;
-  description?: string;
+  description: string;
 }
 
 export interface SimilarIncidentResponse {
-  data: SimilarIncident[];
+  similarIncidents: SimilarIncident[];
 }
 
 export interface SimilarIncidentDetail {
   id: number;
-  ticket: string;
   title: string;
   description: string;
   status: IncidentStatus;
-  createdAt: string;
-  resolution?: string;
+  statusReason: string | null; 
+  updatedAt: string;           
 }
 
 export interface GetSimilarIncidentResponse {
@@ -82,4 +80,6 @@ export interface CreatedIncident {
 export interface CreateIncidentResponse {
   message: string;
   incident: CreatedIncident;
+  ticket: string;
+  aiClassified: boolean;
 }

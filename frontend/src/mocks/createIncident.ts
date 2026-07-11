@@ -24,5 +24,7 @@ export function mockCreateIncidentResponse(
   return {
     message: "Incident created successfully (mock)",
     incident,
+    ticket: `INC-2026-${String(incident.id).padStart(4, "0")}`,
+    aiClassified: true,
   };
 }

@@ -213,8 +213,7 @@ console.log("incidentDetail:", incidentDetail);
     navigate(ROUTES.student.myIncidents);
   };
 
-  const firstSimilar =
-    similarIncidents?.data[0];
+  const firstSimilar = similarIncidents?.similarIncidents[0];
 
   return (
 
@@ -268,12 +267,11 @@ console.log("incidentDetail:", incidentDetail);
         incident={
           incidentDetail?.incident
             ? {
-                ticket: incidentDetail.incident.ticket,
+                ticket: `INC-${incidentDetail.incident.id}`, // no viene del back en este endpoint
                 title: incidentDetail.incident.title,
-                date: incidentDetail.incident.createdAt,
+                date: incidentDetail.incident.updatedAt,      // era createdAt, ahora es updatedAt
                 status: incidentDetail.incident.status,
-                resolution:
-                  incidentDetail.incident.resolution ?? "No resolution yet.",
+                resolution: incidentDetail.incident.statusReason ?? "No resolution yet.",
               }
             : null
         }
