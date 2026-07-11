@@ -22,7 +22,6 @@ import IncidentDetailPage from "../pages/student/IncidentDetailPage";
 import RespondToManagerRequestPage from "../pages/student/RespondToManagerRequestPage";
 import NotificationsPage from "../pages/student/NotificationPage";
 import ProfilePage from "../pages/student/ProfilePage";
-import EditProfilePage from "../pages/profile/EditProfilePage";
 import HelpPage from "../pages/student/HelpPage";
 import AboutPage from "../pages/student/AboutPage";
 
@@ -158,15 +157,6 @@ function AppRouter() {
           element={
             <ProtectedRoute>
               <ProfilePage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path={ROUTES.student.editProfile}
-          element={
-            <ProtectedRoute>
-              <EditProfilePage />
             </ProtectedRoute>
           }
         />
