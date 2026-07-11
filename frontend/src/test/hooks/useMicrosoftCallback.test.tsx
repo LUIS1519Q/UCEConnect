@@ -97,7 +97,7 @@ describe("useMicrosoftCallback", () => {
     });
 
     expect(navigate).toHaveBeenCalledWith(
-      ROUTES.dashboard.student
+      ROUTES.student.myIncidents
     );
   });
 });
