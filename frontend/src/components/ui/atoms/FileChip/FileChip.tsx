@@ -3,11 +3,15 @@ import {
   FileImage,
   FileSpreadsheet,
   FileText,
+  FileVideo,
 } from "../../icons";
 
 import { cn } from "../../../../utils/cn";
 
-import type { FileChipProps } from "./FileChip.types";
+import type {
+  FileChipProps,
+  FileType,
+} from "./FileChip.types";
 
 export default function FileChip({
   fileName,
@@ -16,23 +20,73 @@ export default function FileChip({
   ...props
 }: FileChipProps) {
 
+  const extension =
+    fileName.split(".").pop()?.toLowerCase();
+
+  const detectedType: FileType =
+    fileType !== "other"
+      ? fileType
+      : extension === "pdf"
+      ? "pdf"
+      : extension === "doc"
+      ? "doc"
+      : extension === "docx"
+      ? "docx"
+      : extension === "xls"
+      ? "xls"
+      : extension === "xlsx"
+      ? "xlsx"
+      : extension === "ppt"
+      ? "ppt"
+      : extension === "pptx"
+      ? "pptx"
+      : ["jpg", "jpeg", "png", "gif", "webp"].includes(
+          extension ?? ""
+        )
+      ? "image"
+      : ["mp4", "mov", "avi", "mkv", "webm"].includes(
+          extension ?? ""
+        )
+      ? "video"
+      : ["zip", "rar", "7z"].includes(
+          extension ?? ""
+        )
+      ? "zip"
+      : "other";
+
   const renderIcon = () => {
-    switch (fileType) {
+    switch (detectedType) {
+
       case "image":
         return (
           <FileImage
-            size={18}
-            className="text-primary"
+            size={16}
+            className="shrink-0 text-primary"
+          />
+        );
+
+      case "video":
+        return (
+          <FileVideo
+            size={16}
+            className="shrink-0 text-violet-500"
           />
         );
 
       case "pdf":
+        return (
+          <FileText
+            size={16}
+            className="shrink-0 text-danger"
+          />
+        );
+
       case "doc":
       case "docx":
         return (
           <FileText
-            size={18}
-            className="text-danger"
+            size={16}
+            className="shrink-0 text-blue-600"
           />
         );
 
@@ -40,19 +94,54 @@ export default function FileChip({
       case "xlsx":
         return (
           <FileSpreadsheet
-            size={18}
-            className="text-success"
+            size={16}
+            className="shrink-0 text-success"
+          />
+        );
+
+      case "ppt":
+      case "pptx":
+        return (
+          <FileText
+            size={16}
+            className="shrink-0 text-orange-500"
+          />
+        );
+
+      case "zip":
+        return (
+          <File
+            size={16}
+            className="shrink-0 text-amber-500"
           />
         );
 
       default:
         return (
           <File
-            size={18}
-            className="text-textSecondary"
+            size={16}
+            className="shrink-0 text-textSecondary"
           />
         );
     }
+  };
+
+  const shortenFileName = (name: string) => {
+
+    if (name.length <= 18) {
+      return name;
+    }
+
+    const dotIndex = name.lastIndexOf(".");
+
+    if (dotIndex === -1) {
+      return `${name.slice(0, 12)}...`;
+    }
+
+    const baseName = name.slice(0, dotIndex);
+    const ext = name.slice(dotIndex);
+
+    return `${baseName.slice(0, 10)}...${ext}`;
   };
 
   return (
@@ -78,8 +167,17 @@ export default function FileChip({
     >
       {renderIcon()}
 
-      <span className="truncate">
-        {fileName}
+      <span
+        className="
+          max-w-[120px]
+          truncate
+          whitespace-nowrap
+          sm:max-w-[150px]
+          lg:max-w-[170px]
+        "
+        title={fileName}
+      >
+        {shortenFileName(fileName)}
       </span>
     </div>
   );
