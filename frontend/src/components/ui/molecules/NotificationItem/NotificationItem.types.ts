@@ -3,4 +3,6 @@ export interface NotificationItemProps {
   message: string;
   date: string;
   unread?: boolean;
+  actionLabel?: string;
+  onActionClick?: () => void;
 }
