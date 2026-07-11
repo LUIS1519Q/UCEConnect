@@ -5,4 +5,5 @@ export interface AppHeaderProps {
   onNotificationsClick?: () => void;
   onProfileClick?: () => void;
   onMenuClick?: () => void;
+  isNotificationsActive?: boolean;
 }
