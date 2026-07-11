@@ -24,6 +24,7 @@ import { ErrorState } from "../../components/ui/organisms/ErrorState";
 import { useIncidentDetail } from "../../hooks/useIncidentDetail";
 import { useUpdateIncident } from "../../hooks/useUpdateIncident";
 import { useUploadAttachments } from "../../hooks/useUploadAttachments";
+import { useUnreadNotificationsCount } from "../../hooks/useUnreadNotificationsCount";
 import { useLogout } from "../../hooks/useLogout";
 import { useAuthStore } from "../../store/authStore";
 
@@ -110,11 +111,13 @@ export default function EditIncidentPage() {
     }
   };
 
+  const unreadCount = useUnreadNotificationsCount();
+
   return (
     <AppLayout
       title="Edit incident"
       studentName={`${user?.firstName ?? ""} ${user?.lastName ?? ""}`}
-      notificationCount={0}
+      notificationCount={unreadCount}
       onProfileClick={() => navigate(ROUTES.student.profile)}
       onNotificationsClick={() => navigate(ROUTES.student.notifications)}
       primaryAction={{

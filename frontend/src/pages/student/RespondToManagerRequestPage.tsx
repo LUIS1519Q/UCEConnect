@@ -11,6 +11,7 @@ import { LoadingState } from "../../components/ui/organisms/LoadingState";
 import { useIncidentDetail } from "../../hooks/useIncidentDetail";
 import { useIncidentChat } from "../../hooks/useIncidentChat";
 import { useLogout } from "../../hooks/useLogout";
+import { useUnreadNotificationsCount } from "../../hooks/useUnreadNotificationsCount";
 import { useAuthStore } from "../../store/authStore";
 
 import {
@@ -76,11 +77,13 @@ export default function RespondToManagerRequestPage() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages.length]);
 
+  const unreadCount = useUnreadNotificationsCount();
+
   return (
     <AppLayout
       title="Respond to manager request"
       studentName={`${user?.firstName ?? ""} ${user?.lastName ?? ""}`}
-      notificationCount={0}
+      notificationCount={unreadCount}
       onProfileClick={() => navigate(ROUTES.student.profile)}
       onNotificationsClick={() => navigate(ROUTES.student.notifications)}
       primaryAction={{
