@@ -56,15 +56,8 @@ export function useMyIncidents() {
             statusFilter;
 
       const matchesSearch =
-        incident.ticket
-          .toLowerCase()
-          .includes(value) ||
-        incident.title
-          .toLowerCase()
-          .includes(value) ||
-        incident.category
-          .toLowerCase()
-          .includes(value);
+        incident.ticket.toLowerCase().includes(value) ||
+        incident.title.toLowerCase().includes(value);
 
       return (
         matchesStatus &&
