@@ -7,6 +7,8 @@ export type IncidentStatus =
   | "rejected"
   | "cancelled";
 
+export type IncidentPriority = "low" | "medium" | "high";
+
 export interface IncidentSummary {
   id: number;
   ticket: string;
@@ -57,13 +59,6 @@ export interface GetSimilarIncidentResponse {
   incident: SimilarIncidentDetail;
 }
 
-export interface IncidentAttachment {
-  id: number;
-  fileName: string;
-  fileType: string;
-  url: string;
-}
-
 export interface CreatedIncident {
   id: number;
   title: string;
@@ -105,9 +100,36 @@ export interface IncidentDetail {
   updatedAt: string;
 }
 
+export interface Incident {
+  id: number;
+  ticket: string;
+  title: string;
+  description: string;
+  status: IncidentStatus;
+  statusReason: string | null;
+  priority: IncidentPriority;
+  aiSummary: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IncidentAttachment {
+  id: number;
+  fileName: string;
+  fileUrl: string;
+}
+
+export interface IncidentTimelineEntry {
+  id: number;
+  status: IncidentStatus;
+  changedBy: string;
+  statusComment: string;
+  changedAt: string;
+}
+
 export interface GetIncidentByIdResponse {
-  incident: IncidentDetail;
+  incident: Incident;
   attachments: IncidentAttachment[];
   conversationCount: number;
-  timeline: IncidentTimeline[];
+  timeline: IncidentTimelineEntry[];
 }
