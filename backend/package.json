@@ -9,6 +9,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "test:integration": "jest --testMatch **/tests/integration/**/*.test.js --runInBand",
     "docker:local": "docker-compose -f docker-compose.local.yml up -d",
     "docker:local:down": "docker-compose -f docker-compose.local.yml down",
     "docker:local:logs": "docker-compose -f docker-compose.local.yml logs -f",
@@ -20,11 +21,11 @@
   "jest": {
     "testEnvironment": "node",
     "testMatch": [
-      "**/tests/**/*.test.js"
+      "**/tests/domain/**/*.test.js",
+      "**/tests/application/**/*.test.js"
     ],
-    "collectCoverageFrom": [
-      "src/domain/**/*.js",
-      "src/application/**/*.js"
+    "setupFiles": [
+      "<rootDir>/tests/integration/env.setup.js"
     ]
   },
   "dependencies": {
