@@ -24,6 +24,7 @@ import { ErrorState } from "../../components/ui/organisms/ErrorState";
 import { EmptyState } from "../../components/ui/organisms/EmptyState";
 
 import { useMyIncidents } from "../../hooks/useIncidents";
+import { useUnreadNotificationsCount } from "../../hooks/useUnreadNotificationsCount";
 
 export default function MyIncidentsPage() {
   const navigate = useNavigate();
@@ -46,11 +47,13 @@ export default function MyIncidentsPage() {
     refetch,
   } = useMyIncidents();
   
+  const unreadCount = useUnreadNotificationsCount();
+
   return (
     <AppLayout
       title="My Incidents"
       studentName={`${user?.firstName ?? ""} ${user?.lastName ?? ""}`}
-      notificationCount={0}
+      notificationCount={unreadCount}
       onProfileClick={() => navigate("/profile")}
       onNotificationsClick={() => navigate("/notifications")}
       primaryAction={{
