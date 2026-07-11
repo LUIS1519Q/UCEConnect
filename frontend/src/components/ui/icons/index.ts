@@ -32,10 +32,12 @@ export {
   Phone,
   File,
   FileImage,
+  FileVideo,
   FileSpreadsheet,
   AlertTriangle,
   ChevronLeft,
   FilePlus2,
   LogOut,
   Info,
+  Menu,
 } from "lucide-react";

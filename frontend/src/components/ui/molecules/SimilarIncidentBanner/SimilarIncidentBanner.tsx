@@ -1,12 +1,10 @@
 import { AlertTriangle, X } from "../../icons";
-
 import { Button } from "../../atoms/Button";
 
 import type { SimilarIncidentBannerProps } from "./SimilarIncidentBanner.types";
 
 export default function SimilarIncidentBanner({
-  title,
-  description,
+  incident,
   onViewDetails,
   onDismiss,
 }: SimilarIncidentBannerProps) {
@@ -25,41 +23,55 @@ export default function SimilarIncidentBanner({
       "
     >
       <div className="flex gap-3">
+
         <AlertTriangle
           size={22}
           className="mt-1 text-warning"
         />
 
-        <div className="space-y-2">
-          <h3 className="font-semibold text-textPrimary">
-            {title}
-          </h3>
+        <div className="flex flex-1 justify-between gap-4">
 
-          <p className="text-sm text-textSecondary">
-            {description}
-          </p>
+          <div>
+
+            <h3 className="font-semibold text-textPrimary">
+              Similar incident found
+            </h3>
+
+            <p className="mt-1 text-sm text-textSecondary">
+              {incident.ticket} • Status: {incident.status}
+            </p>
+
+            <p className="text-sm text-textPrimary">
+              {incident.title}
+            </p>
+
+          </div>
 
           {onViewDetails && (
             <Button
               variant="link"
+              size="sm"
+              className="shrink-0 self-start"
               onClick={onViewDetails}
             >
               View details
             </Button>
           )}
+
         </div>
+
       </div>
 
       {onDismiss && (
         <Button
           variant="ghost"
           size="sm"
-          aria-label="Close banner"
           onClick={onDismiss}
         >
-          <X size={18} />
+          <X size={18}/>
         </Button>
       )}
+
     </div>
   );
 }

@@ -8,8 +8,11 @@ describe("SimilarIncidentBanner", () => {
   it("renders title and description", () => {
     render(
       <SimilarIncidentBanner
-        title="Duplicate incident"
-        description="Please review the existing report."
+        incident={{
+            ticket: "INC-1",
+            title: "Duplicate incident",
+            status: "resolved",
+        }}
       />
     );
 
@@ -28,9 +31,12 @@ describe("SimilarIncidentBanner", () => {
 
     render(
       <SimilarIncidentBanner
-        title="Duplicate incident"
-        description="Please review."
-        onViewDetails={onViewDetails}
+        incident={{
+          ticket: "INC-001",
+          title: "Duplicate incident",
+          status: "resolved",
+        }}
+        onViewDetails={vi.fn()}
       />
     );
 
@@ -49,9 +55,12 @@ describe("SimilarIncidentBanner", () => {
 
     render(
       <SimilarIncidentBanner
-        title="Duplicate incident"
-        description="Please review."
-        onDismiss={onDismiss}
+        incident={{
+          ticket: "INC-001",
+          title: "Duplicate incident",
+          status: "resolved",
+        }}
+        onDismiss={vi.fn()}
       />
     );
 

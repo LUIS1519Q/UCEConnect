@@ -7,4 +7,6 @@ export interface ModalProps {
   footer?: ReactNode;
   onClose?: () => void;
   closeOnOverlayClick?: boolean;
+
+  size?: "sm" | "md" | "lg";
 }
