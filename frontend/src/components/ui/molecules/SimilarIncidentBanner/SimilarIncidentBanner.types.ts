@@ -1,6 +1,10 @@
 export interface SimilarIncidentBannerProps {
-  title: string;
-  description: string;
+  incident: {
+    ticket: string;
+    title: string;
+    status: string;
+  };
+
   onViewDetails?: () => void;
   onDismiss?: () => void;
 }

@@ -9,8 +9,15 @@ export default function Modal({
   footer,
   onClose,
   closeOnOverlayClick = true,
+  size = "md",
 }: ModalProps) {
   if (!open) return null;
+
+  const sizes = {
+  sm: "max-w-md",
+  md: "max-w-lg",
+  lg: "max-w-3xl",
+};
 
   const handleOverlayClick = () => {
     if (closeOnOverlayClick) {
@@ -32,7 +39,13 @@ export default function Modal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
-        className="w-full max-w-lg rounded-xl bg-surface shadow-xl"
+        className={`
+          w-full
+          ${sizes[size]}
+          rounded-xl
+          bg-surface
+          shadow-xl
+        `}
         onClick={handleModalClick}
       >
         <header className="border-b border-border px-6 py-4">
