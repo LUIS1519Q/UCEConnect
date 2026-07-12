@@ -13,6 +13,12 @@ import { ProfileCard } from "../../components/ui/organisms/ProfileCard";
 import { NotificationList } from "../../components/ui/organisms/NotificationList";
 import { FAQSection } from "../../components/ui/organisms/FAQSection";
 import { EvidenceSection } from "../../components/ui/organisms/EvidenceSection";
+import { DashboardLayout } from "../../components/ui/templates/DashboardLayout";
+import { FormLayout } from "../../components/ui/templates/FormLayout";
+import { Button } from "../../components/ui/atoms";
+import { TextInput } from "../../components/ui/atoms";
+import { DetailLayout } from "../../components/ui/templates/DetailLayout";
+import { ProfileLayout } from "../../components/ui/templates/ProfileLayout";
 
 export default function StudentShowcase() {
   return (
@@ -272,11 +278,54 @@ export default function StudentShowcase() {
             Templates
           </h2>
 
-          <div className="mt-6">
-            <p className="text-textSecondary">
-              Próximamente...
-            </p>
-          </div>
+          <section className="space-y-4">
+
+            <DashboardLayout
+              header={
+                <div className="p-4 font-semibold">
+                  Student Dashboard
+                </div>
+              }
+              sidebar={
+                <div className="p-4">
+                  Sidebar
+                </div>
+              }
+            >
+              <p>Main Content</p>
+            </DashboardLayout>
+          </section>
+
+          <section>
+            <FormLayout
+              title="Create Incident"
+              description="Complete the following information."
+              actions={
+                <Button>
+                  Submit
+                </Button>
+              }
+            >
+              <TextInput placeholder="Title" />
+
+              <Textarea placeholder="Description" />
+            </FormLayout>
+          </section>
+
+          <DetailLayout
+            title="Incident Details"
+            subtitle="Review all information about the incident."
+          >
+            <p>Incident content goes here.</p>
+          </DetailLayout>
+
+          <ProfileLayout
+            title="My Profile"
+            sidebar={<p>Profile Menu</p>}
+          >
+            <p>Profile content...</p>
+          </ProfileLayout>
+
         </section>
       </div>
     </main>
