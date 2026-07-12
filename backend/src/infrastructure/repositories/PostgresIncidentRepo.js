@@ -243,6 +243,16 @@ class PostgresIncidentRepo {
     return parseInt(result.rows[0].count, 10);
   }
 
+  async findSimilar(userId) {
+    const result = await this.db.query(
+      `SELECT id, title, status
+       FROM incidents
+       WHERE status IN ('open', 'in_progress') AND created_by != $1`,
+      [userId]
+    );
+    return result.rows;
+  }
+
   async categoryExists(categoryId) {
     const result = await this.db.query(
       `SELECT id FROM categories WHERE id = $1 AND is_active = true`,
