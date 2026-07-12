@@ -138,17 +138,25 @@ export const incidentService = {
 
   async updateIncident(
     id: string,
-    data: { title?: string; description?: string }
+    data: {
+      title: string;
+      description: string;
+      categoryId: number;
+    }
   ) {
-    const response = await api.patch(`/api/v1/incidents/${id}`, data);
+    const response = await api.patch(
+      `/api/v1/incidents/${id}`,
+      data
+    );
+
     return response.data;
   },
 
-    async cancelIncident(id: number) {
-      const response = await api.patch(
-        `/api/v1/incidents/${id}/cancel`
-      );
+  async cancelIncident(id: number) {
+    const response = await api.patch(
+      `/api/v1/incidents/${id}/cancel`
+    );
 
-      return response.data;
-    },
+    return response.data;
+  },
 };
