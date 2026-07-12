@@ -2,15 +2,13 @@ import { useMutation } from "@tanstack/react-query";
 
 import { incidentService } from "../api/incidentService";
 
-import { mockSimilarIncidentResponse } from "../mocks/similarIncident";
-
 import type { SimilarIncidentRequest } from "../types/incident";
 
 export function useSimilarIncident() {
   const mutation = useMutation({
-  //mutationFn: incidentService.findSimilarIncident,
-  mutationFn: (data: SimilarIncidentRequest) => incidentService.findSimilarIncident(data).catch(() => mockSimilarIncidentResponse),
-});
+    mutationFn: (data: SimilarIncidentRequest) =>
+      incidentService.findSimilarIncident(data),
+  });
 
   return {
     findSimilar: mutation.mutate,
