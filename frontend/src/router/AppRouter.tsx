@@ -30,6 +30,7 @@ import ManagerIncidentsPage from "../pages/manager/ManagerIncidentsPage";
 import ManagerIncidentDetailPage from "../pages/manager/ManagerIncidentDetailPage";
 import ManagerFeedbackPage from "../pages/manager/ManagerFeedbackPage";
 import ManagerNotificationsPage from "../pages/manager/ManagerNotificationsPage";
+import ManagerProfilePage from "../pages/manager/ManagerProfilePage";
 
 import AdminDashboard from "../pages/dashboard/AdminDashboard";
 
@@ -222,6 +223,15 @@ function AppRouter() {
           element={
             <ProtectedRoute>
               <ManagerNotificationsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.manager.profile}
+          element={
+            <ProtectedRoute>
+              <ManagerProfilePage />
             </ProtectedRoute>
           }
         />
