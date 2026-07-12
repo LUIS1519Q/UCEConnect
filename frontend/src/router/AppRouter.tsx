@@ -20,7 +20,9 @@ import IncidentDetailPage from "../pages/student/IncidentDetailPage";
 import AISuggestionPage from "../pages/student/AISuggestionPage";
 import ManagerIncidentsPage from "../pages/manager/ManagerIncidentsPage";
 import ManagerIncidentDetailPage from "../pages/manager/ManagerIncidentDetailPage";
-import DesignSystemPage from "../pages/dev/DesignSystemPage";
+
+import AuthShowcase from "../pages/dev/AuthShowcase";
+import StudentShowcase from "../pages/dev/StudentShowcase";
 
 function AppRouter() {
   return (
@@ -39,8 +41,13 @@ function AppRouter() {
         {/*DESIGN*/}
 
         <Route
-          path="/design-system"
-          element={<DesignSystemPage />}
+          path="/auth-show-case"
+          element={< AuthShowcase />}
+        />
+
+        <Route
+          path="/student-show-case"
+          element={< StudentShowcase />}
         />
 
         {/*AUTH*/}
