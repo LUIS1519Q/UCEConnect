@@ -200,7 +200,7 @@ function AppRouter() {
         />
 
         <Route
-          path="/manager/incidents/:id"
+          path={ROUTES.manager.incidentDetail}
           element={
             <ProtectedRoute>
               <ManagerIncidentDetailPage />
