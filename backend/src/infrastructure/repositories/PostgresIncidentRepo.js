@@ -74,56 +74,80 @@ class PostgresIncidentRepo {
     return rowToIncident(result.rows[0]);
   }
 
-  async findAll({ userId, status, categoryId, page, limit }) {
-    const VALID_STATUSES = ['open', 'in_progress', 'resolved', 'rejected', 'cancelled'];
-    const params = [];
+  async findAll({ createdBy, status, categoryId, page = 1, limit = 5, paginate = false }) {
     const conditions = [];
+    const params = [];
+    let idx = 1;
 
-    if (userId !== undefined) {
-      params.push(userId);
-      conditions.push(`i.created_by = $${params.length}`);
+    if (createdBy) {
+      conditions.push(`i.created_by = $${idx++}`);
+      params.push(createdBy);
     }
-    if (status !== undefined && VALID_STATUSES.includes(status)) {
+    if (status) {
+      conditions.push(`i.status = $${idx++}`);
       params.push(status);
-      conditions.push(`i.status = $${params.length}`);
     }
-    if (categoryId !== undefined) {
+    if (categoryId) {
+      conditions.push(`i.category_id = $${idx++}`);
       params.push(categoryId);
-      conditions.push(`i.category_id = $${params.length}`);
     }
 
-    const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+    const where = conditions.length > 0
+      ? `WHERE ${conditions.join(' AND ')}`
+      : '';
 
-    const offset = (page - 1) * limit;
-    params.push(limit);
-    const limitIdx = params.length;
-    params.push(offset);
-    const offsetIdx = params.length;
+    const selectFields = `
+      i.*,
+      c.name AS category_name,
+      u1.first_name || ' ' || u1.last_name AS created_by_name,
+      u2.first_name || ' ' || u2.last_name AS assigned_to_name
+    `;
 
-    const dataResult = await this.db.query(
-      `SELECT i.*,
-              c.name  AS category_name,
-              u1.name AS created_by_name,
-              u2.name AS assigned_to_name
-       FROM incidents i
-       LEFT JOIN categories c  ON i.category_id = c.id
-       LEFT JOIN users u1      ON i.created_by  = u1.id
-       LEFT JOIN users u2      ON i.assigned_to = u2.id
-       ${where}
-       ORDER BY i.created_at DESC
-       LIMIT $${limitIdx} OFFSET $${offsetIdx}`,
-      params
-    );
+    const joins = `
+      LEFT JOIN categories c ON i.category_id = c.id
+      LEFT JOIN users u1 ON i.created_by = u1.id
+      LEFT JOIN users u2 ON i.assigned_to = u2.id
+    `;
 
-    const countParams = params.slice(0, params.length - 2);
+    if (!paginate) {
+      const result = await this.db.query(
+        `SELECT ${selectFields}
+         FROM incidents i ${joins}
+         ${where}
+         ORDER BY i.created_at DESC`,
+        params
+      );
+      return { data: result.rows.map(rowToIncident) };
+    }
+
+    const offset = (Number(page) - 1) * Number(limit);
+
     const countResult = await this.db.query(
       `SELECT COUNT(*) FROM incidents i ${where}`,
-      countParams
+      params
+    );
+    const total = parseInt(countResult.rows[0].count, 10);
+    const totalPages = Math.ceil(total / Number(limit));
+
+    const dataResult = await this.db.query(
+      `SELECT ${selectFields}
+       FROM incidents i ${joins}
+       ${where}
+       ORDER BY i.created_at DESC
+       LIMIT $${idx} OFFSET $${idx + 1}`,
+      [...params, Number(limit), offset]
     );
 
     return {
       data: dataResult.rows.map(rowToIncident),
-      total: parseInt(countResult.rows[0].count, 10),
+      pagination: {
+        page: Number(page),
+        limit: Number(limit),
+        total,
+        totalPages,
+        hasNext: Number(page) < totalPages,
+        hasPrev: Number(page) > 1,
+      },
     };
   }
 
