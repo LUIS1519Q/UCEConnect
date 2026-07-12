@@ -1,0 +1,56 @@
+name: Build Electron Installer
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Ambiente objetivo'
+        required: true
+        default: 'qa'
+        type: choice
+        options:
+          - qa
+          - prod
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-installer:
+    name: Build Windows Installer
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Definir URL según ambiente
+        id: url
+        shell: bash
+        run: |
+          if [ "${{ github.event.inputs.environment }}" == "prod" ]; then
+            echo "api_url=https://uceconnectprod.programacionwebuce.net" >> $GITHUB_OUTPUT
+          else
+            echo "api_url=https://uceconnectqa.programacionwebuce.net" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generar instalador
+        run: npm run electron:build
+        env:
+          VITE_API_URL: ${{ steps.url.outputs.api_url }}
+
+      - name: Subir instalador como artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: uceconnect-installer-${{ github.event.inputs.environment || 'qa' }}
+          path: frontend/electron-dist/*.exe
