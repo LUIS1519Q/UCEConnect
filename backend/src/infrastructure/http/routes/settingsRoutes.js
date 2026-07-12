@@ -21,7 +21,7 @@ const updateSettingsSchema = z
     allowedVideoTypes: z.array(z.string()).min(1).optional(),
   })
   .refine((data) => Object.keys(data).length > 0, {
-    message: 'Debes enviar al menos un campo para actualizar.',
+    message: 'You must send at least one field to update.',
   });
 
 function validate(schema) {

@@ -15,7 +15,7 @@ class MarkNotificationRead {
     }
 
     await this.notificationRepo.markAsRead(id);
-    this.logger.info(`Notificación marcada como leída: id=${id}`);
+    this.logger.info(`Notification marked as read: id=${id}`);
 
     return { message: 'Notification marked as read.' };
   }

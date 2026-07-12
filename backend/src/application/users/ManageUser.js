@@ -7,13 +7,13 @@ class ManageUser {
   async execute({ id, role, isActive }) {
     const user = await this.userRepo.findById(id);
     if (!user) {
-      throw new Error('Usuario no encontrado');
+      throw new Error('User not found');
     }
 
     if (role !== undefined) {
       const roleId = await this.userRepo.findRoleIdByName(role);
       if (!roleId) {
-        throw new Error('El rol especificado no existe');
+        throw new Error('The specified role does not exist');
       }
       await this.userRepo.updateRole(id, roleId);
     }
@@ -22,7 +22,7 @@ class ManageUser {
       await this.userRepo.updateActiveStatus(id, isActive);
     }
 
-    this.logger.info(`Usuario gestionado por admin: userId=${id}`);
+    this.logger.info(`User managed by admin: userId=${id}`);
 
     return this.userRepo.findById(id);
   }

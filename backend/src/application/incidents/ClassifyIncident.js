@@ -10,10 +10,10 @@ class ClassifyIncident {
       const categories = this.categoryRepo ? await this.categoryRepo.findAll({ isActive: true }) : [];
       const categoryNames = categories.map((category) => category.name);
       const result = await this.classifier.classify(title, description, categoryNames);
-      this.logger.info(`Incidencia clasificada por Gemini: priority=${result.priority}, category=${result.category}`);
+      this.logger.info(`Incident classified by Gemini: priority=${result.priority}, category=${result.category}`);
       return { ...result, aiClassified: true };
     } catch (err) {
-      this.logger.warn(`Fallback de clasificación activado: ${err.message}`);
+      this.logger.warn(`Classification fallback activated: ${err.message}`);
       const text = `${title} ${description}`.toLowerCase();
       let priority = 'low';
       if (['urgente', 'critico', 'bloqueado', 'no puedo'].some(k => text.includes(k))) {

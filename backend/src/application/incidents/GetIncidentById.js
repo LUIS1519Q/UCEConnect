@@ -11,12 +11,12 @@ class GetIncidentById {
     const incident = await this.incidentRepo.findById(id);
     if (!incident) {
       logger.warn(`[GetIncidentById] INCIDENT_NOT_FOUND: id=${id}`);
-      throw new Error('Incidencia no encontrada');
+      throw new Error('Incident not found');
     }
 
     if (role === 'student' && incident.createdBy !== userId) {
       logger.warn(`[GetIncidentById] INSUFFICIENT_PERMISSION: userId=${userId} incidentId=${id}`);
-      throw new Error('No tienes permiso para ver esta incidencia');
+      throw new Error('You do not have permission to view this incident');
     }
 
     const [history, conversationCount, attachments, internalNotes] = await Promise.all([

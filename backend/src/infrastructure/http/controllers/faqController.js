@@ -14,9 +14,9 @@ async function create(req, res) {
       answer: req.body.answer,
       order: req.body.order,
     });
-    return res.status(201).json({ message: 'Pregunta frecuente creada exitosamente', item });
+    return res.status(201).json({ message: 'FAQ item created successfully', item });
   } catch (err) {
-    logger.warn(`Error en createFaqItem: ${err.message}`);
+    logger.warn(`Error in createFaqItem: ${err.message}`);
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
@@ -29,10 +29,10 @@ async function update(req, res) {
       answer: req.body.answer,
       order: req.body.order,
     });
-    return res.status(200).json({ message: 'Pregunta frecuente actualizada exitosamente', item });
+    return res.status(200).json({ message: 'FAQ item updated successfully', item });
   } catch (err) {
-    logger.warn(`Error en updateFaqItem: ${err.message}`);
-    if (err.message.includes('no encontrada'))
+    logger.warn(`Error in updateFaqItem: ${err.message}`);
+    if (err.message.includes('not found'))
       return res.status(404).json({ message: err.message, errorCode: 'FAQ_ITEM_NOT_FOUND' });
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
@@ -43,8 +43,8 @@ async function remove(req, res) {
     const result = await new DeleteFaqItem(helpItemRepo, logger).execute({ id: Number(req.params.id) });
     return res.status(200).json(result);
   } catch (err) {
-    logger.warn(`Error en deleteFaqItem: ${err.message}`);
-    if (err.message.includes('no encontrada'))
+    logger.warn(`Error in deleteFaqItem: ${err.message}`);
+    if (err.message.includes('not found'))
       return res.status(404).json({ message: err.message, errorCode: 'FAQ_ITEM_NOT_FOUND' });
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }

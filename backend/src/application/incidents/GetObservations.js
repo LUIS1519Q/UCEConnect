@@ -8,16 +8,16 @@ class GetObservations {
   async execute({ incidentId, role, userId }) {
     const incident = await this.incidentRepo.findById(incidentId);
     if (!incident) {
-      throw new Error('Incidencia no encontrada');
+      throw new Error('Incident not found');
     }
 
     if (role === 'student' && incident.createdBy !== userId) {
-      throw new Error('No tienes permiso para ver esta incidencia');
+      throw new Error('You do not have permission to view this incident');
     }
 
     const observations = await this.observationRepo.findByIncidentId(incidentId);
 
-    this.logger.info(`Observaciones obtenidas: incidentId=${incidentId}`);
+    this.logger.info(`Observations retrieved: incidentId=${incidentId}`);
 
     return observations;
   }

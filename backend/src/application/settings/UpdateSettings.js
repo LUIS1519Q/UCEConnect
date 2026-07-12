@@ -27,7 +27,7 @@ class UpdateSettings {
       allowedVideoTypes,
     });
 
-    this.logger.info('Configuración actualizada');
+    this.logger.info('Settings updated');
 
     return updated.toJSON();
   }

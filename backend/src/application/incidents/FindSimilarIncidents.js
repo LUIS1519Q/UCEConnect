@@ -29,7 +29,7 @@ class FindSimilarIncidents {
       .sort((a, b) => b.score - a.score)
       .slice(0, 5);
 
-    this.logger.info(`Búsqueda de incidencias similares: ${scored.length} encontradas`);
+    this.logger.info(`Similar incident search: ${scored.length} found`);
 
     return scored.map(({ incident }) => ({
       id: incident.id,

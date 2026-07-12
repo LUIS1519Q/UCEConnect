@@ -16,7 +16,7 @@ async function getMonthlySummary(req, res) {
     });
     return res.status(200).json(result);
   } catch (err) {
-    logger.error(`Error en getMonthlySummary: ${err.message}`);
+    logger.error(`Error in getMonthlySummary: ${err.message}`);
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
@@ -31,7 +31,7 @@ async function downloadPdf(req, res) {
     res.setHeader('Content-Disposition', `attachment; filename="reporte-${report.month}.pdf"`);
     return res.status(200).send(buffer);
   } catch (err) {
-    logger.error(`Error en downloadPdf: ${err.message}`);
+    logger.error(`Error in downloadPdf: ${err.message}`);
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
@@ -46,7 +46,7 @@ async function downloadExcel(req, res) {
     res.setHeader('Content-Disposition', `attachment; filename="reporte-${report.month}.xlsx"`);
     return res.status(200).send(buffer);
   } catch (err) {
-    logger.error(`Error en downloadExcel: ${err.message}`);
+    logger.error(`Error in downloadExcel: ${err.message}`);
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }

@@ -6,26 +6,26 @@ class VerifyCode {
   }
 
   async execute({ email, code }) {
-    logger.info(`Intento de verificación: ${email}`);
+    logger.info(`Verification attempt: ${email}`);
 
     const verifyCode = await this.userRepo.findVerifyCode(email);
     if (!verifyCode) {
-      logger.warn(`Verificación fallida — código no encontrado: ${email}`);
+      logger.warn(`Verification failed — code not found: ${email}`);
       throw new Error('Verification code not found.');
     }
 
     if (verifyCode.used) {
-      logger.warn(`Verificación fallida — código no encontrado: ${email}`);
+      logger.warn(`Verification failed — code already used: ${email}`);
       throw new Error('Verification code has already been used.');
     }
 
     if (new Date(verifyCode.expiresAt) < new Date()) {
-      logger.warn(`Verificación fallida — código expirado: ${email}`);
+      logger.warn(`Verification failed — code expired: ${email}`);
       throw new Error('Verification code has expired.');
     }
 
     if (verifyCode.code !== code) {
-      logger.warn(`Verificación fallida — código incorrecto: ${email}`);
+      logger.warn(`Verification failed — code incorrect: ${email}`);
       throw new Error('Invalid verification code.');
     }
 
@@ -33,9 +33,9 @@ class VerifyCode {
     await this.userRepo.updateVerified(user.id);
     await this.userRepo.markCodeAsUsed(email);
 
-    logger.info(`Cuenta verificada exitosamente: ${email}`);
+    logger.info(`Account verified successfully: ${email}`);
 
-    return { message: 'Cuenta verificada exitosamente' };
+    return { message: 'Account verified successfully' };
   }
 }
 

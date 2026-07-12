@@ -18,7 +18,7 @@ async function list(req, res) {
     });
     return res.status(200).json(result);
   } catch (err) {
-    logger.warn(`Error en list notifications: ${err.message}`);
+    logger.warn(`Error listing notifications: ${err.message}`);
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
@@ -32,7 +32,7 @@ async function markRead(req, res) {
     });
     return res.status(200).json(result);
   } catch (err) {
-    logger.warn(`Error en markRead: ${err.message}`);
+    logger.warn(`Error in markRead: ${err.message}`);
     if (err.message.includes('not found')) return res.status(404).json({ message: err.message, errorCode: 'NOTIFICATION_NOT_FOUND' });
     if (err.message.includes('permission')) return res.status(403).json({ message: err.message, errorCode: 'INSUFFICIENT_PERMISSION' });
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });

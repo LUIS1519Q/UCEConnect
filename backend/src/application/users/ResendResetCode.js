@@ -7,16 +7,16 @@ class ResendResetCode {
   }
 
   async execute({ email }) {
-    logger.info(`Intento de reenvío de código de reset: ${email}`);
+    logger.info(`Resend reset code attempt: ${email}`);
 
     const user = await this.userRepo.findByEmail(email);
     if (!user) {
-      logger.warn(`Reenvío de código de reset fallido — usuario no encontrado: ${email}`);
+      logger.warn(`Resend reset code failed — user not found: ${email}`);
       throw new Error('User not found.');
     }
 
     if (user.isActive === false) {
-      logger.warn(`Reenvío de código de reset fallido — cuenta desactivada: ${email}`);
+      logger.warn(`Resend reset code failed — account disabled: ${email}`);
       throw new Error('Your account has been deactivated.');
     }
 
@@ -26,9 +26,9 @@ class ResendResetCode {
     await this.userRepo.saveResetCode(user.id, code, expiresAt);
     await this.emailNotifier.sendPasswordResetCode(email, code);
 
-    logger.info(`Código de reset reenviado a: ${email}`);
+    logger.info(`Reset code resent to: ${email}`);
 
-    return { message: 'Código reenviado correctamente' };
+    return { message: 'Code resent successfully' };
   }
 }
 

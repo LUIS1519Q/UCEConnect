@@ -39,7 +39,7 @@ class Incident {
 
   static create({ title, description, categoryId, createdBy, priority, aiSummary }) {
     if (!IncidentStatus.isValid('open')) {
-      throw new Error('Estado inicial inválido');
+      throw new Error('Invalid initial status');
     }
     return new Incident({
       id: null,

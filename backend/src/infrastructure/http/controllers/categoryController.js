@@ -13,10 +13,10 @@ async function create(req, res) {
       name: req.body.name,
       description: req.body.description,
     });
-    return res.status(201).json({ message: 'Categoría creada exitosamente', category });
+    return res.status(201).json({ message: 'Category created successfully', category });
   } catch (err) {
-    logger.warn(`Error en createCategory: ${err.message}`);
-    if (err.message.includes('Ya existe'))
+    logger.warn(`Error in createCategory: ${err.message}`);
+    if (err.message.includes('already exists'))
       return res.status(400).json({ message: err.message, errorCode: 'VALIDATION_ERROR' });
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
@@ -29,7 +29,7 @@ async function list(req, res) {
     });
     return res.status(200).json({ data: categories });
   } catch (err) {
-    logger.error(`Error en listCategories: ${err.message}`);
+    logger.error(`Error in listCategories: ${err.message}`);
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
@@ -42,12 +42,12 @@ async function update(req, res) {
       description: req.body.description,
       isActive: req.body.isActive,
     });
-    return res.status(200).json({ message: 'Categoría actualizada exitosamente', category });
+    return res.status(200).json({ message: 'Category updated successfully', category });
   } catch (err) {
-    logger.warn(`Error en updateCategory: ${err.message}`);
-    if (err.message.includes('no encontrada'))
+    logger.warn(`Error in updateCategory: ${err.message}`);
+    if (err.message.includes('not found'))
       return res.status(404).json({ message: err.message, errorCode: 'CATEGORY_NOT_FOUND' });
-    if (err.message.includes('Ya existe'))
+    if (err.message.includes('already exists'))
       return res.status(400).json({ message: err.message, errorCode: 'VALIDATION_ERROR' });
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }

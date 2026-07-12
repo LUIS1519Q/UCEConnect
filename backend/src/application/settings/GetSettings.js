@@ -6,7 +6,7 @@ class GetSettings {
 
   async execute() {
     const settings = await this.settingsRepo.findSettings();
-    this.logger.info('Configuración obtenida');
+    this.logger.info('Settings retrieved');
     return settings.toJSON();
   }
 }

@@ -73,6 +73,6 @@ describe('ForgotPassword', () => {
 
     const result = await forgotPassword.execute({ email: 'ana.perez@uce.edu.ec' });
 
-    expect(result).toEqual({ message: 'Código enviado. Revisa tu correo.' });
+    expect(result).toEqual({ message: 'Code sent. Check your email.' });
   });
 });

@@ -9,7 +9,7 @@ class GetCareers {
       throw new Error('Faculty ID is required.');
     }
     const careers = await this.userRepo.findCareersByFaculty(facultyId);
-    this.logger.info(`Carreras obtenidas: facultyId=${facultyId}`);
+    this.logger.info(`Careers retrieved: facultyId=${facultyId}`);
     return careers;
   }
 }

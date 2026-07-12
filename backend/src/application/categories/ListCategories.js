@@ -7,7 +7,7 @@ class ListCategories {
   async execute({ isActive } = {}) {
     const categories = await this.categoryRepo.findAll({ isActive });
 
-    this.logger.info('Categorías listadas');
+    this.logger.info('Categories listed');
 
     return categories.map((category) => category.toJSON());
   }

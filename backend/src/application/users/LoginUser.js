@@ -16,27 +16,27 @@ class LoginUser {
   }
 
   async execute({ email, password }) {
-    logger.info(`Intento de login: ${email}`);
+    logger.info(`Login attempt: ${email}`);
 
     const user = await this.userRepo.findByEmail(email);
     if (!user) {
-      logger.warn(`Login fallido — usuario no encontrado: ${email}`);
+      logger.warn(`Login failed — user not found: ${email}`);
       throw new Error('Invalid credentials.');
     }
 
     if (!user.isVerified) {
-      logger.warn(`Login fallido — cuenta no verificada: ${email}`);
+      logger.warn(`Login failed — account not verified: ${email}`);
       throw new Error('You must verify your email before logging in.');
     }
 
     if (!user.isActive) {
-      logger.warn(`Login fallido — cuenta desactivada: ${email}`);
+      logger.warn(`Login failed — account disabled: ${email}`);
       throw new Error('Your account has been deactivated.');
     }
 
     const passwordMatches = await this.bcrypt.compare(password, user.passwordHash);
     if (!passwordMatches) {
-      logger.warn(`Login fallido — contraseña incorrecta: ${email}`);
+      logger.warn(`Login failed — incorrect password: ${email}`);
       throw new Error('Invalid credentials.');
     }
 
@@ -49,7 +49,7 @@ class LoginUser {
       expiresIn: '7d',
     });
 
-    logger.info(`Login exitoso: ${email} rol:${role}`);
+    logger.info(`Login successful: ${email} role:${role}`);
 
     return {
       accessToken: token,

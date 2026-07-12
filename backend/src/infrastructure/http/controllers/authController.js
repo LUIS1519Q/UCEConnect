@@ -51,8 +51,9 @@ const getCareers = new GetCareers(userRepo, logger);
 async function register(req, res) {
   try {
     const user = await registerUser.execute(req.body);
-    res.status(201).json({ message: 'Usuario registrado. Revisa tu correo para verificar tu cuenta.', user });
+    res.status(201).json({ message: 'User registered. Check your email to verify your account.', user });
   } catch (error) {
+    logger.error(`Error in register: ${error.message}`);
     if (error.message.includes('already registered')) {
       return res.status(400).json({ message: error.message, errorCode: 'EMAIL_ALREADY_REGISTERED' });
     }
@@ -68,6 +69,7 @@ async function verifyCodeHandler(req, res) {
     const result = await verifyCode.execute(req.body);
     res.status(200).json(result);
   } catch (error) {
+    logger.error(`Error in verifyCode: ${error.message}`);
     if (error.message.includes('not found')) {
       return res.status(404).json({ message: error.message, errorCode: 'CODE_NOT_FOUND' });
     }
@@ -89,6 +91,7 @@ async function login(req, res) {
     const result = await loginUser.execute(req.body);
     res.status(200).json(result);
   } catch (error) {
+    logger.error(`Error in login: ${error.message}`);
     if (error.message.includes('Invalid credentials')) {
       return res.status(401).json({ message: error.message, errorCode: 'INVALID_CREDENTIALS' });
     }
@@ -118,7 +121,7 @@ async function getProfile(req, res) {
       },
     });
   } catch (error) {
-    logger.error(`Error en getProfile: ${error.message}`);
+    logger.error(`Error in getProfile: ${error.message}`);
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
@@ -139,7 +142,7 @@ async function updateProfileHandler(req, res) {
       user: user.toJSON(),
     });
   } catch (err) {
-    logger.warn(`Error en updateProfile: ${err.message}`);
+    logger.warn(`Error in updateProfile: ${err.message}`);
     if (
       err.message.includes('must contain')
       || err.message.includes('Invalid')
@@ -165,7 +168,7 @@ async function updateAvatarHandler(req, res) {
       avatarUrl: result.avatarUrl,
     });
   } catch (err) {
-    logger.warn(`Error en updateAvatar: ${err.message}`);
+    logger.warn(`Error in updateAvatar: ${err.message}`);
     if (err.message.includes('allowed') || err.message.includes('required'))
       return res.status(400).json({ message: err.message, errorCode: 'VALIDATION_ERROR' });
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
@@ -177,7 +180,7 @@ async function getFacultiesHandler(req, res) {
     const data = await getFaculties.execute();
     return res.status(200).json({ data });
   } catch (err) {
-    logger.error(`Error en getFaculties: ${err.message}`);
+    logger.error(`Error in getFaculties: ${err.message}`);
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
@@ -188,7 +191,7 @@ async function getCareersHandler(req, res) {
     const data = await getCareers.execute({ facultyId: Number(facultyId) });
     return res.status(200).json({ data });
   } catch (err) {
-    logger.warn(`Error en getCareers: ${err.message}`);
+    logger.warn(`Error in getCareers: ${err.message}`);
     if (err.message.includes('required') || err.message.includes('Invalid'))
       return res.status(400).json({ message: err.message, errorCode: 'VALIDATION_ERROR' });
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
@@ -200,6 +203,7 @@ async function resendCode(req, res) {
     const result = await resendVerifyCode.execute(req.body);
     res.status(200).json(result);
   } catch (error) {
+    logger.error(`Error in resendCode: ${error.message}`);
     if (error.message.includes('not found')) {
       return res.status(404).json({ message: error.message, errorCode: 'USER_NOT_FOUND' });
     }
@@ -215,6 +219,7 @@ async function forgotPasswordHandler(req, res) {
     const result = await forgotPassword.execute({ email: req.body.email });
     res.status(200).json(result);
   } catch (error) {
+    logger.error(`Error in forgotPassword: ${error.message}`);
     if (error.message.includes('User not found')) {
       return res.status(404).json({ message: error.message, errorCode: 'USER_NOT_FOUND' });
     }
@@ -230,6 +235,7 @@ async function verifyResetCodeHandler(req, res) {
     const result = await verifyResetCode.execute({ email: req.body.email, code: req.body.code });
     res.status(200).json(result);
   } catch (error) {
+    logger.error(`Error in verifyResetCode: ${error.message}`);
     if (error.message.includes('not found')) {
       return res.status(404).json({ message: error.message, errorCode: 'CODE_NOT_FOUND' });
     }
@@ -251,6 +257,7 @@ async function resendResetCodeHandler(req, res) {
     const result = await resendResetCode.execute({ email: req.body.email });
     res.status(200).json(result);
   } catch (error) {
+    logger.error(`Error in resendResetCode: ${error.message}`);
     if (error.message.includes('not found')) {
       return res.status(404).json({ message: error.message, errorCode: 'USER_NOT_FOUND' });
     }
@@ -269,6 +276,7 @@ async function resetPasswordHandler(req, res) {
     });
     res.status(200).json(result);
   } catch (error) {
+    logger.error(`Error in resetPassword: ${error.message}`);
     if (error.message.includes('Invalid or expired')) {
       return res.status(401).json({ message: error.message, errorCode: 'INVALID_RESET_TOKEN' });
     }
@@ -290,8 +298,8 @@ async function microsoftLogin(req, res) {
     const authUrl = await microsoftAuthService.getAuthUrl();
     res.redirect(authUrl);
   } catch (error) {
-    logger.error(`Error en Microsoft login: ${error.message}`);
-    res.status(500).json({ message: 'Error al iniciar sesión con Microsoft', errorCode: 'MICROSOFT_AUTH_ERROR' });
+    logger.error(`Error in Microsoft login: ${error.message}`);
+    res.status(500).json({ message: 'Error signing in with Microsoft', errorCode: 'MICROSOFT_AUTH_ERROR' });
   }
 }
 
@@ -299,7 +307,7 @@ async function microsoftCallback(req, res) {
   try {
     const { code } = req.query;
     if (!code) {
-      return res.status(400).json({ message: 'Código de autorización requerido', errorCode: 'AUTH_CODE_REQUIRED' });
+      return res.status(400).json({ message: 'Authorization code required', errorCode: 'AUTH_CODE_REQUIRED' });
     }
 
     const result = await loginWithMicrosoft.execute({ code });
@@ -312,12 +320,12 @@ async function microsoftCallback(req, res) {
     });
     res.redirect(`${frontendUrl}/auth/microsoft/callback?${params}`);
   } catch (error) {
-    logger.error(`Error en Microsoft callback: ${error.message}`);
+    logger.error(`Error in Microsoft callback: ${error.message}`);
 
     if (error.message.includes('@uce.edu.ec')) {
       return res.status(403).json({ message: error.message, errorCode: 'INVALID_EMAIL_DOMAIN' });
     }
-    if (error.message.includes('desactivada')) {
+    if (error.message.includes('disabled')) {
       return res.status(400).json({ message: error.message, errorCode: 'USER_DISABLED' });
     }
     res.status(500).json({ message: error.message, errorCode: 'INTERNAL_ERROR' });
