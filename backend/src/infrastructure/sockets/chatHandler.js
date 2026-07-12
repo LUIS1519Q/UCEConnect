@@ -76,7 +76,9 @@ function initChat(io, deps) {
 
         if (socket.user.role === 'student') {
           const observations = await deps.observationRepo.findByIncidentId(incidentId);
-          const managerReplied = observations.some((o) => o.authorRole === 'manager');
+          const managerReplied = observations.some(
+            (o) => o.authorRole === 'manager' || o.authorRole === 'admin'
+          );
           if (!managerReplied) {
             socket.emit('error', {
               event: 'error',
@@ -90,7 +92,8 @@ function initChat(io, deps) {
           deps.incidentRepo,
           deps.observationRepo,
           deps.logger,
-          deps.notificationService
+          deps.notificationService,
+          deps.userRepo
         );
         const observation = await sendObservation.execute({
           incidentId: Number(incidentId),
