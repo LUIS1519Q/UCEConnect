@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 
+import { compressImages } from "../../utils/compressImage";
+
 import {
   FilePlus2,
   FileText,
@@ -71,16 +73,18 @@ export default function EditIncidentPage() {
     }
   }, [incident, reset]);
 
-  const handleFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFiles = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const newFiles = Array.from(event.target.files ?? []);
-    setSelectedFiles((prev) => [...prev, ...newFiles]);
+    const compressedFiles = await compressImages(newFiles);
+    setSelectedFiles((prev) => [...prev, ...compressedFiles]);
     event.target.value = "";
   };
 
-  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+  const handleDrop = async (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     const newFiles = Array.from(event.dataTransfer.files);
-    setSelectedFiles((prev) => [...prev, ...newFiles]);
+    const compressedFiles = await compressImages(newFiles);
+    setSelectedFiles((prev) => [...prev, ...compressedFiles]);
   };
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
