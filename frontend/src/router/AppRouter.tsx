@@ -19,7 +19,7 @@ import MyIncidentsPage from "../pages/student/MyIncidentsPage";
 import CreateIncidentPage from "../pages/student/CreateIncidentPage";
 import EditIncidentPage from "../pages/student/EditIncidentPage";
 import IncidentDetailPage from "../pages/student/IncidentDetailPage";
-import AISuggestionPage from "../pages/student/AISuggestionPage";
+import RespondToManagerRequestPage from "../pages/student/RespondToManagerRequestPage";
 import NotificationsPage from "../pages/student/NotificationPage";
 import ProfilePage from "../pages/profile/ProfilePage";
 import EditProfilePage from "../pages/profile/EditProfilePage";
@@ -136,10 +136,10 @@ function AppRouter() {
         />
 
         <Route
-          path="/incidents/ai-suggestion"
+          path={ROUTES.student.incidentConversation}
           element={
             <ProtectedRoute>
-              <AISuggestionPage />
+              <RespondToManagerRequestPage />
             </ProtectedRoute>
           }
         />
