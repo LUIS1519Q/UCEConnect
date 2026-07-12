@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, MemoryRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ROUTES } from "../constants/routes";
 
 import ProtectedRoute from "./ProtectedRoute";
@@ -47,9 +47,12 @@ const STUDENT_ROLES: Role[] = ["student"];
 const MANAGER_ROLES: Role[] = ["manager"];
 const ADMIN_ROLES: Role[] = ["admin"];
 
+const isElectron = window.navigator.userAgent.includes("Electron");
+const Router = isElectron ? MemoryRouter : BrowserRouter;
+
 function AppRouter() {
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
         <Route
           path="*"
@@ -286,7 +289,7 @@ function AppRouter() {
         />
 
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 }
 
