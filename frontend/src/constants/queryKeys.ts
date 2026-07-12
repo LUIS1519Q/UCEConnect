@@ -66,4 +66,12 @@ export const queryKeys = {
       [...queryKeys.categories.all, "list", filters] as const,
   },
 
+  settings: {
+    all: ["settings"] as const,
+  },
+
+  faq: {
+    all: ["faq"] as const,
+  },
+
 } as const;
