@@ -99,17 +99,20 @@ const db = require('../db/connection');
 const PostgresIncidentRepo = require('../repositories/PostgresIncidentRepo');
 const PostgresObservationRepo = require('../repositories/PostgresObservationRepo');
 const PostgresNotificationRepo = require('../repositories/PostgresNotificationRepo');
+const PostgresUserRepo = require('../repositories/PostgresUserRepo');
 const NotificationService = require('../services/NotificationService');
 const jwt = require('jsonwebtoken');
 
 const incidentRepo = new PostgresIncidentRepo(db);
 const observationRepo = new PostgresObservationRepo(db);
 const notificationRepo = new PostgresNotificationRepo(db);
+const userRepo = new PostgresUserRepo(db);
 const notificationService = new NotificationService(io, notificationRepo, logger);
 
 initChat(io, {
   incidentRepo,
   observationRepo,
+  userRepo,
   logger,
   jwt,
   JWT_SECRET: process.env.JWT_SECRET,

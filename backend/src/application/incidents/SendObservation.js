@@ -1,11 +1,12 @@
 const Observation = require('../../domain/incidents/Observation');
 
 class SendObservation {
-  constructor(incidentRepo, observationRepo, logger, notificationService = null) {
+  constructor(incidentRepo, observationRepo, logger, notificationService = null, userRepo = null) {
     this.incidentRepo = incidentRepo;
     this.observationRepo = observationRepo;
     this.logger = logger;
     this.notificationService = notificationService;
+    this.userRepo = userRepo;
   }
 
   async execute({ incidentId, authorId, authorName, authorRole, message }) {
@@ -40,17 +41,24 @@ class SendObservation {
     this.logger.info(`Observation sent: incidentId=${incidentId} authorId=${authorId}`);
 
     if (this.notificationService) {
-      if (authorRole === 'student') {
-        const targetUserId = incident.assignedTo;
-        if (targetUserId) {
-          await this.notificationService.notify({
-            userId: targetUserId,
-            incidentId,
-            ticket: incident.ticket,
-            type: 'student_reply',
-            title: `Student replied on incident ${incident.ticket || incidentId}.`,
-          });
-        }
+      if (authorRole === 'student' && this.userRepo) {
+        const [managers, admins] = await Promise.all([
+          this.userRepo.findByRole('manager'),
+          this.userRepo.findByRole('admin'),
+        ]);
+        const recipients = [...managers, ...admins];
+
+        await Promise.all(
+          recipients.map((recipient) =>
+            this.notificationService.notify({
+              type: 'student_reply',
+              userId: recipient.id,
+              incidentId: incident.id,
+              ticket: incident.ticket,
+              title: incident.title,
+            })
+          )
+        );
       }
 
       if (authorRole === 'manager' || authorRole === 'admin') {

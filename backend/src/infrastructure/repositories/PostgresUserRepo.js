@@ -239,6 +239,14 @@ class PostgresUserRepo {
     return result.rows;
   }
 
+  async findCareerById(careerId) {
+    const result = await this.db.query(
+      'SELECT id, name, faculty_id FROM careers WHERE id = $1',
+      [careerId]
+    );
+    return result.rows[0] || null;
+  }
+
   async findAllUsers({ role, isActive, search, page = 1, limit = 10 } = {}) {
     const params = [];
     const conditions = [];
