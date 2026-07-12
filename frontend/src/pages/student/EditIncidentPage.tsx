@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -38,78 +38,138 @@ import { ROUTES } from "../../constants/routes";
 export default function EditIncidentPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { logout } = useLogout();
-  const user = useAuthStore((state) => state.user);
 
-  const { data, isLoading, isError, refetch } = useIncidentDetail(id!);
-  const { updateIncidentAsync, isPending: isSaving } = useUpdateIncident(id!);
-  const { uploadAttachmentsAsync, isPending: isUploading } = useUploadAttachments(id!);
+  const [title, setTitle] = useState("");
+  const [categoryId, setCategoryId] = useState("1");
+  const [description, setDescription] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const incident = data?.incident;
-  const isOpen = incident?.status === "open";
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setError,
-    formState: { errors },
-  } = useForm<EditIncidentForm>({
-    resolver: zodResolver(editIncidentSchema),
-    defaultValues: { title: "", description: "" },
+  const { data: incident, isLoading } = useQuery({
+    queryKey: ["incident", id],
+    queryFn: () => incidentService.getIncidentById(id!),
+    enabled: !!id,
   });
 
   useEffect(() => {
     if (incident) {
-      reset({
-        title: incident.title,
-        description: incident.description,
-      });
+      setTitle(incident.title);
+      setDescription(incident.description);
+      setCategoryId(String(incident.categoryId));
     }
-  }, [incident, reset]);
+  }, [incident]);
 
-  const handleFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newFiles = Array.from(event.target.files ?? []);
-    setSelectedFiles((prev) => [...prev, ...newFiles]);
-    event.target.value = "";
+  const { mutate, isPending } = useMutation({
+    mutationFn: (data: {
+      title: string;
+      description: string;
+      categoryId: number;
+    }) => incidentService.updateIncident(id!, data),
+
+    onSuccess: () => {
+      navigate("/incidents");
+    },
+
+    onError: (error: any) => {
+      setErrorMessage(
+        error?.response?.data?.message ?? "Failed to update incident."
+      );
+    },
+  });
+
+  const handleSubmit = (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
+    e.preventDefault();
+
+    mutate({
+      title,
+      description,
+      categoryId: Number(categoryId),
+    });
   };
 
-  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    const newFiles = Array.from(event.dataTransfer.files);
-    setSelectedFiles((prev) => [...prev, ...newFiles]);
-  };
+  if (isLoading) {
+    return (
+      <DashboardLayout title="Edit Incident">
+        <p>Loading incident...</p>
+      </DashboardLayout>
+    );
+  }
 
-  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-  };
+  return (
+    <DashboardLayout title="Edit Incident">
 
-  const removeSelectedFile = (fileToRemove: File) => {
-    setSelectedFiles((prev) => prev.filter((file) => file !== fileToRemove));
-  };
+      <div className="rounded-lg bg-white p-6 shadow">
 
-  const isPending = isSaving || isUploading;
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-4"
+        >
 
-  const onSubmit = async (formData: EditIncidentForm) => {
-    try {
-      await updateIncidentAsync(formData);
+          <div>
 
-      if (selectedFiles.length > 0) {
-        await uploadAttachmentsAsync(selectedFiles);
-      }
+            <label className="mb-1 block">
+              Title
+            </label>
 
-      navigate(`/incidents/${id}`);
-    } catch (err) {
-      const message = axios.isAxiosError(err)
-        ? err.response?.data?.message ?? "Something went wrong. Please try again."
-        : "Something went wrong. Please try again.";
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full rounded-lg border p-3"
+            />
 
-      setError("root", { message });
-    }
-  };
+          </div>
+
+          <div>
+
+            <label className="mb-1 block">
+              Category
+            </label>
+
+            <select
+              value={categoryId}
+              onChange={(e) => setCategoryId(e.target.value)}
+              className="w-full rounded-lg border p-3"
+            >
+              <option value="1">
+                Academic
+              </option>
+
+              <option value="2">
+                Administrative
+              </option>
+
+              <option value="3">
+                Technology
+              </option>
+
+              <option value="4">
+                Infrastructure
+              </option>
+
+            </select>
+
+          </div>
+
+          <div>
+
+            <label className="mb-1 block">
+              Description
+            </label>
+
+            <textarea
+              rows={5}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full rounded-lg border p-3"
+            />
+
+          </div>
+
+          {errorMessage && (
+            <p className="text-red-500 text-sm">{errorMessage}</p>
+          )}
 
   const unreadCount = useUnreadNotificationsCount();
 
@@ -149,95 +209,19 @@ export default function EditIncidentPage() {
       ) : (
         <div className="mx-auto w-full max-w-4xl space-y-4">
           <button
-            onClick={() => navigate(`/incidents/${id}`)}
-            className="text-sm text-primary hover:underline"
+            type="submit"
+            disabled={isPending}
+            className="rounded-lg bg-blue-600 px-5 py-3 text-white disabled:opacity-70"
           >
-            ← Back to incident detail
+            {isPending ? "Saving..." : "Save Changes"}
           </button>
 
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="space-y-5 rounded-xl bg-surface p-5 shadow-sm sm:p-6 lg:p-7"
-          >
-            <div>
-              <h2 className="text-xl font-semibold">Edit incident</h2>
-              <p className="text-sm text-textSecondary">
-                Only available while status is Open
-              </p>
-            </div>
+        </form>
 
-            <div>
-              <label className="mb-2 block font-medium">Title</label>
-              <TextInput placeholder="Incident title" {...register("title")} />
-              {errors.title && (
-                <p className="mt-1 text-sm text-danger">{errors.title.message}</p>
-              )}
-            </div>
+      </div>
 
-            <div>
-              <label className="mb-2 block font-medium">Description</label>
-              <Textarea rows={5} placeholder="Describe the incident..." {...register("description")} />
-              {errors.description && (
-                <p className="mt-1 text-sm text-danger">{errors.description.message}</p>
-              )}
-            </div>
-
-            {data?.attachments && data.attachments.length > 0 && (
-              <div>
-                <h3 className="mb-2 text-base font-medium text-textPrimary">
-                  Attached evidence
-                </h3>
-                <EvidenceSection
-                  title=""
-                  files={data.attachments.map((att) => ({
-                    fileName: att.fileName,
-                    onClick: () => {
-                      window.open(att.fileUrl, "_blank", "noopener,noreferrer");
-                    },
-                  }))}
-                />
-              </div>
-            )}
-
-            <input
-              hidden
-              multiple
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFiles}
-            />
-
-            <EvidenceSection
-              title="Add more evidence"
-              emptyMessage="Drag & drop files here"
-              files={selectedFiles.map((file) => ({
-                fileName: file.name,
-                onRemove: () => removeSelectedFile(file),
-              }))}
-              onAddFile={() => fileInputRef.current?.click()}
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-            />
-
-            {errors.root && (
-              <p className="text-center text-sm text-danger">{errors.root.message}</p>
-            )}
-
-            <div className="flex justify-end gap-4 pt-2">
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => navigate(`/incidents/${id}`)}
-              >
-                Cancel changes
-              </Button>
-              <Button type="submit" disabled={isPending}>
-                {isPending ? "Saving..." : "Save changes"}
-              </Button>
-            </div>
-          </form>
-        </div>
-      )}
-    </AppLayout>
+    </DashboardLayout>
   );
 }
+
+export default EditIncidentPage;

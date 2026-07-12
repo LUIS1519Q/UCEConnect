@@ -78,13 +78,14 @@ async function create(req, res) {
 
 async function list(req, res) {
   try {
+    const { status, category_id, page, limit } = req.query;
     const result = await new ListIncidents(incidentRepo).execute({
       role: req.user.role,
       userId: req.user.id,
-      status: req.query.status,
-      categoryId: req.query.category_id,
-      page: req.query.page,
-      limit: req.query.limit,
+      status,
+      categoryId: category_id ? Number(category_id) : undefined,
+      page: page ? Number(page) : 1,
+      limit: limit ? Number(limit) : 5,
     });
     return res.status(200).json(result);
   } catch (err) {
