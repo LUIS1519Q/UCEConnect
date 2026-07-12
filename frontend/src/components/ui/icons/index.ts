@@ -46,4 +46,5 @@ export {
   CheckCircle2,
   MoreVertical,
   BarChart3,
+  LayoutDashboard,
 } from "lucide-react";
