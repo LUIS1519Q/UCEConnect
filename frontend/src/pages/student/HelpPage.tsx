@@ -32,18 +32,18 @@ export default function HelpPage() {
 
   const [search, setSearch] = useState("");
 
-  const { faqs, supportEmail, isLoading, isError, refetch } = useHelp();
+  const { items, supportEmail, isLoading, isError, refetch } = useHelp();
 
   const filteredFaqs = useMemo(() => {
     const value = search.trim().toLowerCase();
-    if (!value) return faqs;
+    if (!value) return items;
 
-    return faqs.filter(
+    return items.filter(
       (faq) =>
         faq.question.toLowerCase().includes(value) ||
         faq.answer.toLowerCase().includes(value)
     );
-  }, [faqs, search]);
+  }, [items, search]);
 
   return (
     <AppLayout
