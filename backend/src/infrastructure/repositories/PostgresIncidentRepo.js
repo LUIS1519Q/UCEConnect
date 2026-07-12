@@ -4,12 +4,14 @@ function rowToIncident(row) {
   if (!row) return null;
   return new Incident({
     id: row.id,
+    ticket: row.ticket,
     title: row.title,
     description: row.description,
     categoryId: row.category_id,
     priority: row.priority,
     aiSummary: row.ai_summary,
     status: row.status,
+    statusReason: row.status_reason,
     createdBy: row.created_by,
     assignedTo: row.assigned_to,
     createdAt: row.created_at,
@@ -42,7 +44,18 @@ class PostgresIncidentRepo {
         incident.assignedTo,
       ]
     );
-    return rowToIncident(result.rows[0]);
+
+    const row = result.rows[0];
+    const ticketResult = await this.db.query(
+      `UPDATE incidents
+       SET ticket = 'INC-' || TO_CHAR(created_at, 'YYYY') || '-' || LPAD(id::TEXT, 4, '0')
+       WHERE id = $1
+       RETURNING ticket`,
+      [row.id]
+    );
+    row.ticket = ticketResult.rows[0].ticket;
+
+    return rowToIncident(row);
   }
 
   async findById(id) {
@@ -61,66 +74,98 @@ class PostgresIncidentRepo {
     return rowToIncident(result.rows[0]);
   }
 
-  async findAll({ userId, status, categoryId, page, limit }) {
-    const VALID_STATUSES = ['open', 'in_progress', 'resolved', 'rejected'];
-    const params = [];
+  async findAll({ createdBy, status, categoryId, page = 1, limit = 5, paginate = false }) {
     const conditions = [];
+    const params = [];
+    let idx = 1;
 
-    if (userId !== undefined) {
-      params.push(userId);
-      conditions.push(`i.created_by = $${params.length}`);
+    if (createdBy) {
+      conditions.push(`i.created_by = $${idx++}`);
+      params.push(createdBy);
     }
-    if (status !== undefined && VALID_STATUSES.includes(status)) {
+    if (status) {
+      conditions.push(`i.status = $${idx++}`);
       params.push(status);
-      conditions.push(`i.status = $${params.length}`);
     }
-    if (categoryId !== undefined) {
+    if (categoryId) {
+      conditions.push(`i.category_id = $${idx++}`);
       params.push(categoryId);
-      conditions.push(`i.category_id = $${params.length}`);
     }
 
-    const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+    const where = conditions.length > 0
+      ? `WHERE ${conditions.join(' AND ')}`
+      : '';
 
-    const offset = (page - 1) * limit;
-    params.push(limit);
-    const limitIdx = params.length;
-    params.push(offset);
-    const offsetIdx = params.length;
+    const selectFields = `
+      i.*,
+      c.name AS category_name,
+      u1.first_name || ' ' || u1.last_name AS created_by_name,
+      u2.first_name || ' ' || u2.last_name AS assigned_to_name
+    `;
 
-    const dataResult = await this.db.query(
-      `SELECT i.*,
-              c.name  AS category_name,
-              u1.name AS created_by_name,
-              u2.name AS assigned_to_name
-       FROM incidents i
-       LEFT JOIN categories c  ON i.category_id = c.id
-       LEFT JOIN users u1      ON i.created_by  = u1.id
-       LEFT JOIN users u2      ON i.assigned_to = u2.id
-       ${where}
-       ORDER BY i.created_at DESC
-       LIMIT $${limitIdx} OFFSET $${offsetIdx}`,
-      params
-    );
+    const joins = `
+      LEFT JOIN categories c ON i.category_id = c.id
+      LEFT JOIN users u1 ON i.created_by = u1.id
+      LEFT JOIN users u2 ON i.assigned_to = u2.id
+    `;
 
-    const countParams = params.slice(0, params.length - 2);
+    if (!paginate) {
+      const result = await this.db.query(
+        `SELECT ${selectFields}
+         FROM incidents i ${joins}
+         ${where}
+         ORDER BY i.created_at DESC`,
+        params
+      );
+      return { data: result.rows.map(rowToIncident) };
+    }
+
+    const offset = (Number(page) - 1) * Number(limit);
+
     const countResult = await this.db.query(
       `SELECT COUNT(*) FROM incidents i ${where}`,
-      countParams
+      params
+    );
+    const total = parseInt(countResult.rows[0].count, 10);
+    const totalPages = Math.ceil(total / Number(limit));
+
+    const dataResult = await this.db.query(
+      `SELECT ${selectFields}
+       FROM incidents i ${joins}
+       ${where}
+       ORDER BY i.created_at DESC
+       LIMIT $${idx} OFFSET $${idx + 1}`,
+      [...params, Number(limit), offset]
     );
 
     return {
       data: dataResult.rows.map(rowToIncident),
-      total: parseInt(countResult.rows[0].count, 10),
+      pagination: {
+        page: Number(page),
+        limit: Number(limit),
+        total,
+        totalPages,
+        hasNext: Number(page) < totalPages,
+        hasPrev: Number(page) > 1,
+      },
     };
   }
 
-  async updateStatus(id, status) {
+  async updateStatus(id, status, statusReason) {
     const result = await this.db.query(
       `UPDATE incidents
-       SET status = $1, updated_at = NOW()
-       WHERE id = $2
+       SET status = $1, status_reason = $2, updated_at = NOW()
+       WHERE id = $3
        RETURNING *`,
-      [status, id]
+      [status, statusReason, id]
+    );
+    return rowToIncident(result.rows[0]);
+  }
+
+  async updateCategory(id, categoryId) {
+    const result = await this.db.query(
+      `UPDATE incidents SET category_id = $2, updated_at = NOW() WHERE id = $1 RETURNING *`,
+      [id, categoryId]
     );
     return rowToIncident(result.rows[0]);
   }
@@ -190,12 +235,72 @@ class PostgresIncidentRepo {
     }));
   }
 
+  async countObservationsByIncidentId(incidentId) {
+    const result = await this.db.query(
+      `SELECT COUNT(*) FROM observations WHERE incident_id = $1`,
+      [incidentId]
+    );
+    return parseInt(result.rows[0].count, 10);
+  }
+
   async categoryExists(categoryId) {
     const result = await this.db.query(
       `SELECT id FROM categories WHERE id = $1 AND is_active = true`,
       [categoryId]
     );
     return result.rows.length > 0;
+  }
+
+  async findCategoryIdByName(name) {
+    const result = await this.db.query(
+      `SELECT id FROM categories WHERE name = $1 AND is_active = true`,
+      [name]
+    );
+    return result.rows[0] ? result.rows[0].id : null;
+  }
+
+  async countByStatus() {
+    const result = await this.db.query(`SELECT status, COUNT(*) FROM incidents GROUP BY status`);
+    return result.rows.reduce((acc, row) => {
+      acc[row.status] = parseInt(row.count, 10);
+      return acc;
+    }, {});
+  }
+
+  async countByDay(days) {
+    const result = await this.db.query(
+      `SELECT TO_CHAR(d.day, 'YYYY-MM-DD') AS date, COUNT(i.id) AS count
+       FROM generate_series(CURRENT_DATE - ($1::int - 1), CURRENT_DATE, interval '1 day') AS d(day)
+       LEFT JOIN incidents i ON DATE(i.created_at) = d.day
+       GROUP BY d.day
+       ORDER BY d.day ASC`,
+      [days]
+    );
+    return result.rows.map((row) => ({ date: row.date, count: parseInt(row.count, 10) }));
+  }
+
+  async countByStatusInRange(startDate, endDate) {
+    const result = await this.db.query(
+      `SELECT status, COUNT(*) FROM incidents WHERE created_at >= $1 AND created_at < $2 GROUP BY status`,
+      [startDate, endDate]
+    );
+    return result.rows.reduce((acc, row) => {
+      acc[row.status] = parseInt(row.count, 10);
+      return acc;
+    }, {});
+  }
+
+  async countByCategoryInRange(startDate, endDate) {
+    const result = await this.db.query(
+      `SELECT COALESCE(c.name, 'Sin categoría') as category_name, COUNT(i.id) as count
+       FROM incidents i
+       LEFT JOIN categories c ON i.category_id = c.id
+       WHERE i.created_at >= $1 AND i.created_at < $2
+       GROUP BY c.name
+       ORDER BY count DESC`,
+      [startDate, endDate]
+    );
+    return result.rows.map((row) => ({ category: row.category_name, count: parseInt(row.count, 10) }));
   }
 }
 

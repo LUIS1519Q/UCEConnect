@@ -15,10 +15,9 @@ import { useResetPassword } from "../../hooks/useResetPassword";
 export default function ResetPasswordPage() {
   const location = useLocation();
 
-  const { email = "", code = "" } =
+  const { resetToken } =
     (location.state as {
-      email?: string;
-      code?: string;
+      resetToken?: string
     }) ?? {};
 
   const {
@@ -30,7 +29,7 @@ export default function ResetPasswordPage() {
   });
 
   const { onSubmit, isPending, error } =
-    useResetPassword({ email, code });
+    useResetPassword({ resetToken: resetToken ?? "" });
 
   const errorMessage =
     error instanceof Error ? error.message : "";
