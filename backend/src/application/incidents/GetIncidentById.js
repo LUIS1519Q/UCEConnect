@@ -1,3 +1,5 @@
+const logger = require('../../infrastructure/logger/logger');
+
 class GetIncidentById {
   constructor(incidentRepo, attachmentRepo, internalNoteRepo) {
     this.incidentRepo = incidentRepo;
@@ -8,10 +10,12 @@ class GetIncidentById {
   async execute({ id, role, userId }) {
     const incident = await this.incidentRepo.findById(id);
     if (!incident) {
+      logger.warn(`[GetIncidentById] INCIDENT_NOT_FOUND: id=${id}`);
       throw new Error('Incidencia no encontrada');
     }
 
     if (role === 'student' && incident.createdBy !== userId) {
+      logger.warn(`[GetIncidentById] INSUFFICIENT_PERMISSION: userId=${userId} incidentId=${id}`);
       throw new Error('No tienes permiso para ver esta incidencia');
     }
 
@@ -29,6 +33,8 @@ class GetIncidentById {
       statusComment: h.note,
       changedAt: h.changedAt,
     }));
+
+    logger.info(`[GetIncidentById] success: incidentId=${id}`);
 
     return {
       incident: {
