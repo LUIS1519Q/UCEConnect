@@ -1,3 +1,5 @@
+export type { LucideIcon } from "lucide-react";
+
 export {
   Eye,
   EyeOff,
@@ -28,4 +30,12 @@ export {
   Calendar,
   MapPin,
   Phone,
+  File,
+  FileImage,
+  FileSpreadsheet,
+  AlertTriangle,
+  ChevronLeft,
+  FilePlus2,
+  LogOut,
+  Info,
 } from "lucide-react";

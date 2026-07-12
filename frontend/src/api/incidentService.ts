@@ -1,18 +1,50 @@
 import api from "./client";
 
+import { API_ENDPOINTS } from "../constants/apiEndpoints";
+
+import type {
+  GetIncidentsParams,
+  GetIncidentsResponse,
+} from "../types/incident";
+
 export const incidentService = {
-  async getIncidents(params?: { status?: string; categoryId?: number }) {
+  async getIncidents(
+    params?: GetIncidentsParams
+  ): Promise<GetIncidentsResponse> {
+
     const query = new URLSearchParams();
-    if (params?.status) query.append("status", params.status);
-    if (params?.categoryId) query.append("category_id", String(params.categoryId));
-    const queryString = query.toString();
 
-    const response = await api.get(
-      `/api/v1/incidents${queryString ? `?${queryString}` : ""}`
-    );
+    if (params?.status) {
+      query.append("status", params.status);
+    }
 
-    return response.data.data;
+    if (params?.categoryId) {
+      query.append(
+        "category_id",
+        String(params.categoryId)
+      );
+    }
+
+    if (params?.page) {
+      query.append("page", String(params.page));
+    }
+
+    if (params?.limit) {
+      query.append("limit", String(params.limit));
+    }
+
+    const response =
+      await api.get<GetIncidentsResponse>(
+        `${API_ENDPOINTS.incidents.base}${
+          query.toString()
+            ? `?${query.toString()}`
+            : ""
+        }`
+      );
+
+    return response.data;
   },
+
 
   async createIncident(data: {
     title: string;

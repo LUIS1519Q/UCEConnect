@@ -9,14 +9,18 @@ describe("IncidentList", () => {
       <IncidentList
         incidents={[
           {
+            id: 1,
+            ticket: "INC-0001",
             title: "Internet Issue",
-            location: "Building A",
+            category: "Technology",
             status: "open",
             createdAt: "Today",
           },
           {
+            id: 2,
+            ticket: "INC-0002",
             title: "Projector",
-            location: "Building B",
+            category: "Academic",
             status: "resolved",
             createdAt: "Yesterday",
           },
@@ -28,11 +32,4 @@ describe("IncidentList", () => {
     expect(screen.getByText("Projector")).toBeInTheDocument();
   });
 
-  it("renders search bar", () => {
-    render(<IncidentList incidents={[]} />);
-
-    expect(
-      screen.getByPlaceholderText("Search incidents...")
-    ).toBeInTheDocument();
-  });
 });

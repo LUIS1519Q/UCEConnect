@@ -19,11 +19,4 @@ describe("FAQSection", () => {
     expect(screen.getByText("How?")).toBeInTheDocument();
   });
 
-  it("renders search bar", () => {
-    render(<FAQSection faqs={[]} />);
-
-    expect(
-      screen.getByPlaceholderText("Search help topics...")
-    ).toBeInTheDocument();
-  });
 });

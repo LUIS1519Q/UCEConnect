@@ -9,10 +9,10 @@ import { useAuthStore } from "../store/authStore";
 import type { LoginPayload } from "../types/auth";
 import type { ApiMessageResponse } from "../types/common";
 
-const DASHBOARD_ROUTES = {
-  student: ROUTES.dashboard.student,
-  manager: ROUTES.dashboard.manager,
-  admin: ROUTES.dashboard.admin,
+const HOME_ROUTES = {
+  student: ROUTES.student.myIncidents,
+  manager: ROUTES.manager.incidents,
+  admin: ROUTES.admin.incidents,
 } as const;
 
 export function useLogin() {
@@ -30,7 +30,7 @@ export function useLogin() {
         refreshToken: response.refreshToken,
       });
 
-      navigate(DASHBOARD_ROUTES[response.user.role]);
+      navigate(HOME_ROUTES[response.user.role]);
     },
 
     onError: (error: AxiosError<ApiMessageResponse>, variables) => {

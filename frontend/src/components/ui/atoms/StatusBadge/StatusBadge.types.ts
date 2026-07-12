@@ -1,9 +1,5 @@
-export type Status =
-  | "open"
-  | "inProgress"
-  | "resolved"
-  | "rejected";
+import type { IncidentStatus } from "../../../../types/incident";
 
 export interface StatusBadgeProps {
-  status: Status;
+  status: IncidentStatus;
 }
