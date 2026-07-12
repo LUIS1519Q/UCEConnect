@@ -13,12 +13,12 @@ class ForgotPassword {
       const user = await this.userRepo.findByEmail(email);
       if (!user) {
         logger.warn(`Recuperación fallida — usuario no encontrado: ${email}`);
-        throw new Error('Correo no encontrado');
+        throw new Error('User not found.');
       }
 
       if (user.isActive === false) {
         logger.warn(`Recuperación fallida — cuenta desactivada: ${email}`);
-        throw new Error('Tu cuenta ha sido desactivada');
+        throw new Error('Your account has been deactivated.');
       }
 
       const code = Math.floor(100000 + Math.random() * 900000).toString();

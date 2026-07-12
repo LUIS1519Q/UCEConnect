@@ -38,7 +38,8 @@ class LoginWithMicrosoft {
 
       user = await this.userRepo.save(
         new User({
-          name: profile.displayName,
+          firstName: profile.givenName,
+          lastName: profile.surname,
           email,
           passwordHash,
           roleId: 1,
@@ -67,7 +68,7 @@ class LoginWithMicrosoft {
     return {
       accessToken,
       refreshToken,
-      user: { id: user.id, name: user.name, email: user.email, role },
+      user: { id: user.id, firstName: user.firstName, lastName: user.lastName, email: user.email, role },
       isNewUser,
     };
   }

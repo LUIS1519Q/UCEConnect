@@ -7,7 +7,7 @@ module.exports = function authMiddleware(req, res, next) {
 
   if (!token) {
     logger.warn(`Request sin token: ${req.method} ${req.path}`);
-    return res.status(401).json({ error: 'Token requerido' });
+    return res.status(401).json({ message: 'Token requerido', errorCode: 'TOKEN_REQUIRED' });
   }
 
   try {
@@ -20,6 +20,6 @@ module.exports = function authMiddleware(req, res, next) {
     next();
   } catch (error) {
     logger.warn(`Token inválido en: ${req.method} ${req.path}`);
-    return res.status(401).json({ error: 'Token inválido o expirado' });
+    return res.status(401).json({ message: 'Token inválido o expirado', errorCode: 'TOKEN_INVALID' });
   }
 };

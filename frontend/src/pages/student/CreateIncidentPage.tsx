@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import DashboardLayout from "../../components/DashboardLayout";
+import DashboardLayout from "../../components/ui/templates/DashboardLayout";
 
 function CreateIncidentPage() {
   const [title, setTitle] = useState("");
