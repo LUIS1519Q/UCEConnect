@@ -21,7 +21,7 @@ import type { AppNotification, NotificationType } from "../../types/notification
 import { SearchBar } from "../../components/ui/molecules/SearchBar";
 import { Tabs } from "../../components/ui/molecules/Tabs";
 
-const ACTION_LABEL: Record<NotificationType, string> = {
+const ACTION_LABEL: Partial<Record<NotificationType, string>> = {
   incident_created: "New incident",
   student_reply: "New reply",
   manager_request: "New reply",
@@ -126,7 +126,7 @@ export default function ManagerNotificationsPage() {
                 message: `#${n.ticket}`,
                 date: new Date(n.createdAt).toLocaleDateString(),
                 unread: !n.read,
-                actionLabel: ACTION_LABEL[n.type],
+                actionLabel: ACTION_LABEL[n.type]?? "View",
                 onActionClick: () => handleAction(n.id, n.incidentId, n.type),
               }))}
             />
