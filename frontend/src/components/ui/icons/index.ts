@@ -45,4 +45,5 @@ export {
   Users,
   CheckCircle2,
   MoreVertical,
+  BarChart3,
 } from "lucide-react";

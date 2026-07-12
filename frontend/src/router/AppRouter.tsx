@@ -25,7 +25,7 @@ import ProfilePage from "../pages/student/ProfilePage";
 import HelpPage from "../pages/student/HelpPage";
 import AboutPage from "../pages/student/AboutPage";
 
-import ManagerDashboard from "../pages/dashboard/ManagerDashboard";
+import ManagerDashboard from "../pages/manager/MangerDashboardPage";
 import AdminDashboard from "../pages/dashboard/AdminDashboard";
 
 import ManagerIncidentsPage from "../pages/manager/ManagerIncidentsPage";
@@ -182,7 +182,7 @@ function AppRouter() {
         {/*MANAGER*/}
 
         <Route
-          path={ROUTES.manager.incidents}
+          path={ROUTES.manager.dashboard}
           element={
             <ProtectedRoute>
               <ManagerDashboard />

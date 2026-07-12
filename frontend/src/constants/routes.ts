@@ -30,8 +30,11 @@ export const ROUTES = {
   },
 
   manager: {
+    dashboard: "/manager/dashboard",
     incidents: "/manager/incidents",
     incidentDetail: "/manager/incidents/:id",
+    profile: "/manager/profile",
+    notifications: "/manager/notifications",
   },
 
   admin: {
