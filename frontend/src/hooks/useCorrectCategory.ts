@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { incidentService } from "../api/incidentService";
 import { queryKeys } from "../constants/queryKeys";
 
@@ -7,7 +8,7 @@ export function useCorrectCategory() {
 
   const mutation = useMutation({
     mutationFn: ({ id, categoryId }: { id: string; categoryId: number }) =>
-      incidentService.correctCategory(id, categoryId).catch(() => ({ message: "ok", incident: { id: Number(id), category: "" } })),
+      incidentService.correctCategory(id, categoryId),
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.incidents.detail(id) });
     },
@@ -17,5 +18,7 @@ export function useCorrectCategory() {
     correctCategory: mutation.mutate,
     correctCategoryAsync: mutation.mutateAsync,
     isPending: mutation.isPending,
+    isError: mutation.isError,
+    error: mutation.error,
   };
 }
