@@ -10,18 +10,18 @@ class UpdateStatus {
   async execute({ id, newStatus, changedBy, note }) {
     const incident = await this.incidentRepo.findById(id);
     if (!incident) {
-      throw new Error('Incidencia no encontrada');
+      throw new Error('Incident not found');
     }
 
     const currentStatus = new IncidentStatus(incident.status);
     currentStatus.transitionTo(newStatus);
 
-    this.logger.info(`Cambiando estado de incidencia ${id}: ${incident.status} → ${newStatus}`);
+    this.logger.info(`Changing incident ${id} status: ${incident.status} → ${newStatus}`);
 
     const updated = await this.incidentRepo.updateStatus(id, newStatus, note);
     await this.incidentRepo.saveHistory(id, newStatus, changedBy, note);
 
-    this.logger.info(`Incidencia ${id} actualizada a ${newStatus}`);
+    this.logger.info(`Incident ${id} updated to ${newStatus}`);
 
     if (this.notificationService) {
       const statusLabels = {

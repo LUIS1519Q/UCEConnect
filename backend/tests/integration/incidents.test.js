@@ -149,6 +149,14 @@ describe('GET /api/v1/incidents', () => {
     });
   });
 
+  test('200 — default limit is 5 for manager', async () => {
+    const { token: managerToken } = await createManager(db);
+
+    const res = await request(app).get('/api/v1/incidents').set('Authorization', `Bearer ${managerToken}`);
+
+    expect(res.body.pagination.limit).toBe(5);
+  });
+
   test('200 — filters by status=open correctly', async () => {
     const { token: studentToken } = await createStudent(app);
     await createIncident(app, studentToken);

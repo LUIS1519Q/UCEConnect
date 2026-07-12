@@ -73,20 +73,20 @@ app.get('/api/v1/faculties', authMiddleware, authController.getFacultiesHandler)
 app.get('/api/v1/careers', authMiddleware, authController.getCareersHandler);
 
 app.use((req, res) => {
-  logger.warn(`Ruta no encontrada: ${req.method} ${req.path}`);
+  logger.warn(`Route not found: ${req.method} ${req.path}`);
   res.status(404).json({
     status: 'error',
-    message: 'Ruta no encontrada',
+    message: 'Route not found',
     method: req.method,
     path: req.originalUrl,
   });
 });
 
 app.use((err, req, res, next) => {
-  logger.error(`Error en ${req.method} ${req.path}: ${err.message}`, { stack: err.stack });
+  logger.error(`Error in ${req.method} ${req.path}: ${err.message}`, { stack: err.stack });
 
   const isProduction = process.env.NODE_ENV === 'production';
-  const message = isProduction ? 'Error interno del servidor' : err.message;
+  const message = isProduction ? 'Internal server error' : err.message;
 
   res.status(err.status || 500).json({
     status: 'error',

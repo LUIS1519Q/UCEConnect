@@ -38,11 +38,11 @@ class GenerateMonthlyReport {
     try {
       summaryText = await this.reportSummarizer.summarize({ month: targetMonth, metrics, categoryBreakdown });
     } catch (err) {
-      this.logger.warn(`Fallback de resumen de reporte: ${err.message}`);
-      summaryText = `En ${targetMonth} se registraron ${metrics.total} incidencias: ${metrics.open} abiertas, ${metrics.in_progress} en progreso, ${metrics.resolved} resueltas, ${metrics.rejected} rechazadas y ${metrics.cancelled} canceladas.`;
+      this.logger.warn(`Report summary fallback: ${err.message}`);
+      summaryText = `In ${targetMonth}, ${metrics.total} incidents were recorded: ${metrics.open} open, ${metrics.in_progress} in progress, ${metrics.resolved} resolved, ${metrics.rejected} rejected, and ${metrics.cancelled} cancelled.`;
     }
 
-    this.logger.info(`Reporte mensual generado: ${targetMonth}`);
+    this.logger.info(`Monthly report generated: ${targetMonth}`);
 
     return { month: targetMonth, metrics, categoryBreakdown, summaryText };
   }

@@ -42,7 +42,7 @@ class CreateIncident {
       aiSummary: classificationResult.summary,
     });
     const saved = await this.incidentRepo.create(incident);
-    await this.incidentRepo.saveHistory(saved.id, 'open', createdBy, 'Incidencia creada');
+    await this.incidentRepo.saveHistory(saved.id, 'open', createdBy, 'Incident created');
 
     if (this.notificationService) {
       await this.notificationService.notify({

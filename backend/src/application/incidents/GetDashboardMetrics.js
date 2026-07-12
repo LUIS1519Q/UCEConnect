@@ -19,7 +19,7 @@ class GetDashboardMetrics {
     }, {});
     metrics.total = Object.values(metrics).reduce((sum, count) => sum + count, 0);
 
-    this.logger.info('Métricas de dashboard obtenidas');
+    this.logger.info('Dashboard metrics retrieved');
 
     return {
       metrics,

@@ -7,16 +7,16 @@ class CorrectCategory {
   async execute({ id, categoryId }) {
     const incident = await this.incidentRepo.findById(id);
     if (!incident) {
-      throw new Error('Incidencia no encontrada');
+      throw new Error('Incident not found');
     }
 
     const exists = await this.incidentRepo.categoryExists(categoryId);
     if (!exists) {
-      throw new Error('La categoría especificada no existe');
+      throw new Error('The specified category does not exist');
     }
 
     const updated = await this.incidentRepo.updateCategory(id, categoryId);
-    this.logger.info(`Categoría corregida: incidentId=${id} categoryId=${categoryId}`);
+    this.logger.info(`Category corrected: incidentId=${id} categoryId=${categoryId}`);
 
     return updated.toJSON();
   }

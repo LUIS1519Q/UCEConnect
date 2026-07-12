@@ -25,8 +25,8 @@ class LoginWithMicrosoft {
     const email = profile.mail || profile.userPrincipalName;
 
     if (!email || !email.endsWith('@uce.edu.ec')) {
-      logger.warn(`Login con Microsoft rechazado — correo no institucional: ${email}`);
-      throw new Error('Solo se permiten correos institucionales @uce.edu.ec');
+      logger.warn(`Microsoft login rejected — non-institutional email: ${email}`);
+      throw new Error('Only institutional @uce.edu.ec emails are allowed');
     }
 
     let user = await this.userRepo.findByEmail(email);
@@ -48,10 +48,10 @@ class LoginWithMicrosoft {
         })
       );
       isNewUser = true;
-      logger.info(`Usuario creado vía Microsoft: ${email}`);
+      logger.info(`User created via Microsoft: ${email}`);
     } else if (!user.isActive) {
-      logger.warn(`Login con Microsoft fallido — cuenta desactivada: ${email}`);
-      throw new Error('Tu cuenta ha sido desactivada');
+      logger.warn(`Microsoft login failed — account disabled: ${email}`);
+      throw new Error('Your account has been disabled');
     }
 
     const role = ROLE_NAMES[user.roleId] || 'student';
@@ -63,7 +63,7 @@ class LoginWithMicrosoft {
       expiresIn: '7d',
     });
 
-    logger.info(`Login con Microsoft exitoso para: ${email}`);
+    logger.info(`Microsoft login successful for: ${email}`);
 
     return {
       accessToken,

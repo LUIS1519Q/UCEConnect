@@ -6,8 +6,8 @@ module.exports = function authMiddleware(req, res, next) {
   const token = authHeader && authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
 
   if (!token) {
-    logger.warn(`Request sin token: ${req.method} ${req.path}`);
-    return res.status(401).json({ message: 'Token requerido', errorCode: 'TOKEN_REQUIRED' });
+    logger.warn(`Request without token: ${req.method} ${req.path}`);
+    return res.status(401).json({ message: 'Token required', errorCode: 'TOKEN_REQUIRED' });
   }
 
   try {
@@ -16,10 +16,10 @@ module.exports = function authMiddleware(req, res, next) {
       ...decoded,
       role: decoded.role.toLowerCase()
     };
-    logger.debug(`Token válido — user: ${decoded.email} en ${req.path}`);
+    logger.debug(`Valid token — user: ${decoded.email} on ${req.path}`);
     next();
   } catch (error) {
-    logger.warn(`Token inválido en: ${req.method} ${req.path}`);
-    return res.status(401).json({ message: 'Token inválido o expirado', errorCode: 'TOKEN_INVALID' });
+    logger.warn(`Invalid token on: ${req.method} ${req.path}`);
+    return res.status(401).json({ message: 'Invalid or expired token', errorCode: 'TOKEN_INVALID' });
   }
 };

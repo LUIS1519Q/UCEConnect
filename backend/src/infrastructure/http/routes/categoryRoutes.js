@@ -23,7 +23,7 @@ const updateCategorySchema = z
     isActive: z.boolean().optional(),
   })
   .refine((data) => data.name !== undefined || data.description !== undefined || data.isActive !== undefined, {
-    message: 'Debes enviar al menos un campo para actualizar.',
+    message: 'You must send at least one field to update.',
   });
 
 function validate(schema) {

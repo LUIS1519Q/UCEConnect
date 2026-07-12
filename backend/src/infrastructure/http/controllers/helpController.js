@@ -16,7 +16,7 @@ async function getHelp(req, res) {
       items: items.map((item) => item.toJSON()),
     });
   } catch (err) {
-    logger.error(`Error en getHelp: ${err.message}`);
+    logger.error(`Error in getHelp: ${err.message}`);
     return res.status(500).json({ message: 'Internal server error.' });
   }
 }
@@ -38,7 +38,7 @@ async function getAbout(req, res) {
       logoUrl: settings.logoUrl,
     });
   } catch (err) {
-    logger.error(`Error en getAbout: ${err.message}`);
+    logger.error(`Error in getAbout: ${err.message}`);
     return res.status(500).json({ message: 'Internal server error.' });
   }
 }

@@ -7,17 +7,17 @@ class ForgotPassword {
   }
 
   async execute({ email }) {
-    logger.info(`Solicitud de recuperación de contraseña: ${email}`);
+    logger.info(`Password recovery requested: ${email}`);
 
     try {
       const user = await this.userRepo.findByEmail(email);
       if (!user) {
-        logger.warn(`Recuperación fallida — usuario no encontrado: ${email}`);
+        logger.warn(`Recovery failed — user not found: ${email}`);
         throw new Error('User not found.');
       }
 
       if (user.isActive === false) {
-        logger.warn(`Recuperación fallida — cuenta desactivada: ${email}`);
+        logger.warn(`Recovery failed — account disabled: ${email}`);
         throw new Error('Your account has been deactivated.');
       }
 
@@ -29,11 +29,11 @@ class ForgotPassword {
 
       await this.emailNotifier.sendPasswordResetCode(email, code);
 
-      logger.info(`Código de recuperación enviado a: ${email}`);
+      logger.info(`Recovery code sent to: ${email}`);
 
-      return { message: 'Código enviado. Revisa tu correo.' };
+      return { message: 'Code sent. Check your email.' };
     } catch (error) {
-      logger.error(`Error en recuperación de contraseña: ${error.message}`);
+      logger.error(`Error in password recovery: ${error.message}`);
       throw error;
     }
   }

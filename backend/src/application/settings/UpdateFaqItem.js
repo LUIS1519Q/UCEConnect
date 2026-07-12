@@ -7,12 +7,12 @@ class UpdateFaqItem {
   async execute({ id, question, answer, order }) {
     const item = await this.helpItemRepo.findById(id);
     if (!item) {
-      throw new Error('Pregunta no encontrada');
+      throw new Error('FAQ item not found');
     }
 
     const updated = await this.helpItemRepo.update(id, { question, answer, order });
 
-    this.logger.info(`Pregunta frecuente actualizada: id=${id}`);
+    this.logger.info(`FAQ item updated: id=${id}`);
 
     return updated.toJSON();
   }

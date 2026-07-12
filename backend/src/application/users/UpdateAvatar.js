@@ -14,7 +14,7 @@ class UpdateAvatar {
 
     await this.userRepo.updateAvatar(userId, avatarUrl);
 
-    this.logger.info(`Avatar actualizado: userId=${userId}`);
+    this.logger.info(`Avatar updated: userId=${userId}`);
 
     return { avatarUrl };
   }

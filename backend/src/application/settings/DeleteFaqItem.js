@@ -7,14 +7,14 @@ class DeleteFaqItem {
   async execute({ id }) {
     const item = await this.helpItemRepo.findById(id);
     if (!item) {
-      throw new Error('Pregunta no encontrada');
+      throw new Error('FAQ item not found');
     }
 
     await this.helpItemRepo.delete(id);
 
-    this.logger.info(`Pregunta frecuente eliminada: id=${id}`);
+    this.logger.info(`FAQ item deleted: id=${id}`);
 
-    return { message: 'Pregunta eliminada exitosamente.' };
+    return { message: 'Question deleted successfully.' };
   }
 }
 
