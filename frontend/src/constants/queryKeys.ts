@@ -54,4 +54,16 @@ export const queryKeys = {
     metrics: ["dashboard", "metrics"] as const,
   },
 
+  users: {
+    all: ["users"] as const,
+    list: (filters?: { page?: number; limit?: number; role?: string }) =>
+      [...queryKeys.users.all, "list", filters] as const,
+  },
+
+  categories: {
+    all: ["categories"] as const,
+    list: (filters?: { page?: number; limit?: number; search?: string }) =>
+      [...queryKeys.categories.all, "list", filters] as const,
+  },
+
 } as const;
