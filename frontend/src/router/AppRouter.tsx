@@ -32,7 +32,7 @@ import ManagerFeedbackPage from "../pages/manager/ManagerFeedbackPage";
 import ManagerNotificationsPage from "../pages/manager/ManagerNotificationsPage";
 import ManagerProfilePage from "../pages/manager/ManagerProfilePage";
 
-import AdminDashboard from "../pages/dashboard/AdminDashboard";
+import AdminDashboard from "../pages/admin/AdminDashboardPage";
 
 function AppRouter() {
   return (
@@ -239,7 +239,7 @@ function AppRouter() {
         {/*ADMIN*/}
 
         <Route
-          path={ROUTES.admin.incidents}
+          path={ROUTES.admin.dashboard}
           element={
             <ProtectedRoute>
               <AdminDashboard />
