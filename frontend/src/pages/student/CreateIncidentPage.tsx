@@ -260,6 +260,15 @@ export default function CreateIncidentPage() {
           onClick: logout,
         },
       ]}
+      mobileTabItems={[
+        { label: "My Incidents", icon: FileText, active: true, onClick: () => navigate(ROUTES.student.myIncidents) },
+        { label: "Profile", icon: User, onClick: () => navigate(ROUTES.student.profile) },
+      ]}
+      mobileMoreMenuItems={[
+        { label: "Help & FAQ", icon: CircleHelp, onClick: () => navigate(ROUTES.student.help) },
+        { label: "About UCEConnect", icon: Info, onClick: () => navigate(ROUTES.student.about) },
+        { label: "Logout", icon: LogOut, onClick: logout },
+      ]}
     >
       <div className="mx-auto w-full max-w-4xl">
       <SimilarIncidentModal
