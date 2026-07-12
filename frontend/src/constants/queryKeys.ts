@@ -49,4 +49,9 @@ export const queryKeys = {
     help: ["content", "help"] as const,
     about: ["content", "about"] as const,
   },
+
+  dashboard: {
+    metrics: ["dashboard", "metrics"] as const,
+  },
+
 } as const;
