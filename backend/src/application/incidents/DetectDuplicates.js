@@ -23,7 +23,7 @@ class DetectDuplicates {
       .map(inc => ({ id: inc.id, title: inc.title, status: inc.status }));
 
     if (similar.length > 0) {
-      this.logger.warn(`Posible duplicado detectado para usuario ${userId}: IDs [${similar.map(s => s.id).join(', ')}]`);
+      this.logger.warn(`Possible duplicate detected for user ${userId}: IDs [${similar.map(s => s.id).join(', ')}]`);
     }
 
     return { isDuplicate: similar.length > 0, similar };

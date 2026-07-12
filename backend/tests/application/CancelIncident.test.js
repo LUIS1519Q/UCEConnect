@@ -31,7 +31,7 @@ describe('CancelIncident', () => {
     incidentRepo.findById.mockResolvedValue(null);
 
     await expect(cancelIncident.execute({ id: 1, userId: 10 })).rejects.toThrow(
-      'Incidencia no encontrada'
+      'Incident not found'
     );
   });
 
@@ -39,7 +39,7 @@ describe('CancelIncident', () => {
     incidentRepo.findById.mockResolvedValue(buildIncident({ createdBy: 99 }));
 
     await expect(cancelIncident.execute({ id: 1, userId: 10 })).rejects.toThrow(
-      'No tienes permiso para cancelar esta incidencia'
+      'You do not have permission to cancel this incident'
     );
   });
 
@@ -47,7 +47,7 @@ describe('CancelIncident', () => {
     incidentRepo.findById.mockResolvedValue(buildIncident({ status: 'resolved' }));
 
     await expect(cancelIncident.execute({ id: 1, userId: 10 })).rejects.toThrow(
-      'Solo se pueden cancelar incidencias en estado open'
+      'Only incidents in open status can be cancelled'
     );
   });
 

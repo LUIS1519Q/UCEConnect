@@ -10,7 +10,7 @@ class AddInternalNote {
   async execute({ incidentId, authorId, authorName, authorRole, message }) {
     const incident = await this.incidentRepo.findById(incidentId);
     if (!incident) {
-      throw new Error('Incidencia no encontrada');
+      throw new Error('Incident not found');
     }
 
     const note = new InternalNote({
@@ -24,7 +24,7 @@ class AddInternalNote {
 
     const saved = await this.internalNoteRepo.save(note);
 
-    this.logger.info(`Nota interna agregada: incidentId=${incidentId} authorId=${authorId}`);
+    this.logger.info(`Internal note added: incidentId=${incidentId} authorId=${authorId}`);
 
     return saved.toJSON();
   }

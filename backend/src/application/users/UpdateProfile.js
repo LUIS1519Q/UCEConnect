@@ -47,7 +47,7 @@ class UpdateProfile {
 
     await this.userRepo.updateProfile(userId, { firstName, lastName, phone, facultyId, careerId });
 
-    this.logger.info(`Perfil actualizado: userId=${userId}`);
+    this.logger.info(`Profile updated: userId=${userId}`);
 
     return this.userRepo.findById(userId);
   }

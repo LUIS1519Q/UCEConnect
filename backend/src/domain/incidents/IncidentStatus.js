@@ -9,7 +9,7 @@ class IncidentStatus {
 
   constructor(status) {
     if (!IncidentStatus.isValid(status)) {
-      throw new Error(`Estado inválido: ${status}`);
+      throw new Error(`Invalid status: ${status}`);
     }
     this.status = status;
   }
@@ -18,7 +18,7 @@ class IncidentStatus {
     const allowed = IncidentStatus.TRANSITIONS[this.status];
     if (!allowed.includes(newStatus)) {
       throw new Error(
-        `Transición inválida: no se puede pasar de ${this.status} a ${newStatus}`
+        `Invalid transition: cannot go from ${this.status} to ${newStatus}`
       );
     }
     return newStatus;

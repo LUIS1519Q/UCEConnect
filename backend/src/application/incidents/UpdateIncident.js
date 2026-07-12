@@ -9,24 +9,24 @@ class UpdateIncident {
     const incident = await this.incidentRepo.findById(id);
     if (!incident) {
       logger.warn(`[UpdateIncident] INCIDENT_NOT_FOUND: id=${id}`);
-      throw new Error('Incidencia no encontrada');
+      throw new Error('Incident not found');
     }
 
     if (incident.createdBy !== userId) {
       logger.warn(`[UpdateIncident] INSUFFICIENT_PERMISSION: userId=${userId} incidentId=${id}`);
-      throw new Error('No tienes permiso para editar esta incidencia');
+      throw new Error('You do not have permission to edit this incident');
     }
 
     if (incident.status !== 'open') {
       logger.warn(`[UpdateIncident] BUSINESS_RULE_VIOLATION: incidentId=${id} status=${incident.status}`);
-      throw new Error('Solo se pueden editar incidencias en estado open');
+      throw new Error('Only incidents in open status can be edited');
     }
 
     if (categoryId !== undefined) {
       const exists = await this.incidentRepo.categoryExists(categoryId);
       if (!exists) {
         logger.warn(`[UpdateIncident] VALIDATION_ERROR: categoryId=${categoryId} not found`);
-        throw new Error('La categoría especificada no existe');
+        throw new Error('The specified category does not exist');
       }
     }
 

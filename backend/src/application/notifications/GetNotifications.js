@@ -6,7 +6,7 @@ class GetNotifications {
 
   async execute({ userId, page, limit, unread }) {
     const result = await this.notificationRepo.findByUserId(userId, { page, limit, unread });
-    this.logger.info(`Notificaciones obtenidas: userId=${userId}`);
+    this.logger.info(`Notifications retrieved: userId=${userId}`);
     return result;
   }
 }

@@ -12,33 +12,33 @@ class UploadAttachments {
   async execute({ incidentId, userId, role, files }) {
     const incident = await this.incidentRepo.findById(incidentId);
     if (!incident) {
-      throw new Error('Incidencia no encontrada');
+      throw new Error('Incident not found');
     }
 
     if (role === 'student') {
       if (incident.createdBy !== userId) {
-        throw new Error('No tienes permiso para adjuntar archivos a esta incidencia');
+        throw new Error('You do not have permission to attach files to this incident');
       }
       if (incident.status !== 'open') {
-        throw new Error('Solo se pueden adjuntar archivos a incidencias en estado open');
+        throw new Error('Files can only be attached to incidents in open status');
       }
     }
 
     if (!files || files.length === 0) {
-      throw new Error('Se requiere al menos un archivo');
+      throw new Error('At least one file is required');
     }
 
     if (files.length > this.attachmentPolicy.maxFilesPerUpload) {
-      throw new Error('Se excede la cantidad máxima de archivos permitida');
+      throw new Error('The maximum number of allowed files was exceeded');
     }
 
     for (const file of files) {
       const category = this.attachmentPolicy.resolveCategory(file.mimetype);
       if (!category) {
-        throw new Error(`Tipo de archivo no permitido: ${file.mimetype}`);
+        throw new Error(`File type not allowed: ${file.mimetype}`);
       }
       if (file.size > this.attachmentPolicy.maxSizeForMimeType(file.mimetype)) {
-        throw new Error(`El archivo "${file.originalname}" excede el tamaño máximo permitido`);
+        throw new Error(`File "${file.originalname}" exceeds the maximum allowed size`);
       }
     }
 
@@ -62,7 +62,7 @@ class UploadAttachments {
       attachments.push(saved);
     }
 
-    this.logger.info(`Archivos adjuntados: incidentId=${incidentId} count=${attachments.length}`);
+    this.logger.info(`Files attached: incidentId=${incidentId} count=${attachments.length}`);
 
     return attachments.map((attachment) => attachment.toJSON());
   }

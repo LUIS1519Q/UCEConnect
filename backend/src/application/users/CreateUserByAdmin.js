@@ -21,7 +21,7 @@ class CreateUserByAdmin {
 
     const roleId = await this.userRepo.findRoleIdByName(role);
     if (!roleId) {
-      throw new Error('El rol especificado no existe');
+      throw new Error('The specified role does not exist');
     }
 
     const passwordHash = await this.bcrypt.hash(crypto.randomBytes(16).toString('hex'), 10);
@@ -31,7 +31,7 @@ class CreateUserByAdmin {
 
     await this.forgotPassword.execute({ email });
 
-    this.logger.info(`Usuario creado por admin: ${email} role=${role}`);
+    this.logger.info(`User created by admin: ${email} role=${role}`);
 
     return savedUser.toJSON();
   }

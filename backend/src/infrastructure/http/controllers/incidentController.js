@@ -42,14 +42,14 @@ const classifyIncidentUC = new ClassifyIncident(classifier, logger, categoryRepo
 const detectDuplicatesUC = new DetectDuplicates(incidentRepo, logger);
 
 const mapIncidentError = (err, res, logger, context) => {
-  logger.warn(`Error en ${context}: ${err.message}`);
-  if (err.message.includes('not found') || err.message.includes('no encontrada'))
+  logger.warn(`Error in ${context}: ${err.message}`);
+  if (err.message.includes('not found'))
     return res.status(404).json({ message: err.message, errorCode: 'INCIDENT_NOT_FOUND' });
-  if (err.message.includes('permission') || err.message.includes('permiso'))
+  if (err.message.includes('permission'))
     return res.status(403).json({ message: err.message, errorCode: 'INSUFFICIENT_PERMISSION' });
-  if (err.message.includes('open') || err.message.includes('Transición'))
+  if (err.message.includes('open') || err.message.includes('transition'))
     return res.status(400).json({ message: err.message, errorCode: 'BUSINESS_RULE_VIOLATION' });
-  if (err.message.includes('no permitido') || err.message.includes('excede') || err.message.includes('no existe'))
+  if (err.message.includes('not allowed') || err.message.includes('exceed') || err.message.includes('does not exist'))
     return res.status(400).json({ message: err.message, errorCode: 'VALIDATION_ERROR' });
   return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
 };
@@ -71,7 +71,7 @@ async function create(req, res) {
     });
     return res.status(201).json({ message: 'Incident created successfully.', incident });
   } catch (err) {
-    logger.error(`Error al crear incidencia: ${err.message}`);
+    logger.error(`Error creating incident: ${err.message}`);
     return res.status(400).json({ message: err.message, errorCode: 'VALIDATION_ERROR' });
   }
 }
@@ -89,7 +89,7 @@ async function list(req, res) {
     });
     return res.status(200).json(result);
   } catch (err) {
-    logger.error(`Error al listar incidencias: ${err.message}`);
+    logger.error(`Error listing incidents: ${err.message}`);
     return res.status(500).json({ message: err.message, errorCode: 'INTERNAL_ERROR' });
   }
 }
@@ -113,7 +113,7 @@ async function correctCategory(req, res) {
       id: Number(req.params.id),
       categoryId: req.body.categoryId,
     });
-    return res.status(200).json({ message: 'Categoría corregida exitosamente', incident });
+    return res.status(200).json({ message: 'Category corrected successfully', incident });
   } catch (err) {
     return mapIncidentError(err, res, logger, 'correctCategory');
   }
@@ -136,11 +136,11 @@ async function updateStatus(req, res) {
       });
     }
 
-    return res.status(200).json({ message: 'Estado actualizado exitosamente', incident });
+    return res.status(200).json({ message: 'Status updated successfully', incident });
   } catch (err) {
-    logger.warn(`Error al actualizar estado de incidencia ${req.params.id}: ${err.message}`);
-    if (err.message.includes('no encontrada')) return res.status(404).json({ message: err.message, errorCode: 'INCIDENT_NOT_FOUND' });
-    if (err.message.includes('Transición inválida')) return res.status(400).json({ message: err.message, errorCode: 'INVALID_TRANSITION' });
+    logger.warn(`Error updating status for incident ${req.params.id}: ${err.message}`);
+    if (err.message.includes('not found')) return res.status(404).json({ message: err.message, errorCode: 'INCIDENT_NOT_FOUND' });
+    if (err.message.includes('Invalid transition')) return res.status(400).json({ message: err.message, errorCode: 'INVALID_TRANSITION' });
     return res.status(500).json({ message: err.message, errorCode: 'INTERNAL_ERROR' });
   }
 }
@@ -154,7 +154,7 @@ async function update(req, res) {
       categoryId: req.body.categoryId,
       userId: req.user.id,
     });
-    return res.status(200).json({ message: 'Incidencia actualizada exitosamente', incident });
+    return res.status(200).json({ message: 'Incident updated successfully', incident });
   } catch (err) {
     return mapIncidentError(err, res, logger, 'update');
   }
@@ -208,7 +208,7 @@ async function findSimilar(req, res) {
     });
     return res.status(200).json({ data: results });
   } catch (err) {
-    logger.error(`Error en findSimilar: ${err.message}`);
+    logger.error(`Error in findSimilar: ${err.message}`);
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
@@ -216,7 +216,7 @@ async function findSimilar(req, res) {
 async function uploadAttachments(req, res) {
   try {
     if (!req.files || req.files.length === 0)
-      return res.status(400).json({ message: 'Se requiere al menos un archivo.', errorCode: 'VALIDATION_ERROR' });
+      return res.status(400).json({ message: 'At least one file is required.', errorCode: 'VALIDATION_ERROR' });
 
     const settings = await settingsRepo.findSettings();
     const dynamicPolicy = buildAttachmentPolicy(settings);
@@ -239,7 +239,7 @@ async function uploadAttachments(req, res) {
       })),
     });
 
-    return res.status(201).json({ message: 'Archivos adjuntados exitosamente.', attachments });
+    return res.status(201).json({ message: 'Files attached successfully.', attachments });
   } catch (err) {
     return mapIncidentError(err, res, logger, 'uploadAttachments');
   }
@@ -254,7 +254,7 @@ async function addInternalNote(req, res) {
       authorRole: req.user.role,
       message: req.body.message,
     });
-    return res.status(201).json({ message: 'Nota interna agregada exitosamente', note });
+    return res.status(201).json({ message: 'Internal note added successfully', note });
   } catch (err) {
     return mapIncidentError(err, res, logger, 'addInternalNote');
   }

@@ -38,7 +38,7 @@ const manageUserSchema = z
     isActive: z.boolean().optional(),
   })
   .refine((data) => data.role !== undefined || data.isActive !== undefined, {
-    message: 'Debes enviar al menos role o isActive.',
+    message: 'You must send at least role or isActive.',
   });
 
 function validate(schema) {

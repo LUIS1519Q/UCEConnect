@@ -26,7 +26,7 @@ const listIncidentsSchema = z.object({
 
 const updateStatusSchema = z.object({
   status: z.enum(['in_progress', 'resolved', 'rejected']),
-  note: z.string().min(1, 'La justificación es obligatoria.').max(500, 'La justificación no puede superar los 500 caracteres.'),
+  note: z.string().min(1, 'A justification is required.').max(500, 'The justification cannot exceed 500 characters.'),
 });
 
 const updateIncidentSchema = z.object({
@@ -48,8 +48,8 @@ const correctCategorySchema = z.object({
 
 const addInternalNoteSchema = z.object({
   message: z.string()
-    .min(1, 'El mensaje no puede estar vacío.')
-    .max(1000, 'El mensaje no puede superar los 1000 caracteres.'),
+    .min(1, 'The message cannot be empty.')
+    .max(1000, 'The message cannot exceed 1000 characters.'),
 });
 
 function validate(schema) {

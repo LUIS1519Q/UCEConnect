@@ -29,7 +29,7 @@ describe('UpdateStatus', () => {
 
     await expect(
       updateStatus.execute({ id: 1, newStatus: 'in_progress', changedBy: 10, note: 'note' })
-    ).rejects.toThrow('Incidencia no encontrada');
+    ).rejects.toThrow('Incident not found');
   });
 
   test('throws INVALID_TRANSITION on open → resolved', async () => {
@@ -37,7 +37,7 @@ describe('UpdateStatus', () => {
 
     await expect(
       updateStatus.execute({ id: 1, newStatus: 'resolved', changedBy: 10, note: 'note' })
-    ).rejects.toThrow('Transición inválida: no se puede pasar de open a resolved');
+    ).rejects.toThrow('Invalid transition: cannot go from open to resolved');
   });
 
   test('throws INVALID_TRANSITION on resolved → open', async () => {
@@ -45,7 +45,7 @@ describe('UpdateStatus', () => {
 
     await expect(
       updateStatus.execute({ id: 1, newStatus: 'open', changedBy: 10, note: 'note' })
-    ).rejects.toThrow('Transición inválida: no se puede pasar de resolved a open');
+    ).rejects.toThrow('Invalid transition: cannot go from resolved to open');
   });
 
   test('throws INVALID_TRANSITION on cancelled → in_progress', async () => {
@@ -53,7 +53,7 @@ describe('UpdateStatus', () => {
 
     await expect(
       updateStatus.execute({ id: 1, newStatus: 'in_progress', changedBy: 10, note: 'note' })
-    ).rejects.toThrow('Transición inválida: no se puede pasar de cancelled a in_progress');
+    ).rejects.toThrow('Invalid transition: cannot go from cancelled to in_progress');
   });
 
   test('calls updateStatus with new status', async () => {

@@ -9,14 +9,14 @@ class CreateCategory {
   async execute({ name, description }) {
     const existing = await this.categoryRepo.findByName(name);
     if (existing) {
-      throw new Error('Ya existe una categoría con ese nombre');
+      throw new Error('A category with that name already exists');
     }
 
     const category = await this.categoryRepo.create(
       new Category({ name, description: description || null, isActive: true })
     );
 
-    this.logger.info(`Categoría creada: ${name}`);
+    this.logger.info(`Category created: ${name}`);
 
     return category.toJSON();
   }

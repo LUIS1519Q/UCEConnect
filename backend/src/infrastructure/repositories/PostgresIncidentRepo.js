@@ -292,7 +292,7 @@ class PostgresIncidentRepo {
 
   async countByCategoryInRange(startDate, endDate) {
     const result = await this.db.query(
-      `SELECT COALESCE(c.name, 'Sin categoría') as category_name, COUNT(i.id) as count
+      `SELECT COALESCE(c.name, 'No category') as category_name, COUNT(i.id) as count
        FROM incidents i
        LEFT JOIN categories c ON i.category_id = c.id
        WHERE i.created_at >= $1 AND i.created_at < $2
