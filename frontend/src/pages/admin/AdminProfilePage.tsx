@@ -25,7 +25,6 @@ import {
   Users,
   Tags,
   Settings,
-  Bell,
   User,
   LogOut,
 } from "../../components/ui/icons";
@@ -85,7 +84,6 @@ export default function AdminProfilePage() {
         { label: "Users", icon: Users, onClick: () => navigate(ROUTES.admin.users) },
         { label: "Categories", icon: Tags, onClick: () => navigate(ROUTES.admin.categories) },
         { label: "Settings", icon: Settings, onClick: () => navigate(ROUTES.admin.settings) },
-        { label: "Notifications", icon: Bell, onClick: () => navigate(ROUTES.admin.notifications) },
         { label: "Profile", icon: User, active: true, onClick: () => navigate(ROUTES.admin.profile) },
       ]}
       bottomItems={[{ label: "Logout", icon: LogOut, onClick: logout }]}
