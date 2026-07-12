@@ -58,12 +58,117 @@ INSERT INTO about_info (
   '© 2026 Central University of Ecuador'
 ) ON CONFLICT DO NOTHING;
 
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'faculties_name_unique'
+  ) THEN
+    ALTER TABLE faculties
+      ADD CONSTRAINT faculties_name_unique UNIQUE (name);
+  END IF;
+END $$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'careers_faculty_name_unique'
+  ) THEN
+    ALTER TABLE careers
+      ADD CONSTRAINT careers_faculty_name_unique UNIQUE (faculty_id, name);
+  END IF;
+END $$;
+
 INSERT INTO faculties (name) VALUES
-  ('Engineering'),
-  ('Health Sciences'),
-  ('Law'),
-  ('Economics'),
-  ('Arts and Humanities')
+  ('Facultad de Artes'),
+  ('Facultad de Arquitectura y Urbanismo'),
+  ('Facultad de Ciencias'),
+  ('Facultad de Ciencias Administrativas'),
+  ('Facultad de Ciencias Agrícolas'),
+  ('Facultad de Ciencias Biológicas'),
+  ('Facultad de Ciencias de la Discapacidad, Atención Prehospitalaria y Desastres'),
+  ('Facultad de Ciencias Económicas'),
+  ('Facultad de Ciencias Médicas'),
+  ('Facultad de Ciencias Psicológicas'),
+  ('Facultad de Ciencias Químicas'),
+  ('Facultad de Ciencias Sociales y Humanas'),
+  ('Facultad de Comunicación Social'),
+  ('Facultad de Cultura Física'),
+  ('Facultad de Filosofía, Letras y Ciencias de la Educación'),
+  ('Facultad de Ingeniería y Ciencias Aplicadas'),
+  ('Facultad de Ingeniería en Geología, Minas, Petróleos y Ambiental'),
+  ('Facultad de Ingeniería Química'),
+  ('Facultad de Jurisprudencia, Ciencias Políticas y Sociales'),
+  ('Facultad de Medicina Veterinaria y Zootecnia'),
+  ('Facultad de Odontología')
+ON CONFLICT DO NOTHING;
+
+INSERT INTO careers (faculty_id, name)
+SELECT f.id, c.name
+FROM (VALUES
+  ('Facultad de Artes', 'Artes Escénicas'),
+  ('Facultad de Artes', 'Artes Musicales'),
+  ('Facultad de Artes', 'Artes Plásticas'),
+  ('Facultad de Artes', 'Danza'),
+  ('Facultad de Arquitectura y Urbanismo', 'Arquitectura'),
+  ('Facultad de Ciencias', 'Ingeniería Matemática'),
+  ('Facultad de Ciencias Administrativas', 'Administración de Empresas'),
+  ('Facultad de Ciencias Administrativas', 'Administración Pública'),
+  ('Facultad de Ciencias Administrativas', 'Contabilidad y Auditoría'),
+  ('Facultad de Ciencias Agrícolas', 'Agronomía'),
+  ('Facultad de Ciencias Agrícolas', 'Turismo'),
+  ('Facultad de Ciencias Biológicas', 'Ciencias Biológicas'),
+  ('Facultad de Ciencias Biológicas', 'Ingeniería en Recursos Naturales'),
+  ('Facultad de Ciencias de la Discapacidad, Atención Prehospitalaria y Desastres', 'Fisioterapia'),
+  ('Facultad de Ciencias de la Discapacidad, Atención Prehospitalaria y Desastres', 'Fonoaudiología'),
+  ('Facultad de Ciencias de la Discapacidad, Atención Prehospitalaria y Desastres', 'Terapia Ocupacional'),
+  ('Facultad de Ciencias de la Discapacidad, Atención Prehospitalaria y Desastres', 'Atención Prehospitalaria'),
+  ('Facultad de Ciencias Económicas', 'Economía'),
+  ('Facultad de Ciencias Económicas', 'Ingeniería Estadística'),
+  ('Facultad de Ciencias Económicas', 'Finanzas'),
+  ('Facultad de Ciencias Médicas', 'Medicina'),
+  ('Facultad de Ciencias Médicas', 'Enfermería'),
+  ('Facultad de Ciencias Médicas', 'Obstetricia'),
+  ('Facultad de Ciencias Médicas', 'Laboratorio Clínico'),
+  ('Facultad de Ciencias Médicas', 'Imagenología y Radiología'),
+  ('Facultad de Ciencias Psicológicas', 'Licenciatura en Psicología'),
+  ('Facultad de Ciencias Psicológicas', 'Licenciatura en Psicología Clínica'),
+  ('Facultad de Ciencias Químicas', 'Química'),
+  ('Facultad de Ciencias Químicas', 'Bioquímica y Farmacia'),
+  ('Facultad de Ciencias Sociales y Humanas', 'Política'),
+  ('Facultad de Ciencias Sociales y Humanas', 'Sociología'),
+  ('Facultad de Ciencias Sociales y Humanas', 'Trabajo Social'),
+  ('Facultad de Comunicación Social', 'Comunicación Social'),
+  ('Facultad de Comunicación Social', 'Turismo Histórico'),
+  ('Facultad de Cultura Física', 'Pedagogía de la Actividad Física y Deporte'),
+  ('Facultad de Filosofía, Letras y Ciencias de la Educación', 'Educación Inicial'),
+  ('Facultad de Filosofía, Letras y Ciencias de la Educación', 'Multilingüe'),
+  ('Facultad de Filosofía, Letras y Ciencias de la Educación', 'Pedagogía de los Idiomas Nacionales y Extranjeros'),
+  ('Facultad de Filosofía, Letras y Ciencias de la Educación', 'Psicología Educativa y Orientación'),
+  ('Facultad de Filosofía, Letras y Ciencias de la Educación', 'Pedagogía de la Historia y las Ciencias Sociales'),
+  ('Facultad de Filosofía, Letras y Ciencias de la Educación', 'Comercio y Administración'),
+  ('Facultad de Filosofía, Letras y Ciencias de la Educación', 'Pedagogía de las Ciencias Experimentales Química y Biología'),
+  ('Facultad de Filosofía, Letras y Ciencias de la Educación', 'Pedagogía de las Ciencias Experimentales Informática'),
+  ('Facultad de Filosofía, Letras y Ciencias de la Educación', 'Pedagogía de las Ciencias Experimentales Matemática y Física'),
+  ('Facultad de Filosofía, Letras y Ciencias de la Educación', 'Pedagogía de la Lengua y Literatura'),
+  ('Facultad de Filosofía, Letras y Ciencias de la Educación', 'Psicopedagogía'),
+  ('Facultad de Filosofía, Letras y Ciencias de la Educación', 'Educación Básica'),
+  ('Facultad de Filosofía, Letras y Ciencias de la Educación', 'Pedagogía Técnica de la Mecatrónica'),
+  ('Facultad de Ingeniería y Ciencias Aplicadas', 'Ingeniería Civil'),
+  ('Facultad de Ingeniería y Ciencias Aplicadas', 'Diseño Industrial'),
+  ('Facultad de Ingeniería y Ciencias Aplicadas', 'Computación'),
+  ('Facultad de Ingeniería y Ciencias Aplicadas', 'Sistemas de Información'),
+  ('Facultad de Ingeniería en Geología, Minas, Petróleos y Ambiental', 'Ingeniería en Petróleos'),
+  ('Facultad de Ingeniería en Geología, Minas, Petróleos y Ambiental', 'Ingeniería Ambiental'),
+  ('Facultad de Ingeniería en Geología, Minas, Petróleos y Ambiental', 'Ingeniería en Geología'),
+  ('Facultad de Ingeniería en Geología, Minas, Petróleos y Ambiental', 'Ingeniería de Minas'),
+  ('Facultad de Ingeniería Química', 'Ingeniería Química'),
+  ('Facultad de Jurisprudencia, Ciencias Políticas y Sociales', 'Derecho'),
+  ('Facultad de Jurisprudencia, Ciencias Políticas y Sociales', 'Ciencias Policiales'),
+  ('Facultad de Jurisprudencia, Ciencias Políticas y Sociales', 'Instituto de Criminología'),
+  ('Facultad de Medicina Veterinaria y Zootecnia', 'Medicina Veterinaria y Zootecnia'),
+  ('Facultad de Odontología', 'Odontología')
+) AS c(faculty_name, name)
+JOIN faculties f ON f.name = c.faculty_name
 ON CONFLICT DO NOTHING;
 
 INSERT INTO help_items (question, answer, "order") VALUES
