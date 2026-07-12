@@ -10,6 +10,10 @@ class CorrectCategory {
       throw new Error('Incident not found');
     }
 
+    if (['resolved', 'rejected', 'cancelled'].includes(incident.status)) {
+      throw new Error('Category cannot be corrected on a closed incident.');
+    }
+
     const exists = await this.incidentRepo.categoryExists(categoryId);
     if (!exists) {
       throw new Error('The specified category does not exist');
