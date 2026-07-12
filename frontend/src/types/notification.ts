@@ -2,7 +2,10 @@ export type NotificationType =
   | "incident_created"
   | "status_updated"
   | "manager_request"
-  | "student_reply";
+  | "student_reply"
+  | "user_registered"
+  | "category_updated"
+  | "settings_changed";
 
 export interface AppNotification {
   id: number;
