@@ -13,6 +13,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@capacitor/core": "^8.4.1",
     "@fontsource/dm-mono": "^5.2.7",
     "@fontsource/plus-jakarta-sans": "^5.2.8",
     "@hookform/resolvers": "^5.4.0",
