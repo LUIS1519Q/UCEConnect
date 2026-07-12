@@ -13,7 +13,7 @@ async function getSettings(req, res) {
     const settings = await new GetSettings(settingsRepo, logger).execute();
     return res.status(200).json(settings);
   } catch (err) {
-    logger.error(`Error en getSettings: ${err.message}`);
+    logger.error(`Error in getSettings: ${err.message}`);
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
@@ -21,9 +21,9 @@ async function getSettings(req, res) {
 async function updateSettings(req, res) {
   try {
     const settings = await new UpdateSettings(settingsRepo, logger).execute(req.body);
-    return res.status(200).json({ message: 'Configuración actualizada exitosamente', settings });
+    return res.status(200).json({ message: 'Settings updated successfully', settings });
   } catch (err) {
-    logger.warn(`Error en updateSettings: ${err.message}`);
+    logger.warn(`Error in updateSettings: ${err.message}`);
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
@@ -37,9 +37,9 @@ async function uploadLogo(req, res) {
       fileBuffer: req.file.buffer,
     });
 
-    return res.status(200).json({ message: 'Logo actualizado exitosamente', logoUrl: result.logoUrl });
+    return res.status(200).json({ message: 'Logo updated successfully', logoUrl: result.logoUrl });
   } catch (err) {
-    logger.warn(`Error en uploadLogo: ${err.message}`);
+    logger.warn(`Error in uploadLogo: ${err.message}`);
     if (err.message.includes('required'))
       return res.status(400).json({ message: err.message, errorCode: 'VALIDATION_ERROR' });
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });

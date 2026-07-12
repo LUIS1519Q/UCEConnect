@@ -20,7 +20,7 @@ const updateFaqSchema = z
     order: z.number().int().min(0).optional(),
   })
   .refine((data) => data.question !== undefined || data.answer !== undefined || data.order !== undefined, {
-    message: 'Debes enviar al menos un campo para actualizar.',
+    message: 'You must send at least one field to update.',
   });
 
 function validate(schema) {

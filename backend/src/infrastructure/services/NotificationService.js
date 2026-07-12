@@ -16,7 +16,7 @@ class NotificationService {
       createdAt: new Date(),
     });
     this.io.to(`user_${userId}`).emit('notification', notification.toJSON());
-    this.logger.info(`Notificación emitida: userId=${userId} type=${type}`);
+    this.logger.info(`Notification emitted: userId=${userId} type=${type}`);
     return notification;
   }
 }

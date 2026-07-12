@@ -10,7 +10,7 @@ async function getMetrics(req, res) {
     const result = await new GetDashboardMetrics(incidentRepo, logger).execute({ days: req.query.days });
     return res.status(200).json(result);
   } catch (err) {
-    logger.error(`Error en getMetrics: ${err.message}`);
+    logger.error(`Error in getMetrics: ${err.message}`);
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }

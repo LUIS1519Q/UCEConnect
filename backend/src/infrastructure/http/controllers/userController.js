@@ -23,16 +23,16 @@ async function createUser(req, res) {
       role: req.body.role,
     });
     return res.status(201).json({
-      message: 'Usuario creado exitosamente. Se envió un correo para establecer su contraseña.',
+      message: 'User created successfully. An email was sent to set their password.',
       user,
     });
   } catch (err) {
-    logger.warn(`Error en createUser: ${err.message}`);
+    logger.warn(`Error in createUser: ${err.message}`);
     if (err.message.includes('already registered'))
       return res.status(400).json({ message: err.message, errorCode: 'EMAIL_ALREADY_REGISTERED' });
     if (err.message.includes('institutional'))
       return res.status(400).json({ message: err.message, errorCode: 'INVALID_EMAIL_DOMAIN' });
-    if (err.message.includes('no existe'))
+    if (err.message.includes('does not exist'))
       return res.status(400).json({ message: err.message, errorCode: 'VALIDATION_ERROR' });
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
@@ -49,7 +49,7 @@ async function list(req, res) {
     });
     return res.status(200).json(result);
   } catch (err) {
-    logger.error(`Error en listUsers: ${err.message}`);
+    logger.error(`Error in listUsers: ${err.message}`);
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
@@ -61,12 +61,12 @@ async function manage(req, res) {
       role: req.body.role,
       isActive: req.body.isActive,
     });
-    return res.status(200).json({ message: 'Usuario actualizado exitosamente', user: user.toJSON() });
+    return res.status(200).json({ message: 'User updated successfully', user: user.toJSON() });
   } catch (err) {
-    logger.warn(`Error en manageUser: ${err.message}`);
-    if (err.message.includes('no encontrado'))
+    logger.warn(`Error in manageUser: ${err.message}`);
+    if (err.message.includes('not found'))
       return res.status(404).json({ message: err.message, errorCode: 'USER_NOT_FOUND' });
-    if (err.message.includes('no existe'))
+    if (err.message.includes('does not exist'))
       return res.status(400).json({ message: err.message, errorCode: 'VALIDATION_ERROR' });
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }

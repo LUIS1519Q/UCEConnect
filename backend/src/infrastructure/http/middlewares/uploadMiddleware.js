@@ -28,7 +28,7 @@ const attachmentUpload = multer({
 function uploadAttachments(req, res, next) {
   attachmentUpload(req, res, (err) => {
     if (err) {
-      return res.status(400).json({ message: err.message || 'Error al procesar los archivos.', errorCode: 'VALIDATION_ERROR' });
+      return res.status(400).json({ message: err.message || 'Error processing the files.', errorCode: 'VALIDATION_ERROR' });
     }
     next();
   });

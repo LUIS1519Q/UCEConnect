@@ -7,17 +7,17 @@ class ResendVerifyCode {
   }
 
   async execute({ email, code: unusedCode }) {
-    logger.info(`Intento de reenvío de código: ${email}`);
+    logger.info(`Resend code attempt: ${email}`);
 
     try {
       const user = await this.userRepo.findByEmail(email);
       if (!user) {
-        logger.warn(`Reenvío fallido — usuario no encontrado: ${email}`);
+        logger.warn(`Resend failed — user not found: ${email}`);
         throw new Error('User not found.');
       }
 
       if (user.isVerified) {
-        logger.warn(`Reenvío fallido — usuario ya verificado: ${email}`);
+        logger.warn(`Resend failed — user already verified: ${email}`);
         throw new Error('This account is already verified.');
       }
 
@@ -28,14 +28,14 @@ class ResendVerifyCode {
 
       await this.userRepo.saveVerifyCode(user.id, code, expiresAt);
 
-      logger.info(`Enviando código de verificación a: ${email}`);
+      logger.info(`Sending verification code to: ${email}`);
       await this.emailNotifier.sendVerificationCode(email, code);
 
-      logger.info(`Código de verificación reenviado exitosamente: ${email}`);
+      logger.info(`Verification code resent successfully: ${email}`);
 
-      return { message: 'Código de verificación reenviado exitosamente' };
+      return { message: 'Verification code resent successfully' };
     } catch (error) {
-      logger.error(`Error en reenvío de código: ${error.message}`);
+      logger.error(`Error resending code: ${error.message}`);
       throw error;
     }
   }

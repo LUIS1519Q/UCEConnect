@@ -6,7 +6,7 @@ class GetFaculties {
 
   async execute() {
     const faculties = await this.userRepo.findFaculties();
-    this.logger.info('Facultades obtenidas');
+    this.logger.info('Faculties retrieved');
     return faculties;
   }
 }

@@ -1,3 +1,5 @@
+const logger = require('../../infrastructure/logger/logger');
+
 class ListIncidents {
   constructor(incidentRepo) {
     this.incidentRepo = incidentRepo;
@@ -11,6 +13,7 @@ class ListIncidents {
         categoryId,
         paginate: false,
       });
+      logger.info(`[ListIncidents] success: role=${role} userId=${userId}`);
       return { data };
     }
 
@@ -21,6 +24,7 @@ class ListIncidents {
       limit: Number(limit),
       paginate: true,
     });
+    logger.info(`[ListIncidents] success: role=${role} userId=${userId}`);
     return result;
   }
 }
