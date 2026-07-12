@@ -33,6 +33,7 @@ export const ROUTES = {
     dashboard: "/manager/dashboard",
     incidents: "/manager/incidents",
     incidentDetail: "/manager/incidents/:id",
+    incidentFeedback: "/manager/incidents/:id/conversation",
     profile: "/manager/profile",
     notifications: "/manager/notifications",
   },
