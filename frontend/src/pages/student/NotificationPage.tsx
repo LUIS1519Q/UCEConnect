@@ -28,7 +28,7 @@ import { ROUTES } from "../../constants/routes";
 
 import type { AppNotification, NotificationType } from "../../types/notification";
 
-const ACTION_LABEL: Record<NotificationType, string> = {
+const ACTION_LABEL: Partial<Record<NotificationType, string>> = {
   manager_request: "Request",
   incident_created: "Status update",
   status_updated: "Status update",
@@ -135,7 +135,7 @@ export default function NotificationPage() {
                 message: `#${notification.ticket}`,
                 date: new Date(notification.createdAt).toLocaleDateString(),
                 unread: !notification.read,
-                actionLabel: ACTION_LABEL[notification.type],
+                actionLabel: ACTION_LABEL[notification.type]?? "View",
                 onActionClick: () =>
                   handleAction(notification.id, notification.incidentId, notification.type),
               }))}
