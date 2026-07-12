@@ -9,19 +9,25 @@ export default function NotificationItem({
   message,
   date,
   unread = false,
+  actionLabel,
+  onActionClick,
 }: NotificationItemProps) {
   return (
     <div
       className={cn(
-        "flex gap-4 rounded-xl border border-border bg-surface p-4 shadow-sm",
+        "flex items-center gap-4 rounded-xl border border-border bg-surface p-4 shadow-sm",
         unread && "border-primary"
       )}
     >
-      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+      <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary/10">
         <Bell
           size={20}
           className="text-primary"
         />
+
+        {unread && (
+          <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-primary" />
+        )}
       </div>
 
       <div className="flex-1">
@@ -37,6 +43,15 @@ export default function NotificationItem({
           {date}
         </span>
       </div>
+
+      {actionLabel && (
+        <button
+          onClick={onActionClick}
+          className="flex-shrink-0 rounded-lg border border-border px-4 py-2 text-sm font-medium text-textPrimary transition-colors hover:bg-background"
+        >
+          {actionLabel}
+        </button>
+      )}
     </div>
   );
 }

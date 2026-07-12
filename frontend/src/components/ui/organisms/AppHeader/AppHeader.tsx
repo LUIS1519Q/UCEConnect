@@ -12,7 +12,9 @@ export default function AppHeader({
   onNotificationsClick,
   onProfileClick,
   onMenuClick,
+  isNotificationsActive,
 }: AppHeaderProps) {
+  console.log("isNotificationsActive:", isNotificationsActive);
   return (
     
     <header
@@ -44,14 +46,19 @@ export default function AppHeader({
       <div className="ml-auto flex items-center gap-4">
 
         <div className="relative">
-          <Button
-            variant="ghost"
-            size="sm"
+          <button
+            type="button"
             aria-label="Notifications"
             onClick={onNotificationsClick}
+            className={`
+              rounded-lg p-2 transition-colors
+              ${isNotificationsActive 
+                ? "bg-blue-100 [&>svg]:stroke-primary" 
+                : "hover:bg-background"}
+            `}
           >
             <Bell size={20} />
-          </Button>
+          </button>
 
           {notificationCount > 0 && (
             <span
