@@ -39,6 +39,14 @@ export const ROUTES = {
   },
 
   admin: {
+    dashboard: "/admin/dashboard",
     incidents: "/admin/incidents",
+    incidentDetail: "/admin/incidents/:id",
+    users: "/admin/users",
+    categories: "/admin/categories",
+    settings: "/admin/settings",
+    notifications: "/admin/notifications",
+    profile: "/admin/profile",
   },
+
 } as const;
