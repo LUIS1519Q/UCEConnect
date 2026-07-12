@@ -47,4 +47,5 @@ export {
   MoreVertical,
   BarChart3,
   LayoutDashboard,
+  Tags,
 } from "lucide-react";
