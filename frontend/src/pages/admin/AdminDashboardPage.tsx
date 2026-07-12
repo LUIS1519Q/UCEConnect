@@ -1,18 +1,14 @@
 import { useNavigate } from "react-router-dom";
 
 import { AppLayout } from "../../components/ui/templates/AppLayout";
-import { StatusBadge } from "../../components/ui/atoms/StatusBadge";
 import { LoadingState } from "../../components/ui/organisms/LoadingState";
 import { ErrorState } from "../../components/ui/organisms/ErrorState";
-import { EmptyState } from "../../components/ui/organisms/EmptyState";
-import { Pagination } from "../../components/ui/molecules/Pagination";
-import { SearchBar } from "../../components/ui/molecules/SearchBar";
+import { StatusBadge } from "../../components/ui/atoms/StatusBadge";
 
-import { useManagerIncidents } from "../../hooks/useManagerIncident";
+import { useDashboard } from "../../hooks/useDashboard";
 import { useLogout } from "../../hooks/useLogout";
 import { useAuthStore } from "../../store/authStore";
 import { useUnreadNotificationsCount } from "../../hooks/useUnreadNotificationsCount";
-import type { IncidentStatus, ManagerIncidentSummary } from "../../types/incident";
 
 import {
   LayoutDashboard,
@@ -27,45 +23,40 @@ import {
 
 import { ROUTES } from "../../constants/routes";
 
-const STATUS_OPTIONS: { label: string; value: IncidentStatus | "all" }[] = [
-  { label: "All", value: "all" },
-  { label: "Open", value: "open" },
-  { label: "In progress", value: "in_progress" },
-  { label: "Resolved", value: "resolved" },
-  { label: "Rejected", value: "rejected" },
-  { label: "Cancelled", value: "cancelled" },
-];
-
-export default function AdminIncidentsPage() {
+export default function AdminDashboardPage() {
   const navigate = useNavigate();
   const { logout } = useLogout();
   const user = useAuthStore((state) => state.user);
   const unreadCount = useUnreadNotificationsCount();
 
-  const {
-    incidents,
-    pagination,
-    isLoading,
-    isError,
-    refetch,
-    page,
-    setPage,
-    statusFilter,
-    setStatusFilter,
-    search,
-    setSearch,
-  } = useManagerIncidents();
+  const { metrics, recentIncidents, isLoading, isError, refetch } = useDashboard();
+
+  const total = metrics?.total ?? 0;
+
+  const statusBreakdown = metrics
+    ? ([
+        { key: "open", label: "Open" },
+        { key: "in_progress", label: "In progress" },
+        { key: "resolved", label: "Resolved" },
+        { key: "rejected", label: "Rejected" },
+        { key: "cancelled", label: "Cancelled" },
+      ] as const).map(({ key, label }) => ({
+        label,
+        count: metrics[key],
+        percentage: total > 0 ? Math.round((metrics[key] / total) * 100) : 0,
+      }))
+    : [];
 
   return (
     <AppLayout
-      title="Incidents"
+      title="Dashboard"
       studentName={`${user?.firstName ?? ""} ${user?.lastName ?? ""}`}
       notificationCount={unreadCount}
       onProfileClick={() => navigate(ROUTES.admin.profile)}
       onNotificationsClick={() => navigate(ROUTES.admin.notifications)}
       sidebarItems={[
-        { label: "Dashboard", icon: LayoutDashboard, onClick: () => navigate(ROUTES.admin.dashboard) },
-        { label: "Incidents", icon: FileText, active: true, onClick: () => navigate(ROUTES.admin.incidents) },
+        { label: "Dashboard", icon: LayoutDashboard, active: true, onClick: () => navigate(ROUTES.admin.dashboard) },
+        { label: "Incidents", icon: FileText, onClick: () => navigate(ROUTES.admin.incidents) },
         { label: "Users", icon: Users, onClick: () => navigate(ROUTES.admin.users) },
         { label: "Categories", icon: Tags, onClick: () => navigate(ROUTES.admin.categories) },
         { label: "Settings", icon: Settings, onClick: () => navigate(ROUTES.admin.settings) },
@@ -74,95 +65,115 @@ export default function AdminIncidentsPage() {
       ]}
       bottomItems={[{ label: "Logout", icon: LogOut, onClick: logout }]}
     >
-      <div className="mx-auto w-full max-w-6xl space-y-4">
-
-        <div className="flex flex-wrap gap-3">
-          <div className="flex-1 min-w-48">
-            <SearchBar
-              placeholder="Search by ID or title..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-
-          <select
-            className="rounded-lg border border-border bg-surface px-3 py-2 text-sm"
-            value={statusFilter}
-            onChange={(e) => {
-              setStatusFilter(e.target.value as IncidentStatus | "all");
-              setPage(1);
-            }}
-          >
-            {STATUS_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        </div>
+      <div className="mx-auto w-full max-w-6xl space-y-6">
 
         {isLoading ? (
-          <LoadingState title="Loading incidents..." />
+          <LoadingState title="Loading dashboard..." />
         ) : isError ? (
-          <ErrorState title="Failed to load incidents" description="Please try again." onRetry={refetch} />
-        ) : incidents.length === 0 ? (
-          <EmptyState title="No incidents found" description="Try adjusting your filters." />
+          <ErrorState
+            title="Failed to load dashboard"
+            description="Please try again."
+            onRetry={refetch}
+          />
         ) : (
-          <div className="overflow-x-auto rounded-xl border border-border bg-surface">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border bg-background">
-                  <th className="px-4 py-3 text-left font-medium text-textSecondary">ID</th>
-                  <th className="px-4 py-3 text-left font-medium text-textSecondary">Title</th>
-                  <th className="px-4 py-3 text-left font-medium text-textSecondary">Student</th>
-                  <th className="px-4 py-3 text-left font-medium text-textSecondary">Category</th>
-                  <th className="px-4 py-3 text-left font-medium text-textSecondary">Status</th>
-                  <th className="px-4 py-3 text-left font-medium text-textSecondary">Date</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {incidents.map((incident) => (
-                  <tr
-                    key={incident.id}
-                    onClick={() => navigate(`/admin/incidents/${incident.id}`)}
-                    className="cursor-pointer transition-colors hover:bg-background"
-                  >
-                    <td className="px-4 py-3 font-medium text-primary">
-                      #{incident.ticket}
-                    </td>
-                    <td className="px-4 py-3 text-textPrimary">
-                      {incident.title}
-                    </td>
-                    <td className="px-4 py-3 text-textSecondary">
-                      {(incident as ManagerIncidentSummary).student ?? "—"}
-                    </td>
-                    <td className="px-4 py-3 text-textSecondary">
-                      {(incident as ManagerIncidentSummary).category ?? "—"}
-                    </td>
-                    <td className="px-4 py-3">
-                      <StatusBadge status={incident.status} />
-                    </td>
-                    <td className="px-4 py-3 text-textSecondary">
-                      {new Date(incident.createdAt).toLocaleDateString()}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+          <>
+            {/* Quick actions — solo admin */}
+            <div className="grid grid-cols-2 gap-4">
+              <button
+                onClick={() => navigate(ROUTES.admin.users)}
+                className="rounded-xl border border-border bg-surface p-4 text-left transition-colors hover:bg-background"
+              >
+                <Users size={20} className="mb-2 text-primary" />
+                <p className="font-medium text-textPrimary">Manage users</p>
+                <p className="text-sm text-textSecondary">Create, edit and manage roles</p>
+              </button>
 
-        {pagination && (
-          <div className="flex items-center justify-between text-sm text-textSecondary">
-            <span>
-              {((page - 1) * 5) + 1}–{Math.min(page * 5, pagination.total)} of {pagination.total}
-            </span>
-            <Pagination
-              currentPage={page}
-              totalPages={pagination.totalPages ?? Math.ceil(pagination.total / 5)}
-              onPageChange={setPage}
-            />
-          </div>
+              <button
+                onClick={() => navigate(ROUTES.admin.categories)}
+                className="rounded-xl border border-border bg-surface p-4 text-left transition-colors hover:bg-background"
+              >
+                <Tags size={20} className="mb-2 text-primary" />
+                <p className="font-medium text-textPrimary">Manage categories</p>
+                <p className="text-sm text-textSecondary">Organize incident categories</p>
+              </button>
+            </div>
+
+            {/* KPI cards */}
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
+              {[
+                { label: "Total", value: metrics?.total },
+                { label: "Open", value: metrics?.open },
+                { label: "In progress", value: metrics?.in_progress },
+                { label: "Resolved", value: metrics?.resolved },
+                { label: "Rejected", value: metrics?.rejected },
+              ].map((kpi) => (
+                <div key={kpi.label} className="rounded-xl border border-border bg-surface p-4">
+                  <p className="text-xs text-textSecondary">{kpi.label}</p>
+                  <p className="mt-1 text-2xl font-semibold text-textPrimary">
+                    {kpi.value ?? "—"}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <div className="grid gap-6 lg:grid-cols-2">
+
+              {/* Status breakdown — barras horizontales */}
+              <div className="rounded-xl border border-border bg-surface p-6">
+                <h2 className="mb-4 font-semibold text-textPrimary">
+                  Incidents by status
+                </h2>
+
+                <div className="space-y-4">
+                  {statusBreakdown.map((item) => (
+                    <div key={item.label}>
+                      <div className="mb-1 flex items-center justify-between text-sm">
+                        <span className="text-textPrimary">{item.label}</span>
+                        <span className="text-textSecondary">
+                          {item.count} ({item.percentage}%)
+                        </span>
+                      </div>
+                      <div className="h-2 w-full overflow-hidden rounded-full bg-background">
+                        <div
+                          className="h-full rounded-full bg-primary transition-all"
+                          style={{ width: `${item.percentage}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Recent incidents */}
+              <div className="rounded-xl border border-border bg-surface p-6">
+                <h2 className="mb-4 font-semibold text-textPrimary">
+                  Recent incidents
+                </h2>
+
+                <div className="space-y-3">
+                  {recentIncidents.map((incident) => (
+                    <button
+                      key={incident.id}
+                      onClick={() => navigate(`/admin/incidents/${incident.id}`)}
+                      className="flex w-full items-center justify-between rounded-lg border border-border p-3 text-left transition-colors hover:bg-background"
+                    >
+                      <div>
+                        <p className="text-sm font-medium text-textPrimary">
+                          #{incident.ticket}
+                        </p>
+                        <p className="text-sm text-textSecondary">
+                          {incident.title}
+                        </p>
+                      </div>
+
+                      <StatusBadge status={incident.status} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+          </>
         )}
 
       </div>
