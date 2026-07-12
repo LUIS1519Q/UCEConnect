@@ -37,6 +37,7 @@ import AdminIncidentsPage from "../pages/admin/AdminIncidentsPage";
 import AdminIncidentDetailPage from "../pages/admin/AdminIncidentsDetailPage";
 import AdminUsersPage from "../pages/admin/AdminUserPage";
 import AdminCategoriesPage from "../pages/admin/AdminCategoriesPage";
+import AdminSettingsPage from "../pages/admin/AdminSettingsPage";
 
 function AppRouter() {
   return (
@@ -283,6 +284,15 @@ function AppRouter() {
           element={
             <ProtectedRoute>
               <AdminCategoriesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.admin.settings}
+          element={
+            <ProtectedRoute>
+              <AdminSettingsPage />
             </ProtectedRoute>
           }
         />
