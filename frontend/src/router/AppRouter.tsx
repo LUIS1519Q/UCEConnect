@@ -41,84 +41,52 @@ import AdminSettingsPage from "../pages/admin/AdminSettingsPage";
 import AdminNotificationsPage from "../pages/admin/AdminNotificationsPage";
 import AdminProfilePage from "../pages/admin/AdminProfilePage";
 
+import type { Role } from "../types/user";
+
+const STUDENT_ROLES: Role[] = ["student"];
+const MANAGER_ROLES: Role[] = ["manager"];
+const ADMIN_ROLES: Role[] = ["admin"];
+
 function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
         <Route
           path="*"
-          element={
-              <Navigate
-                  to={ROUTES.public.home}
-                  replace
-              />
-          }
+          element={<Navigate to={ROUTES.public.home} replace />}
         />
 
-        <Route
-          path={ROUTES.public.home}
-          element={< LandingPage />}
-        />
+        <Route path={ROUTES.public.home} element={<LandingPage />} />
 
         {/*DESIGN*/}
 
-        <Route
-          path="/auth-show-case"
-          element={< AuthShowcase />}
-        />
-
-        <Route
-          path="/student-show-case"
-          element={< StudentShowcase />}
-        />
+        <Route path="/auth-show-case" element={<AuthShowcase />} />
+        <Route path="/student-show-case" element={<StudentShowcase />} />
 
         {/*AUTH*/}
 
-        <Route
-          path={ROUTES.auth.login}
-          element={<LoginPage />}
-        />
-
-        <Route
-          path={ROUTES.auth.register}
-          element={<RegisterPage />}
-        />
-
-        <Route
-          path={ROUTES.auth.microsoftCallback}
-          element={<MicrosoftCallbackPage />}
-        />
-
-        <Route
-          path={ROUTES.auth.verifyCode}
-          element={<VerifyEmailPage />}
-        />
-
-        <Route
-          path={ROUTES.auth.forgotPassword}
-          element={<ForgotPasswordPage />}
-        />
-
-        <Route
-          path={ROUTES.auth.resetPassword}
-          element={<ResetPasswordPage />}
-        />
+        <Route path={ROUTES.auth.login} element={<LoginPage />} />
+        <Route path={ROUTES.auth.register} element={<RegisterPage />} />
+        <Route path={ROUTES.auth.microsoftCallback} element={<MicrosoftCallbackPage />} />
+        <Route path={ROUTES.auth.verifyCode} element={<VerifyEmailPage />} />
+        <Route path={ROUTES.auth.forgotPassword} element={<ForgotPasswordPage />} />
+        <Route path={ROUTES.auth.resetPassword} element={<ResetPasswordPage />} />
 
         {/*STUDENT*/}
 
         <Route
           path={ROUTES.student.myIncidents}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={STUDENT_ROLES}>
               <MyIncidentsPage />
             </ProtectedRoute>
           }
         />
-        
+
         <Route
           path={ROUTES.student.createIncident}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={STUDENT_ROLES}>
               <CreateIncidentPage />
             </ProtectedRoute>
           }
@@ -127,7 +95,7 @@ function AppRouter() {
         <Route
           path={ROUTES.student.incidentDetail}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={STUDENT_ROLES}>
               <IncidentDetailPage />
             </ProtectedRoute>
           }
@@ -136,7 +104,7 @@ function AppRouter() {
         <Route
           path={ROUTES.student.editIncident}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={STUDENT_ROLES}>
               <EditIncidentPage />
             </ProtectedRoute>
           }
@@ -145,7 +113,7 @@ function AppRouter() {
         <Route
           path={ROUTES.student.incidentConversation}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={STUDENT_ROLES}>
               <RespondToManagerRequestPage />
             </ProtectedRoute>
           }
@@ -154,7 +122,7 @@ function AppRouter() {
         <Route
           path={ROUTES.student.notifications}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={STUDENT_ROLES}>
               <NotificationsPage />
             </ProtectedRoute>
           }
@@ -163,7 +131,7 @@ function AppRouter() {
         <Route
           path={ROUTES.student.profile}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={STUDENT_ROLES}>
               <ProfilePage />
             </ProtectedRoute>
           }
@@ -172,7 +140,7 @@ function AppRouter() {
         <Route
           path={ROUTES.student.about}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={STUDENT_ROLES}>
               <AboutPage />
             </ProtectedRoute>
           }
@@ -181,7 +149,7 @@ function AppRouter() {
         <Route
           path={ROUTES.student.help}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={STUDENT_ROLES}>
               <HelpPage />
             </ProtectedRoute>
           }
@@ -192,7 +160,7 @@ function AppRouter() {
         <Route
           path={ROUTES.manager.dashboard}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={MANAGER_ROLES}>
               <ManagerDashboard />
             </ProtectedRoute>
           }
@@ -201,7 +169,7 @@ function AppRouter() {
         <Route
           path={ROUTES.manager.incidents}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={MANAGER_ROLES}>
               <ManagerIncidentsPage />
             </ProtectedRoute>
           }
@@ -210,7 +178,7 @@ function AppRouter() {
         <Route
           path={ROUTES.manager.incidentDetail}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={MANAGER_ROLES}>
               <ManagerIncidentDetailPage />
             </ProtectedRoute>
           }
@@ -219,7 +187,7 @@ function AppRouter() {
         <Route
           path={ROUTES.manager.incidentFeedback}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={MANAGER_ROLES}>
               <ManagerFeedbackPage />
             </ProtectedRoute>
           }
@@ -228,7 +196,7 @@ function AppRouter() {
         <Route
           path={ROUTES.manager.notifications}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={MANAGER_ROLES}>
               <ManagerNotificationsPage />
             </ProtectedRoute>
           }
@@ -237,7 +205,7 @@ function AppRouter() {
         <Route
           path={ROUTES.manager.profile}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={MANAGER_ROLES}>
               <ManagerProfilePage />
             </ProtectedRoute>
           }
@@ -248,7 +216,7 @@ function AppRouter() {
         <Route
           path={ROUTES.admin.dashboard}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={ADMIN_ROLES}>
               <AdminDashboard />
             </ProtectedRoute>
           }
@@ -257,7 +225,7 @@ function AppRouter() {
         <Route
           path={ROUTES.admin.incidents}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={ADMIN_ROLES}>
               <AdminIncidentsPage />
             </ProtectedRoute>
           }
@@ -266,7 +234,7 @@ function AppRouter() {
         <Route
           path={ROUTES.admin.incidentDetail}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={ADMIN_ROLES}>
               <AdminIncidentDetailPage />
             </ProtectedRoute>
           }
@@ -275,7 +243,7 @@ function AppRouter() {
         <Route
           path={ROUTES.admin.users}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={ADMIN_ROLES}>
               <AdminUsersPage />
             </ProtectedRoute>
           }
@@ -284,7 +252,7 @@ function AppRouter() {
         <Route
           path={ROUTES.admin.categories}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={ADMIN_ROLES}>
               <AdminCategoriesPage />
             </ProtectedRoute>
           }
@@ -293,7 +261,7 @@ function AppRouter() {
         <Route
           path={ROUTES.admin.settings}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={ADMIN_ROLES}>
               <AdminSettingsPage />
             </ProtectedRoute>
           }
@@ -302,7 +270,7 @@ function AppRouter() {
         <Route
           path={ROUTES.admin.notifications}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={ADMIN_ROLES}>
               <AdminNotificationsPage />
             </ProtectedRoute>
           }
@@ -311,7 +279,7 @@ function AppRouter() {
         <Route
           path={ROUTES.admin.profile}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={ADMIN_ROLES}>
               <AdminProfilePage />
             </ProtectedRoute>
           }
