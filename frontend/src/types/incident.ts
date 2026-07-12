@@ -153,3 +153,27 @@ export interface GetManagerIncidentsParams {
 }
 
 export type GetManagerIncidentsResponse = PaginatedResponse<ManagerIncidentSummary>;
+
+export interface InternalNote {
+  id: number;
+  note: string;
+  author: string;
+  createdAt: string;
+}
+
+export interface Observation {
+  id: number;
+  authorId: number;
+  authorName: string;
+  authorRole: string;
+  message: string;
+  createdAt: string;
+}
+
+export interface GetManagerIncidentByIdResponse {
+  incident: Incident;
+  attachments: IncidentAttachment[];
+  conversationCount: number;
+  timeline: IncidentTimelineEntry[];
+  internalNotes?: InternalNote[];
+}
