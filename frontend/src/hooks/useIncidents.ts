@@ -8,7 +8,7 @@ import { queryKeys } from "../constants/queryKeys";
 import type {
   IncidentStatus,
 } from "../types/incident";
-//import { mockIncidents } from "../mocks/incidents";
+import { mockIncidents } from "../mocks/incidents";
 
 const DEFAULT_PAGE_SIZE = 5;
 
@@ -41,8 +41,8 @@ export function useMyIncidents() {
   const filteredIncidents = useMemo(() => {
     const list = Array.isArray(data?.data)
       ? data.data
-      //:mockIncidents;
-      : [];
+      :mockIncidents;
+      //: [];
 
     const value = search
       .trim()
@@ -56,15 +56,8 @@ export function useMyIncidents() {
             statusFilter;
 
       const matchesSearch =
-        incident.ticket
-          .toLowerCase()
-          .includes(value) ||
-        incident.title
-          .toLowerCase()
-          .includes(value) ||
-        incident.category
-          .toLowerCase()
-          .includes(value);
+        incident.ticket.toLowerCase().includes(value) ||
+        incident.title.toLowerCase().includes(value);
 
       return (
         matchesStatus &&

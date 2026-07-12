@@ -20,7 +20,6 @@ import { ProfileInfoItem } from "../../components/ui/molecules/ProfileInfoItem";
 import { FAQItem } from "../../components/ui/molecules/FAQItem";
 import { Tabs } from "../../components/ui/molecules";
 import { ChatBubble } from "../../components/ui/molecules/ChatBubble";
-import { SimilarIncidentBanner } from "../../components/ui/molecules/SimilarIncidentBanner";
 import { Pagination } from "../../components/ui/molecules/Pagination";
 import { IncidentList } from "../../components/ui/organisms/IncidentList";
 import { ProfileCard } from "../../components/ui/organisms/ProfileCard";
@@ -164,20 +163,17 @@ export default function StudentShowcase() {
                 <EvidenceItem
                   fileName="Complaint.pdf"
                   fileType="pdf"
-                  fileSize="1.2 MB"
                 />
 
                 <EvidenceItem
                   fileName="Evidence.jpg"
                   fileType="image"
-                  fileSize="2.8 MB"
                   onClick={() => alert("Open evidence")}
                 />
 
                 <EvidenceItem
                   fileName="Grades.xlsx"
                   fileType="xlsx"
-                  fileSize="180 KB"
                   onRemove={() => alert("Remove")}
                 />
               </div>
@@ -272,18 +268,7 @@ export default function StudentShowcase() {
               </div>
             </section> 
 
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold">
-                SimilarIncidentBanner
-              </h2>
-
-              <SimilarIncidentBanner
-                title="Similar incident detected"
-                description="A similar incident has already been reported. Please review it before submitting a new one."
-                onViewDetails={() => alert("View details")}
-                onDismiss={() => alert("Dismiss")}
-              />
-            </section>           
+                       
 
            <section className="space-y-4">
               <h2 className="text-2xl font-bold">
@@ -399,18 +384,15 @@ export default function StudentShowcase() {
                 {
                   fileName: "Complaint.pdf",
                   fileType: "pdf",
-                  fileSize: "1.2 MB",
                 },
                 {
                   fileName: "Evidence.jpg",
                   fileType: "image",
-                  fileSize: "2.8 MB",
                   onRemove: () => alert("Remove"),
                 },
                 {
                   fileName: "Grades.xlsx",
                   fileType: "xlsx",
-                  fileSize: "180 KB",
                 },
               ]}
             />
