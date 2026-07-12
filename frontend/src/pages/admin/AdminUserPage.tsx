@@ -19,7 +19,7 @@ import { useAuthStore } from "../../store/authStore";
 import { useUnreadNotificationsCount } from "../../hooks/useUnreadNotificationsCount";
 
 import {
-  LayoutDashboard, FileText, Users, Tags, Settings, Bell, User, LogOut, Pencil, Trash2,
+  LayoutDashboard, FileText, Users, Tags, Settings, User, LogOut, Pencil, Trash2,
 } from "../../components/ui/icons";
 
 import { ROUTES } from "../../constants/routes";
@@ -39,7 +39,6 @@ const ADMIN_SIDEBAR = (navigate: ReturnType<typeof useNavigate>, logout: () => v
     { label: "Users", icon: Users, active: true, onClick: () => navigate(ROUTES.admin.users) },
     { label: "Categories", icon: Tags, onClick: () => navigate(ROUTES.admin.categories) },
     { label: "Settings", icon: Settings, onClick: () => navigate(ROUTES.admin.settings) },
-    { label: "Notifications", icon: Bell, onClick: () => navigate(ROUTES.admin.notifications) },
     { label: "Profile", icon: User, onClick: () => navigate(ROUTES.admin.profile) },
   ],
   bottomItems: [{ label: "Logout", icon: LogOut, onClick: logout }],
