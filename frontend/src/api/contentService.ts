@@ -4,12 +4,12 @@ import type { GetHelpResponse, GetAboutResponse } from "../types/content";
 
 export const contentService = {
   async getHelp(): Promise<GetHelpResponse> {
-    const response = await api.get<GetHelpResponse>("/help");
+    const response = await api.get<GetHelpResponse>("/api/v1/help");
     return response.data;
   },
 
   async getAbout(): Promise<GetAboutResponse> {
-    const response = await api.get<GetAboutResponse>("/about");
+    const response = await api.get<GetAboutResponse>("/api/v1/about");
     return response.data;
   },
 };

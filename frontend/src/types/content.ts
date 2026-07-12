@@ -1,19 +1,28 @@
-export interface FAQ {
+export interface FAQItem {
   id: number;
   question: string;
   answer: string;
+  order: number;
 }
 
 export interface GetHelpResponse {
-  faqs: FAQ[];
+  pageTitle: string;
+  pageDescription: string;
   supportEmail: string;
+  items: FAQItem[];
+}
+
+export interface AboutContact {
+  email: string;
+  website: string;
 }
 
 export interface GetAboutResponse {
-  appName: string;
+  applicationName: string;
   version: string;
   description: string;
   institution: string;
-  contactEmail: string;
+  contact: AboutContact;
   developedBy: string;
+  copyright: string;
 }

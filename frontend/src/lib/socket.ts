@@ -9,7 +9,7 @@ export function getSocket(): Socket {
     const { accessToken } = useAuthStore.getState();
 
     socket = io(
-      import.meta.env.VITE_SOCKET_URL ?? "http://localhost:9999",
+      import.meta.env.VITE_SOCKET_URL ?? "http://localhost:3000",
       {
         autoConnect: false,
         query: { token: accessToken ?? "" },
