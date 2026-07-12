@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { compressImages } from "../../utils/compressImage";
+
 import {
   useForm,
   useWatch,
@@ -140,15 +142,16 @@ export default function CreateIncidentPage() {
     findSimilarAsync,
   ]);
 
-  const handleFiles = (
+  const handleFiles = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
 
-    const newFiles =
-      Array.from(event.target.files ?? []);
+    const newFiles = Array.from(event.target.files ?? []);
+    const compressedFiles = await compressImages(newFiles);
 
     const updatedFiles = [
       ...selectedFiles,
+      ...compressedFiles,
       ...newFiles,
     ];
 
@@ -161,27 +164,24 @@ export default function CreateIncidentPage() {
     event.target.value = "";
   };
 
-  const handleDrop = (
+  const handleDrop = async (
     event: React.DragEvent<HTMLDivElement>
   ) => {
+    event.preventDefault();
 
-  event.preventDefault();
+    const newFiles = Array.from(event.dataTransfer.files);
+    const compressedFiles = await compressImages(newFiles);
 
-  const newFiles = Array.from(
-    event.dataTransfer.files
-  );
+    const updatedFiles = [
+      ...selectedFiles,
+      ...compressedFiles,
+    ];
 
-  const updatedFiles = [
-    ...selectedFiles,
-    ...newFiles,
-  ];
+    setSelectedFiles(updatedFiles);
 
-  setSelectedFiles(updatedFiles);
-
-  setValue("files", updatedFiles, {
-    shouldValidate: true,
-  });
-
+    setValue("files", updatedFiles, {
+      shouldValidate: true,
+    });
   };
 
   const handleDragOver = (
@@ -270,9 +270,9 @@ export default function CreateIncidentPage() {
         incident={
           incidentDetail?.incident
             ? {
-                ticket: `INC-${incidentDetail.incident.id}`, // no viene del back en este endpoint
+                ticket: `INC-${incidentDetail.incident.id}`,
                 title: incidentDetail.incident.title,
-                date: incidentDetail.incident.updatedAt,      // era createdAt, ahora es updatedAt
+                date: incidentDetail.incident.updatedAt,
                 status: incidentDetail.incident.status,
                 resolution: incidentDetail.incident.statusReason ?? "No resolution yet.",
               }
