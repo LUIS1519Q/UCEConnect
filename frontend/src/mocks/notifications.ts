@@ -2,6 +2,33 @@ import type { AppNotification } from "../types/notification";
 
 export const mockNotifications: AppNotification[] = [
   {
+  id: 16,
+  type: "user_registered",
+  incidentId: 0,
+  ticket: "",
+  title: "New user registered: mjperez@uce.edu.ec",
+  read: false,
+  createdAt: "2026-07-10T15:00:00Z",
+},
+{
+  id: 17,
+  type: "category_updated",
+  incidentId: 0,
+  ticket: "",
+  title: "Category updated: Infrastructure",
+  read: false,
+  createdAt: "2026-07-09T12:00:00Z",
+},
+{
+  id: 18,
+  type: "settings_changed",
+  incidentId: 0,
+  ticket: "",
+  title: "System settings changed: Max file size updated",
+  read: true,
+  createdAt: "2026-07-08T10:00:00Z",
+},
+  {
     id: 15,
     type: "student_reply",
     incidentId: 5,
