@@ -1,5 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { userService } from "../api/userService";
+import { queryKeys } from "../constants/queryKeys";
+
 import type { ManageUserRequest } from "../types/user";
 
 export function useManageUser() {
@@ -7,9 +10,9 @@ export function useManageUser() {
 
   const mutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: ManageUserRequest }) =>
-      userService.manageUser(id, data).catch(() => ({ message: "ok", user: { id, isActive: data.isActive ?? true, role: data.role ?? "student" } })),
+      userService.manageUser(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.users.all });
     },
   });
 
@@ -17,5 +20,7 @@ export function useManageUser() {
     manageUser: mutation.mutate,
     manageUserAsync: mutation.mutateAsync,
     isPending: mutation.isPending,
+    isError: mutation.isError,
+    error: mutation.error,
   };
 }
