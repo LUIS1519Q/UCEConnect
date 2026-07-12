@@ -48,4 +48,5 @@ export {
   BarChart3,
   LayoutDashboard,
   Tags,
+  Pencil,
 } from "lucide-react";
