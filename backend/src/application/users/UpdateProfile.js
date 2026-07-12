@@ -38,7 +38,17 @@ class UpdateProfile {
     }
 
     if (careerId !== undefined) {
-      const careers = await this.userRepo.findCareersByFaculty(facultyId);
+      let targetFacultyId = facultyId;
+
+      if (targetFacultyId === undefined) {
+        const career = await this.userRepo.findCareerById(careerId);
+        if (!career) {
+          throw new Error('Selected career does not exist.');
+        }
+        targetFacultyId = career.faculty_id;
+      }
+
+      const careers = await this.userRepo.findCareersByFaculty(targetFacultyId);
       const careerExists = careers.some((career) => career.id === careerId);
       if (!careerExists) {
         throw new Error('Selected career does not belong to the selected faculty.');
