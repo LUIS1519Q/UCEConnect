@@ -60,7 +60,7 @@ async function register(req, res) {
     if (error.message.includes('institutional')) {
       return res.status(400).json({ message: error.message, errorCode: 'INVALID_EMAIL_DOMAIN' });
     }
-    res.status(500).json({ message: error.message, errorCode: 'INTERNAL_ERROR' });
+    res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
 
@@ -82,7 +82,7 @@ async function verifyCodeHandler(req, res) {
     if (error.message.includes('Invalid verification')) {
       return res.status(400).json({ message: error.message, errorCode: 'INVALID_CODE' });
     }
-    res.status(500).json({ message: error.message, errorCode: 'INTERNAL_ERROR' });
+    res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
 
@@ -101,7 +101,7 @@ async function login(req, res) {
     if (error.message.includes('deactivated')) {
       return res.status(403).json({ message: error.message, errorCode: 'USER_DISABLED' });
     }
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
 
@@ -210,7 +210,7 @@ async function resendCode(req, res) {
     if (error.message.includes('already verified')) {
       return res.status(400).json({ message: error.message, errorCode: 'ALREADY_VERIFIED' });
     }
-    res.status(500).json({ message: error.message, errorCode: 'INTERNAL_ERROR' });
+    res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
 
@@ -226,7 +226,7 @@ async function forgotPasswordHandler(req, res) {
     if (error.message.includes('deactivated')) {
       return res.status(400).json({ message: error.message, errorCode: 'USER_DISABLED' });
     }
-    res.status(500).json({ message: error.message, errorCode: 'INTERNAL_ERROR' });
+    res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
 
@@ -248,7 +248,7 @@ async function verifyResetCodeHandler(req, res) {
     if (error.message.includes('Invalid verification')) {
       return res.status(400).json({ message: error.message, errorCode: 'INVALID_CODE' });
     }
-    res.status(500).json({ message: error.message, errorCode: 'INTERNAL_ERROR' });
+    res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
 
@@ -264,7 +264,7 @@ async function resendResetCodeHandler(req, res) {
     if (error.message.includes('deactivated')) {
       return res.status(400).json({ message: error.message, errorCode: 'USER_DISABLED' });
     }
-    res.status(500).json({ message: error.message, errorCode: 'INTERNAL_ERROR' });
+    res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
 
@@ -289,7 +289,7 @@ async function resetPasswordHandler(req, res) {
     if (error.message.includes('different from')) {
       return res.status(400).json({ message: error.message, errorCode: 'SAME_PASSWORD' });
     }
-    res.status(500).json({ message: error.message, errorCode: 'INTERNAL_ERROR' });
+    res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
 
@@ -328,7 +328,7 @@ async function microsoftCallback(req, res) {
     if (error.message.includes('disabled')) {
       return res.status(400).json({ message: error.message, errorCode: 'USER_DISABLED' });
     }
-    res.status(500).json({ message: error.message, errorCode: 'INTERNAL_ERROR' });
+    res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
 

@@ -17,7 +17,7 @@ async function getHelp(req, res) {
     });
   } catch (err) {
     logger.error(`Error in getHelp: ${err.message}`);
-    return res.status(500).json({ message: 'Internal server error.' });
+    return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
 
@@ -39,7 +39,7 @@ async function getAbout(req, res) {
     });
   } catch (err) {
     logger.error(`Error in getAbout: ${err.message}`);
-    return res.status(500).json({ message: 'Internal server error.' });
+    return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
 

@@ -47,7 +47,7 @@ const mapIncidentError = (err, res, logger, context) => {
     return res.status(404).json({ message: err.message, errorCode: 'INCIDENT_NOT_FOUND' });
   if (err.message.includes('permission'))
     return res.status(403).json({ message: err.message, errorCode: 'INSUFFICIENT_PERMISSION' });
-  if (err.message.includes('open') || err.message.includes('transition'))
+  if (err.message.includes('open') || err.message.includes('transition') || err.message.includes('closed'))
     return res.status(400).json({ message: err.message, errorCode: 'BUSINESS_RULE_VIOLATION' });
   if (err.message.includes('not allowed') || err.message.includes('exceed') || err.message.includes('does not exist'))
     return res.status(400).json({ message: err.message, errorCode: 'VALIDATION_ERROR' });
@@ -71,8 +71,7 @@ async function create(req, res) {
     });
     return res.status(201).json({ message: 'Incident created successfully.', incident });
   } catch (err) {
-    logger.error(`Error creating incident: ${err.message}`);
-    return res.status(400).json({ message: err.message, errorCode: 'VALIDATION_ERROR' });
+    return mapIncidentError(err, res, logger, 'create');
   }
 }
 
@@ -90,7 +89,7 @@ async function list(req, res) {
     return res.status(200).json(result);
   } catch (err) {
     logger.error(`Error listing incidents: ${err.message}`);
-    return res.status(500).json({ message: err.message, errorCode: 'INTERNAL_ERROR' });
+    return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
   }
 }
 
@@ -205,6 +204,7 @@ async function findSimilar(req, res) {
     const results = await new FindSimilarIncidents(incidentRepo, logger).execute({
       title: req.body.title,
       description: req.body.description,
+      userId: req.user.id,
     });
     return res.status(200).json({ data: results });
   } catch (err) {

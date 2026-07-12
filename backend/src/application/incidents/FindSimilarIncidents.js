@@ -8,18 +8,14 @@ class FindSimilarIncidents {
     this.logger = logger;
   }
 
-  async execute({ title, description }) {
-    const [openResult, inProgressResult] = await Promise.all([
-      this.incidentRepo.findAll({ status: 'open', page: 1, limit: 100, paginate: true }),
-      this.incidentRepo.findAll({ status: 'in_progress', page: 1, limit: 100, paginate: true }),
-    ]);
-    const candidates = [...openResult.data, ...inProgressResult.data];
+  async execute({ title, description, userId }) {
+    const candidates = await this.incidentRepo.findSimilar(userId);
 
     const newWords = [...extractWords(title), ...extractWords(description)];
 
     const scored = candidates
       .map((incident) => {
-        const existingWords = [...extractWords(incident.title), ...extractWords(incident.description)];
+        const existingWords = extractWords(incident.title);
         if (newWords.length === 0 || existingWords.length === 0) return null;
         const matches = newWords.filter((word) => existingWords.includes(word)).length;
         const score = matches / newWords.length;
@@ -33,10 +29,7 @@ class FindSimilarIncidents {
 
     return scored.map(({ incident }) => ({
       id: incident.id,
-      ticket: incident.ticket,
       title: incident.title,
-      description: incident.description,
-      category: incident.categoryName,
       status: incident.status,
     }));
   }
