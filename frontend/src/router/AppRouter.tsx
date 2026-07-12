@@ -26,12 +26,11 @@ import HelpPage from "../pages/student/HelpPage";
 import AboutPage from "../pages/student/AboutPage";
 
 import ManagerDashboard from "../pages/manager/MangerDashboardPage";
-import AdminDashboard from "../pages/dashboard/AdminDashboard";
-
 import ManagerIncidentsPage from "../pages/manager/ManagerIncidentsPage";
 import ManagerIncidentDetailPage from "../pages/manager/ManagerIncidentDetailPage";
+import ManagerFeedbackPage from "../pages/manager/ManagerFeedbackPage";
 
-
+import AdminDashboard from "../pages/dashboard/AdminDashboard";
 
 function AppRouter() {
   return (
@@ -204,6 +203,15 @@ function AppRouter() {
           element={
             <ProtectedRoute>
               <ManagerIncidentDetailPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.manager.incidentFeedback}
+          element={
+            <ProtectedRoute>
+              <ManagerFeedbackPage />
             </ProtectedRoute>
           }
         />
