@@ -27,6 +27,8 @@ import {
 
 import { ROUTES } from "../../constants/routes";
 
+import { useUnreadNotificationsCount } from "../../hooks/useUnreadNotificationsCount";
+
 export default function ManagerProfilePage() {
   const navigate = useNavigate();
   const { logout } = useLogout();
@@ -65,11 +67,13 @@ export default function ManagerProfilePage() {
     await updateAvatarAsync(compressedFile);
   };
 
+  const unreadCount = useUnreadNotificationsCount();
+
   return (
     <AppLayout
       title="Profile"
       studentName={`${user?.firstName ?? ""} ${user?.lastName ?? ""}`}
-      notificationCount={0}
+      notificationCount={unreadCount}
       onProfileClick={() => navigate(ROUTES.manager.profile)}
       onNotificationsClick={() => navigate(ROUTES.manager.notifications)}
       sidebarItems={[
