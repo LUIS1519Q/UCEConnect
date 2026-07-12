@@ -13,7 +13,7 @@ describe("StatusBadge", () => {
   });
 
   it("renders in progress status", () => {
-    render(<StatusBadge status="inProgress" />);
+    render(<StatusBadge status="in_progress" />);
 
     expect(
       screen.getByText("In Progress")
@@ -33,6 +33,14 @@ describe("StatusBadge", () => {
 
     expect(
       screen.getByText("Rejected")
+    ).toBeInTheDocument();
+  });
+
+  it("renders cancelled status", () => {
+    render(<StatusBadge status="cancelled" />);
+
+    expect(
+      screen.getByText("Cancelled")
     ).toBeInTheDocument();
   });
 });

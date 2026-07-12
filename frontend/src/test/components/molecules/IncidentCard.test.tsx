@@ -8,27 +8,27 @@ describe("IncidentCard", () => {
   it("renders incident information", () => {
     render(
       <IncidentCard
+        id={1}
+        ticket="INC-0001"
         title="Internet Issue"
-        location="Building A"
+        category="Technology"
         status="open"
         createdAt="Jun 29, 2026"
       />
     );
 
-    expect(
-      screen.getByText("Internet Issue")
-    ).toBeInTheDocument();
+  expect(screen.getByText("Internet Issue")).toBeInTheDocument();
 
-    expect(
-      screen.getByText("Building A")
-    ).toBeInTheDocument();
+  expect(screen.getByText("Technology")).toBeInTheDocument();
   });
 
   it("renders the status badge", () => {
     render(
       <IncidentCard
+        id={1}
+        ticket="INC-0001"
         title="Internet Issue"
-        location="Building A"
+        category="Technology"
         status="resolved"
         createdAt="Jun 29, 2026"
       />
@@ -45,8 +45,10 @@ describe("IncidentCard", () => {
 
     render(
       <IncidentCard
+        id={1}
+        ticket="INC-0001"
         title="Internet Issue"
-        location="Building A"
+        category="Technology"
         status="open"
         createdAt="Jun 29, 2026"
         onClick={onClick}
@@ -60,5 +62,22 @@ describe("IncidentCard", () => {
     );
 
     expect(onClick).toHaveBeenCalledOnce();
+  });
+
+  it("renders incident ticket", () => {
+    render(
+      <IncidentCard
+        id={1}
+        ticket="INC-0001"
+        title="Projector not working"
+        category="Academic"
+        status="open"
+        createdAt="05 Jul 2026"
+      />
+    );
+
+    expect(
+      screen.getByText("INC-0001")
+    ).toBeInTheDocument();
   });
 });

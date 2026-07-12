@@ -28,10 +28,12 @@ export function Button({
   size = "md",
   className = "",
   children,
+  type = "button",
   ...props
 }: ButtonProps) {
   return (
     <button
+      type={type}
       className={`
         inline-flex
         items-center

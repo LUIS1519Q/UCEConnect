@@ -1,4 +1,9 @@
-import { FileText } from "../../icons";
+import {
+  File,
+  FileImage,
+  FileSpreadsheet,
+  FileText,
+} from "../../icons";
 
 import { cn } from "../../../../utils/cn";
 
@@ -6,9 +11,50 @@ import type { FileChipProps } from "./FileChip.types";
 
 export default function FileChip({
   fileName,
+  fileType = "other",
   className = "",
   ...props
 }: FileChipProps) {
+
+  const renderIcon = () => {
+    switch (fileType) {
+      case "image":
+        return (
+          <FileImage
+            size={18}
+            className="text-primary"
+          />
+        );
+
+      case "pdf":
+      case "doc":
+      case "docx":
+        return (
+          <FileText
+            size={18}
+            className="text-danger"
+          />
+        );
+
+      case "xls":
+      case "xlsx":
+        return (
+          <FileSpreadsheet
+            size={18}
+            className="text-success"
+          />
+        );
+
+      default:
+        return (
+          <File
+            size={18}
+            className="text-textSecondary"
+          />
+        );
+    }
+  };
+
   return (
     <div
       className={cn(
@@ -30,10 +76,7 @@ export default function FileChip({
       )}
       {...props}
     >
-      <FileText
-        size={18}
-        className="text-primary"
-      />
+      {renderIcon()}
 
       <span className="truncate">
         {fileName}

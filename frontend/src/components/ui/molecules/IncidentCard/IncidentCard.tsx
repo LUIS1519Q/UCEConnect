@@ -4,8 +4,9 @@ import { StatusBadge } from "../../atoms/StatusBadge";
 import type { IncidentCardProps } from "./IncidentCard.types";
 
 export default function IncidentCard({
+  ticket,
   title,
-  location,
+  category,
   status,
   createdAt,
   onClick,
@@ -23,12 +24,16 @@ export default function IncidentCard({
     >
       <div className="mb-4 flex items-start justify-between gap-4">
         <div>
+          <p className="mb-1 text-xs font-medium uppercase tracking-wide text-textSecondary">
+            {ticket}
+          </p>
+
           <h3 className="text-lg font-semibold text-textPrimary">
             {title}
           </h3>
 
           <p className="text-sm text-textSecondary">
-            {location}
+            {category}
           </p>
         </div>
 
