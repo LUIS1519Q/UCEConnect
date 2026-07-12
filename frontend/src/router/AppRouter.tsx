@@ -33,6 +33,7 @@ import ManagerNotificationsPage from "../pages/manager/ManagerNotificationsPage"
 import ManagerProfilePage from "../pages/manager/ManagerProfilePage";
 
 import AdminDashboard from "../pages/admin/AdminDashboardPage";
+import AdminIncidentsPage from "../pages/admin/AdminIncidentsPage";
 
 function AppRouter() {
   return (
@@ -246,6 +247,16 @@ function AppRouter() {
             </ProtectedRoute>
           }
         />
+
+      <Route
+          path={ROUTES.admin.incidents}
+          element={
+            <ProtectedRoute>
+              <AdminIncidentsPage />
+            </ProtectedRoute>
+          }
+        />
+
       </Routes>
     </BrowserRouter>
   );
