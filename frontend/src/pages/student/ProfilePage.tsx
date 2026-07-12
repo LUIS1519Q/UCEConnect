@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { compressImage } from "../../utils/compressImage";
+
 import { AppLayout } from "../../components/ui/templates/AppLayout";
 import { Avatar } from "../../components/ui/atoms/Avatar";
 import { Button } from "../../components/ui/atoms/Button";
@@ -68,7 +70,9 @@ export default function ProfilePage() {
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    await updateAvatarAsync(file);
+
+    const compressedFile = await compressImage(file, { maxWidth: 512, maxHeight: 512 });
+    await updateAvatarAsync(compressedFile);
   };
 
   return (
