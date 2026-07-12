@@ -3,3 +3,8 @@ export * from "./RegisterForm";
 export * from "./ForgotPasswordForm";
 export * from "./VerifyCodeForm";
 export * from "./ResetPasswordForm";
+export * from "./IncidentList";
+export * from "./ProfileCard";
+export * from "./NotificationList";
+export * from "./FAQSection";
+export * from "./EvidenceSection";
