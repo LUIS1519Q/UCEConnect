@@ -16,7 +16,7 @@ import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage";
 import ResetPasswordPage from "../pages/auth/ResetPasswordPage";
 
 import MyIncidentsPage from "../pages/student/MyIncidentsPage";
-import CreateIncidentPage from "../pages/incidents/CreateIncidentPage";
+import CreateIncidentPage from "../pages/student/CreateIncidentPage";
 import EditIncidentPage from "../pages/student/EditIncidentPage";
 import IncidentDetailPage from "../pages/student/IncidentDetailPage";
 import AISuggestionPage from "../pages/student/AISuggestionPage";

@@ -10,5 +10,4 @@ export * from "./ProfileInfoItem";
 export * from "./FAQItem";
 export * from "./Tabs";
 export * from "./ChatBubble";
-export * from "./SimilarIncidentBanner";
 export * from "./Pagination";

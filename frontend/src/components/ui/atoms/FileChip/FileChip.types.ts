@@ -6,7 +6,11 @@ export type FileType =
   | "docx"
   | "xls"
   | "xlsx"
+  | "ppt"
+  | "pptx"
   | "image"
+  | "video"
+  | "zip"
   | "other";
 
 export interface FileChipProps

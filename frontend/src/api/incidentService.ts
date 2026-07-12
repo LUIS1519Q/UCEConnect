@@ -3,8 +3,14 @@ import api from "./client";
 import { API_ENDPOINTS } from "../constants/apiEndpoints";
 
 import type {
+  CreateIncidentRequest,
+  CreateIncidentResponse,
   GetIncidentsParams,
   GetIncidentsResponse,
+  SimilarIncidentRequest,
+  SimilarIncidentResponse,
+  GetSimilarIncidentResponse,
+  IncidentAttachment,
 } from "../types/incident";
 
 export const incidentService = {
@@ -46,17 +52,68 @@ export const incidentService = {
   },
 
 
-  async createIncident(data: {
-    title: string;
-    description: string;
-    categoryId: number;
-  }) {
-    const response = await api.post(
-      "/api/v1/incidents",
-      data
-    );
+  async createIncident(
+    data: CreateIncidentRequest
+  ): Promise<CreateIncidentResponse> {
+    const response =
+      await api.post<CreateIncidentResponse>(
+        API_ENDPOINTS.incidents.base,
+        data
+      );
 
     return response.data;
+  },
+
+  async findSimilarIncident(
+    data: SimilarIncidentRequest
+  ): Promise<SimilarIncidentResponse> {
+
+    const response =
+      await api.post<SimilarIncidentResponse>(
+        `${API_ENDPOINTS.incidents.base}/similar`,
+        data
+      );
+
+    return response.data;
+  },
+
+  async getSimilarIncident(
+    incidentId: number
+  ): Promise<GetSimilarIncidentResponse> {
+
+    const response =
+      await api.get<GetSimilarIncidentResponse>(
+        `${API_ENDPOINTS.incidents.base}/${incidentId}/similar`
+      );
+
+    return response.data;
+  },
+
+  async uploadAttachments(
+    incidentId: number,
+    files: File[]
+  ): Promise<IncidentAttachment[]> {
+
+    const formData = new FormData();
+
+    files.forEach((file) => {
+      formData.append("files", file);
+    });
+
+    const response = await api.post<{
+      message: string;
+      attachments: IncidentAttachment[];
+    }>(
+      `${API_ENDPOINTS.incidents.base}/${incidentId}/attachments`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    return response.data.attachments;
   },
 
   async getIncidentById(id: string) {

@@ -4,4 +4,5 @@ export interface AppHeaderProps {
   notificationCount?: number;
   onNotificationsClick?: () => void;
   onProfileClick?: () => void;
+  onMenuClick?: () => void;
 }

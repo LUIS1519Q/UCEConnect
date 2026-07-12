@@ -6,9 +6,9 @@ import { ROUTES } from "../constants/routes";
 import { useAuthStore } from "../store/authStore";
 
 const DASHBOARD_ROUTES = {
-  student: ROUTES.dashboard.student,
-  manager: ROUTES.dashboard.manager,
-  admin: ROUTES.dashboard.admin,
+  student: ROUTES.student.myIncidents,
+  manager: ROUTES.manager.incidents,
+  admin: ROUTES.admin.incidents,
 } as const;
 
 export function useMicrosoftCallback() {
