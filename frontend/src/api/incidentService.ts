@@ -11,6 +11,7 @@ import type {
   SimilarIncidentResponse,
   GetSimilarIncidentResponse,
   IncidentAttachment,
+  GetIncidentByIdResponse,
 } from "../types/incident";
 
 export const incidentService = {
@@ -116,11 +117,10 @@ export const incidentService = {
     return response.data.attachments;
   },
 
-  async getIncidentById(id: string) {
-    const response = await api.get(
+  async getIncidentById(id: string): Promise<GetIncidentByIdResponse> {
+    const response = await api.get<GetIncidentByIdResponse>(
       `/api/v1/incidents/${id}`
     );
-
     return response.data;
   },
 

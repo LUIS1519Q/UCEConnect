@@ -177,10 +177,7 @@ export default function MyIncidentsPage() {
                 <IncidentList
                   incidents={incidents.map((incident) => ({
                     ...incident,
-                    onClick: () =>
-                      navigate(
-                        `${ROUTES.student.incidentDetail}/${incident.id}`
-                      ),
+                    onClick: () => navigate(`/incidents/${incident.id}`),
                   }))}
                 />
               </div>
