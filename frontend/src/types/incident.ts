@@ -133,3 +133,23 @@ export interface GetIncidentByIdResponse {
   conversationCount: number;
   timeline: IncidentTimelineEntry[];
 }
+
+export interface ManagerIncidentSummary {
+  id: number;
+  ticket: string;
+  title: string;
+  student: string;
+  category: string;
+  status: IncidentStatus;
+  createdAt: string;
+}
+
+export interface GetManagerIncidentsParams {
+  status?: IncidentStatus;
+  categoryId?: number;
+  page?: number;
+  limit?: number;
+  search?: string;
+}
+
+export type GetManagerIncidentsResponse = PaginatedResponse<ManagerIncidentSummary>;
