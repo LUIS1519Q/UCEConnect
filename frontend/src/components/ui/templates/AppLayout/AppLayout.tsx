@@ -2,6 +2,10 @@ import { useState } from "react";
 
 import { AppHeader } from "../../organisms/AppHeader";
 import { AppSidebar } from "../../organisms/AppSidebar";
+import { MobileBottomNav } from "../../organisms/MobileBottomNav";
+import { MobileMoreMenu } from "../../organisms/MobileMoreMenu";
+
+import { isMobileApp } from "../../../../utils/plataform";
 
 import type { AppLayoutProps } from "./AppLayout.types";
 
@@ -13,12 +17,49 @@ export default function AppLayout({
   primaryAction,
   sidebarItems,
   bottomItems,
+  mobileTabItems,
+  mobileMoreMenuItems,
   onNotificationsClick,
   onProfileClick,
   isNotificationsActive,
 }: AppLayoutProps) {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
+
+  if (isMobileApp()) {
+    return (
+      <div className="flex h-screen flex-col overflow-hidden bg-background">
+        <AppHeader
+          variant="mobile"
+          studentName={studentName}
+          notificationCount={notificationCount}
+          onNotificationsClick={onNotificationsClick}
+          onMoreClick={() => setMoreMenuOpen((prev) => !prev)}
+          isNotificationsActive={isNotificationsActive}
+        />
+
+        {moreMenuOpen && (
+          <MobileMoreMenu
+            items={mobileMoreMenuItems ?? []}
+            onClose={() => setMoreMenuOpen(false)}
+          />
+        )}
+
+        <main className="flex min-h-0 flex-1 flex-col overflow-y-auto bg-background p-4">
+          <h1 className="mb-4 text-xl font-semibold text-textPrimary">
+            {title}
+          </h1>
+          {children}
+        </main>
+
+        <MobileBottomNav
+          items={mobileTabItems ?? []}
+          primaryAction={primaryAction}
+        />
+      </div>
+    );
+  }
 
   return (
     <div
