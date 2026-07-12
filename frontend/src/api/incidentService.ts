@@ -151,4 +151,48 @@ export const incidentService = {
 
       return response.data;
     },
+
+    async updateStatus(
+      id: string,
+      status: string,
+      note?: string
+    ): Promise<{ message: string; incident: { id: number; status: string } }> {
+      const response = await api.patch(
+        `/api/v1/incidents/${id}/status`,
+        { status, note }
+      );
+      return response.data;
+    },
+
+    async correctCategory(
+      id: string,
+      categoryId: number
+    ): Promise<{ message: string; incident: { id: number; category: string } }> {
+      const response = await api.patch(
+        `/api/v1/incidents/${id}/category`,
+        { categoryId }
+      );
+      return response.data;
+    },
+
+    async addInternalNote(
+      id: string,
+      note: string
+    ): Promise<{ message: string; note: { id: number; note: string; author: string; createdAt: string } }> {
+      const response = await api.post(
+        `/api/v1/incidents/${id}/internal-notes`,
+        { note }
+      );
+      return response.data;
+    },
+
+    async getObservations(
+      id: string
+    ): Promise<{ observations: { id: number; authorId: number; authorName: string; authorRole: string; message: string; createdAt: string }[] }> {
+      const response = await api.get(
+        `/api/v1/incidents/${id}/observations`
+      );
+      return response.data;
+    },
+
 };
