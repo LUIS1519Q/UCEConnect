@@ -8,6 +8,11 @@ import { EvidenceItem } from "../../components/ui/molecules/EvidenceItem";
 import { NotificationItem } from "../../components/ui/molecules/NotificationItem";
 import { ProfileInfoItem } from "../../components/ui/molecules/ProfileInfoItem";
 import { FAQItem } from "../../components/ui/molecules/FAQItem";
+import { IncidentList } from "../../components/ui/organisms/IncidentList";
+import { ProfileCard } from "../../components/ui/organisms/ProfileCard";
+import { NotificationList } from "../../components/ui/organisms/NotificationList";
+import { FAQSection } from "../../components/ui/organisms/FAQSection";
+import { EvidenceSection } from "../../components/ui/organisms/EvidenceSection";
 
 export default function StudentShowcase() {
   return (
@@ -166,11 +171,99 @@ export default function StudentShowcase() {
             Organisms
           </h2>
 
-          <div className="mt-6">
-            <p className="text-textSecondary">
-              Próximamente...
-            </p>
+          <div>
+            <IncidentList
+              incidents={[
+                {
+                  title: "Internet connection issue",
+                  location: "Building A - Lab 3",
+                  status: "open",
+                  createdAt: "Jun 29, 2026",
+                },
+                {
+                  title: "Projector not working",
+                  location: "Building B - Room 201",
+                  status: "inProgress",
+                  createdAt: "Jun 28, 2026",
+                },
+              ]}
+            />
           </div>
+
+          <div>
+            <h2 className="mb-4 text-xl font-semibold text-textPrimary">
+              Profile Card
+            </h2>
+
+            <ProfileCard
+              name="John Doe"
+              email="john.doe@uce.edu.ec"
+              studentId="2023123456"
+              career="Software Engineering"
+            />
+          </div>
+
+          <div>
+            <h2 className="mb-4 text-xl font-semibold text-textPrimary">
+              Notification List
+            </h2>
+
+            <NotificationList
+              notifications={[
+                {
+                  title: "Incident Updated",
+                  message: "Your incident is now in progress.",
+                  date: "2 hours ago",
+                  unread: true,
+                },
+                {
+                  title: "Incident Resolved",
+                  message: "Your incident has been resolved.",
+                  date: "Yesterday",
+                },
+              ]}
+            />
+          </div>
+
+          <div>
+            <h2 className="mb-4 text-xl font-semibold text-textPrimary">
+              FAQ Section
+            </h2>
+
+            <FAQSection
+              faqs={[
+                {
+                  question: "How do I create an incident?",
+                  answer:
+                    "Go to Create Incident, complete the form and submit it.",
+                },
+                {
+                  question: "Can I edit an incident?",
+                  answer:
+                    "Yes, while it has not been resolved.",
+                },
+              ]}
+            />
+          </div>
+
+          <div>
+            <h2 className="mb-4 text-xl font-semibold text-textPrimary">
+              Evidence Section
+            </h2>
+
+            <EvidenceSection
+              files={[
+                {
+                  fileName: "incident-photo.jpg",
+                },
+                {
+                  fileName: "report.pdf",
+                },
+              ]}
+              onAddFile={() => {}}
+            />
+          </div>
+
         </section>
 
         {/* ===================== TEMPLATES ===================== */}
