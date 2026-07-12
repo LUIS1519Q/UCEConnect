@@ -27,6 +27,7 @@ import {
 import { useCreateIncident } from "../../hooks/useCreateIncident";
 import { useSimilarIncident } from "../../hooks/useSimilarIncident";
 import { useSimilarIncidentDetail } from "../../hooks/useSimilarIncidentDetail";
+import { useUnreadNotificationsCount } from "../../hooks/useUnreadNotificationsCount";
 
 import { ROUTES } from "../../constants/routes";
 
@@ -86,7 +87,7 @@ export default function CreateIncidentPage() {
   } = useSimilarIncidentDetail(
     selectedIncidentId
   );
-console.log("incidentDetail:", incidentDetail);
+
   const {
     register,
     handleSubmit,
@@ -161,8 +162,8 @@ console.log("incidentDetail:", incidentDetail);
   };
 
   const handleDrop = (
-  event: React.DragEvent<HTMLDivElement>
-) => {
+    event: React.DragEvent<HTMLDivElement>
+  ) => {
 
   event.preventDefault();
 
@@ -215,12 +216,14 @@ console.log("incidentDetail:", incidentDetail);
 
   const firstSimilar = similarIncidents?.similarIncidents[0];
 
+  const unreadCount = useUnreadNotificationsCount();
+
   return (
 
     <AppLayout
       title="Create Incident"
       studentName={`${user?.firstName ?? ""} ${user?.lastName ?? ""}`}
-      notificationCount={0}
+      notificationCount={unreadCount}
       onProfileClick={() => navigate(ROUTES.student.profile)}
       onNotificationsClick={() => navigate(ROUTES.student.notifications)}
       primaryAction={{

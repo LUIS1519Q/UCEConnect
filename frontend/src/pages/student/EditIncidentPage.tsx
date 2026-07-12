@@ -1,12 +1,42 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 
-import { incidentService } from "../../api/incidentService";
-import DashboardLayout from "../../components/ui/templates/DashboardLayout";
+import {
+  FilePlus2,
+  FileText,
+  User,
+  CircleHelp,
+  Info,
+  LogOut,
+} from "../../components/ui/icons";
 
-function EditIncidentPage() {
-  const { id } = useParams();
+import { AppLayout } from "../../components/ui/templates/AppLayout";
+import { Button } from "../../components/ui/atoms/Button";
+import { TextInput } from "../../components/ui/atoms/TextInput";
+import { Textarea } from "../../components/ui/atoms/Textarea";
+import { EvidenceSection } from "../../components/ui/organisms/EvidenceSection";
+import { LoadingState } from "../../components/ui/organisms/LoadingState";
+import { ErrorState } from "../../components/ui/organisms/ErrorState";
+
+import { useIncidentDetail } from "../../hooks/useIncidentDetail";
+import { useUpdateIncident } from "../../hooks/useUpdateIncident";
+import { useUploadAttachments } from "../../hooks/useUploadAttachments";
+import { useUnreadNotificationsCount } from "../../hooks/useUnreadNotificationsCount";
+import { useLogout } from "../../hooks/useLogout";
+import { useAuthStore } from "../../store/authStore";
+
+import {
+  editIncidentSchema,
+  type EditIncidentForm,
+} from "../../schemas/student/editIncidentSchema";
+
+import { ROUTES } from "../../constants/routes";
+
+export default function EditIncidentPage() {
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
@@ -141,6 +171,43 @@ function EditIncidentPage() {
             <p className="text-red-500 text-sm">{errorMessage}</p>
           )}
 
+  const unreadCount = useUnreadNotificationsCount();
+
+  return (
+    <AppLayout
+      title="Edit incident"
+      studentName={`${user?.firstName ?? ""} ${user?.lastName ?? ""}`}
+      notificationCount={unreadCount}
+      onProfileClick={() => navigate(ROUTES.student.profile)}
+      onNotificationsClick={() => navigate(ROUTES.student.notifications)}
+      primaryAction={{
+        label: "New Incident",
+        icon: FilePlus2,
+        onClick: () => navigate(ROUTES.student.createIncident),
+      }}
+      sidebarItems={[
+        { label: "My Incidents", icon: FileText, onClick: () => navigate(ROUTES.student.myIncidents) },
+        { label: "Profile", icon: User, onClick: () => navigate(ROUTES.student.profile) },
+        { label: "Help", icon: CircleHelp, onClick: () => navigate(ROUTES.student.help) },
+        { label: "About", icon: Info, onClick: () => navigate(ROUTES.student.about) },
+      ]}
+      bottomItems={[{ label: "Logout", icon: LogOut, onClick: logout }]}
+    >
+      {isLoading ? (
+        <LoadingState title="Loading incident..." />
+      ) : isError ? (
+        <ErrorState title="Failed to load incident" description="Please try again." onRetry={refetch} />
+      ) : !isOpen ? (
+        <div className="mx-auto w-full max-w-2xl space-y-4 text-center">
+          <p className="text-textSecondary">
+            This incident can no longer be edited because its status is not Open.
+          </p>
+          <Button variant="secondary" onClick={() => navigate(`/incidents/${id}`)}>
+            ← Back to incident detail
+          </Button>
+        </div>
+      ) : (
+        <div className="mx-auto w-full max-w-4xl space-y-4">
           <button
             type="submit"
             disabled={isPending}

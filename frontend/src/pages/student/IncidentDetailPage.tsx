@@ -22,6 +22,7 @@ import { ErrorState } from "../../components/ui/organisms/ErrorState";
 
 import { useIncidentDetail } from "../../hooks/useIncidentDetail";
 import { useCancelIncident } from "../../hooks/useCancelIncident";
+import { useUnreadNotificationsCount } from "../../hooks/useUnreadNotificationsCount";
 import { useLogout } from "../../hooks/useLogout";
 import { useAuthStore } from "../../store/authStore";
 
@@ -78,11 +79,13 @@ export default function IncidentDetailPage() {
     ? timelineItems
     : timelineItems.slice(0, TIMELINE_PREVIEW_COUNT);
 
+  const unreadCount = useUnreadNotificationsCount();
+  
   return (
     <AppLayout
       title="Incident detail"
       studentName={`${user?.firstName ?? ""} ${user?.lastName ?? ""}`}
-      notificationCount={0}
+      notificationCount={unreadCount}
       onProfileClick={() => navigate(ROUTES.student.profile)}
       onNotificationsClick={() => navigate(ROUTES.student.notifications)}
       primaryAction={{
