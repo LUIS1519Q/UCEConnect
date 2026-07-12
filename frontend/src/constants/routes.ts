@@ -17,6 +17,8 @@ export const ROUTES = {
     createIncident: "/incidents/create",
     incidentDetail: "/incidents/:id",
     editIncident: "/incidents/:id/edit",
+
+    incidentConversation: "/incidents/:id/conversation",
     
     notifications: "/notifications",
 
