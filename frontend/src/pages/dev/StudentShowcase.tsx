@@ -2,6 +2,12 @@ import { Textarea } from "../../components/ui/atoms/Textarea";
 import { StatusBadge } from "../../components/ui/atoms/StatusBadge";
 import { FileChip } from "../../components/ui/atoms/FileChip";
 import { Avatar } from "../../components/ui/atoms/Avatar";
+import { SearchBar } from "../../components/ui/molecules/SearchBar";
+import { IncidentCard } from "../../components/ui/molecules/IncidentCard";
+import { EvidenceItem } from "../../components/ui/molecules/EvidenceItem";
+import { NotificationItem } from "../../components/ui/molecules/NotificationItem";
+import { ProfileInfoItem } from "../../components/ui/molecules/ProfileInfoItem";
+import { FAQItem } from "../../components/ui/molecules/FAQItem";
 
 export default function StudentShowcase() {
   return (
@@ -70,12 +76,6 @@ export default function StudentShowcase() {
             </div>
 
           </h2>
-
-          <div className="mt-6">
-            <p className="text-textSecondary">
-              Próximamente...
-            </p>
-          </div>
         </section>
 
         {/* ===================== MOLECULES ===================== */}
@@ -84,11 +84,80 @@ export default function StudentShowcase() {
             Molecules
           </h2>
 
-          <div className="mt-6">
-            <p className="text-textSecondary">
-              Próximamente...
-            </p>
-          </div>
+            <div>
+              <h3 className="mb-4 text-lg font-medium text-textPrimary">
+                Search Bar
+              </h3>
+
+              <SearchBar placeholder="Search incidents..." />
+            </div>
+
+            <div>
+              <h3 className="mb-4 text-lg font-medium text-textPrimary">
+                Incident Card
+              </h3>
+
+              <IncidentCard
+                title="Internet connection issue"
+                location="Building A - Lab 3"
+                status="open"
+                createdAt="Jun 29, 2026"
+              />
+            </div>
+
+            <div>
+              <h3 className="mb-4 text-lg font-medium text-textPrimary">
+                Evidence Item
+              </h3>
+
+              <EvidenceItem
+                fileName="incident-photo.jpg"
+                onRemove={() => {}}
+              />
+            </div>
+
+            <div>
+              <h3 className="mb-4 text-lg font-medium text-textPrimary">
+                Notification Item
+              </h3>
+
+              <NotificationItem
+                title="Incident Updated"
+                message="Your incident status has changed to In Progress."
+                date="2 hours ago"
+                unread
+              />
+            </div>
+
+            <div>
+              <h3 className="mb-4 text-lg font-medium text-textPrimary">
+                Profile Info Item
+              </h3>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <ProfileInfoItem
+                  label="Student ID"
+                  value="2023123456"
+                />
+
+                <ProfileInfoItem
+                  label="Career"
+                  value="Software Engineering"
+                />
+              </div>
+            </div>
+
+            <div>
+              <h3 className="mb-4 text-lg font-medium text-textPrimary">
+                FAQ Item
+              </h3>
+
+              <FAQItem
+                question="How can I create a new incident?"
+                answer="Go to the Create Incident page, fill out the form, attach any evidence if needed, and submit your report."
+              />
+            </div>
+
         </section>
 
         {/* ===================== ORGANISMS ===================== */}
