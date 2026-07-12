@@ -35,7 +35,7 @@ import ManagerProfilePage from "../pages/manager/ManagerProfilePage";
 import AdminDashboard from "../pages/admin/AdminDashboardPage";
 import AdminIncidentsPage from "../pages/admin/AdminIncidentsPage";
 import AdminIncidentDetailPage from "../pages/admin/AdminIncidentsDetailPage";
-import AdminUsersPage from "../pages/admin/AdminUserPage";
+import AdminUsersPage from "../pages/admin/AdminUsersPage";
 import AdminCategoriesPage from "../pages/admin/AdminCategoriesPage";
 import AdminSettingsPage from "../pages/admin/AdminSettingsPage";
 import AdminNotificationsPage from "../pages/admin/AdminNotificationsPage";
