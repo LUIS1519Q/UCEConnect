@@ -30,12 +30,4 @@ export const API_ENDPOINTS = {
   notifications: {
     base: "/api/v1/notifications",
   },
-
-  conversations: {
-    base: "/api/v1/conversations",
-  },
-
-  profile: {
-    base: "/api/v1/profile",
-  },
 } as const;

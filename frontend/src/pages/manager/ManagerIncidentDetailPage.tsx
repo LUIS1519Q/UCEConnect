@@ -225,12 +225,13 @@ export default function ManagerIncidentDetailPage() {
               <h3 className="text-xs font-semibold uppercase tracking-wide text-textSecondary">Evidence (submitted by student)</h3>
               <div className="flex flex-wrap gap-3">
                 {data.attachments.map((att) => (
-                  <a>
+                  <a  
                     key={att.id}
                     href={att.fileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm hover:bg-surface"
+                  >
                     {att.fileName}
                   </a>
                 ))}
