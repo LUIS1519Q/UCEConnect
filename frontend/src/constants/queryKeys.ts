@@ -44,4 +44,9 @@ export const queryKeys = {
   profile: {
     me: ["profile", "me"] as const,
   },
+
+  content: {
+    help: ["content", "help"] as const,
+    about: ["content", "about"] as const,
+  },
 } as const;
