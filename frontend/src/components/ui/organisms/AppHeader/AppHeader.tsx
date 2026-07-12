@@ -1,4 +1,4 @@
-import { Bell, Menu } from "../../icons";
+import { Bell, Menu, MoreVertical } from "../../icons";
 
 import { Avatar } from "../../atoms/Avatar";
 import { Button } from "../../atoms/Button";
@@ -12,11 +12,11 @@ export default function AppHeader({
   onNotificationsClick,
   onProfileClick,
   onMenuClick,
+  onMoreClick,
   isNotificationsActive,
+  variant = "default",
 }: AppHeaderProps) {
-  console.log("isNotificationsActive:", isNotificationsActive);
   return (
-    
     <header
       className="
         flex
@@ -30,21 +30,20 @@ export default function AppHeader({
         shadow-sm
       "
     >
-      <div className="lg:hidden">
-
-        <Button
-          variant="ghost"
-          size="sm"
-          aria-label="Open menu"
-          onClick={onMenuClick}
-        >
-          <Menu size={22} />
-        </Button>
-
-      </div>
+      {variant === "default" && (
+        <div className="lg:hidden">
+          <Button
+            variant="ghost"
+            size="sm"
+            aria-label="Open menu"
+            onClick={onMenuClick}
+          >
+            <Menu size={22} />
+          </Button>
+        </div>
+      )}
 
       <div className="ml-auto flex items-center gap-4">
-
         <div className="relative">
           <button
             type="button"
@@ -52,8 +51,8 @@ export default function AppHeader({
             onClick={onNotificationsClick}
             className={`
               rounded-lg p-2 transition-colors
-              ${isNotificationsActive 
-                ? "bg-blue-100 [&>svg]:stroke-primary" 
+              ${isNotificationsActive
+                ? "bg-blue-100 [&>svg]:stroke-primary"
                 : "hover:bg-background"}
             `}
           >
@@ -83,39 +82,53 @@ export default function AppHeader({
           )}
         </div>
 
-        <button
+        {variant === "default" && (
+          <button
             type="button"
             aria-label="Profile"
             onClick={onProfileClick}
             className="
-                flex
-                items-center
-                gap-3
-                rounded-lg
-                px-2
-                py-1
-                transition-colors
-                hover:bg-background
-            "
-        >
-          <span
-            className="
-              hidden
-              text-sm
-              font-medium
-              text-textPrimary
-              sm:block
+              flex
+              items-center
+              gap-3
+              rounded-lg
+              px-2
+              py-1
+              transition-colors
+              hover:bg-background
             "
           >
-            {studentName}
-          </span>
+            <span
+              className="
+                hidden
+                text-sm
+                font-medium
+                text-textPrimary
+                sm:block
+              "
+            >
+              {studentName}
+            </span>
 
-          <Avatar
-            src={avatarUrl}
-            alt={studentName}
-          />
-        </button>
+            <Avatar src={avatarUrl} alt={studentName} />
+          </button>
+        )}
 
+        {variant === "mobile" && (
+          <button
+            type="button"
+            aria-label="More options"
+            onClick={onMoreClick}
+            className="
+              rounded-lg
+              p-2
+              transition-colors
+              hover:bg-background
+            "
+          >
+            <MoreVertical size={22} />
+          </button>
+        )}
       </div>
     </header>
   );

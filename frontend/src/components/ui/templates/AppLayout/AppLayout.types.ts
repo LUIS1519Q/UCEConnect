@@ -1,8 +1,5 @@
 import type { ReactNode } from "react";
-
-import type {
-  SidebarItem,
-} from "../../organisms/AppSidebar";
+import type { SidebarItem } from "../../organisms/AppSidebar";
 
 export interface AppLayoutProps {
   title: string;
@@ -14,8 +11,10 @@ export interface AppLayoutProps {
   primaryAction?: SidebarItem;
 
   sidebarItems: SidebarItem[];
-
   bottomItems?: SidebarItem[];
+
+  mobileTabItems?: SidebarItem[];
+  mobileMoreMenuItems?: SidebarItem[];
 
   onNotificationsClick?: () => void;
   onProfileClick?: () => void;
