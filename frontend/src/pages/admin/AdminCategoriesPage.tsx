@@ -17,7 +17,7 @@ import { useLogout } from "../../hooks/useLogout";
 import { useAuthStore } from "../../store/authStore";
 import { useUnreadNotificationsCount } from "../../hooks/useUnreadNotificationsCount";
 
-import { LayoutDashboard, FileText, Users, Tags, Settings, Bell, User, LogOut, Pencil } from "../../components/ui/icons";
+import { LayoutDashboard, FileText, Users, Tags, Settings, User, LogOut, Pencil } from "../../components/ui/icons";
 import { ROUTES } from "../../constants/routes";
 import type { Category } from "../../types/category";
 
@@ -61,7 +61,6 @@ export default function AdminCategoriesPage() {
         { label: "Users", icon: Users, onClick: () => navigate(ROUTES.admin.users) },
         { label: "Categories", icon: Tags, active: true, onClick: () => navigate(ROUTES.admin.categories) },
         { label: "Settings", icon: Settings, onClick: () => navigate(ROUTES.admin.settings) },
-        { label: "Notifications", icon: Bell, onClick: () => navigate(ROUTES.admin.notifications) },
         { label: "Profile", icon: User, onClick: () => navigate(ROUTES.admin.profile) },
       ]}
       bottomItems={[{ label: "Logout", icon: LogOut, onClick: logout }]}
