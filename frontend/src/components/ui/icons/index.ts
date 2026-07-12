@@ -40,4 +40,8 @@ export {
   LogOut,
   Info,
   Menu,
+  MessageSquare,
+  Share2,
+  Users,
+  CheckCircle2,
 } from "lucide-react";
