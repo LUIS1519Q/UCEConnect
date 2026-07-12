@@ -38,6 +38,7 @@ import AdminIncidentDetailPage from "../pages/admin/AdminIncidentsDetailPage";
 import AdminUsersPage from "../pages/admin/AdminUserPage";
 import AdminCategoriesPage from "../pages/admin/AdminCategoriesPage";
 import AdminSettingsPage from "../pages/admin/AdminSettingsPage";
+import AdminNotificationsPage from "../pages/admin/AdminNotificationsPage";
 
 function AppRouter() {
   return (
@@ -293,6 +294,15 @@ function AppRouter() {
           element={
             <ProtectedRoute>
               <AdminSettingsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.admin.notifications}
+          element={
+            <ProtectedRoute>
+              <AdminNotificationsPage />
             </ProtectedRoute>
           }
         />
