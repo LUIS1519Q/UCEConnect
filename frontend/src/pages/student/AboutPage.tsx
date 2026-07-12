@@ -74,7 +74,7 @@ export default function AboutPage() {
               <Logo variant="vertical-color" className="mx-auto h-40 w-40" />
 
               <h1 className="mt-4 text-xl font-semibold text-textPrimary">
-                {about.appName}
+                {about.applicationName}
               </h1>
 
               <p className="mt-3 text-sm text-textSecondary">
@@ -101,7 +101,7 @@ export default function AboutPage() {
                 <div>
                   <h3 className="font-medium text-textPrimary">Contact</h3>
                   <p className="mt-1 text-sm text-textSecondary">
-                    {about.contactEmail}
+                    {about.contact.email}
                   </p>
                 </div>
 
@@ -110,6 +110,10 @@ export default function AboutPage() {
                   <p className="mt-1 text-sm text-textSecondary">
                     {about.developedBy}
                   </p>
+                </div>
+
+                <div>
+                  <p className="text-xs text-textSecondary">{about.copyright}</p>
                 </div>
               </div>
             </div>
