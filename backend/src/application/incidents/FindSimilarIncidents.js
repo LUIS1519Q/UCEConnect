@@ -10,8 +10,8 @@ class FindSimilarIncidents {
 
   async execute({ title, description }) {
     const [openResult, inProgressResult] = await Promise.all([
-      this.incidentRepo.findAll({ status: 'open', page: 1, limit: 100 }),
-      this.incidentRepo.findAll({ status: 'in_progress', page: 1, limit: 100 }),
+      this.incidentRepo.findAll({ status: 'open', page: 1, limit: 100, paginate: true }),
+      this.incidentRepo.findAll({ status: 'in_progress', page: 1, limit: 100, paginate: true }),
     ]);
     const candidates = [...openResult.data, ...inProgressResult.data];
 
