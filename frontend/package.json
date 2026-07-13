@@ -39,6 +39,8 @@
     }
   },
   "dependencies": {
+    "@capacitor/android": "^8.4.1",
+    "@capacitor/cli": "^7.6.7",
     "@capacitor/core": "^8.4.1",
     "@fontsource/dm-mono": "^5.2.7",
     "@fontsource/plus-jakarta-sans": "^5.2.8",
