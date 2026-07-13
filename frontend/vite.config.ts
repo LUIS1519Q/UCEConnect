@@ -3,7 +3,7 @@ import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
-  base: "./",
+  base: process.env.ELECTRON_BUILD === "true" ? "./" : "/",
   plugins: [react()],
   build: {
     sourcemap: true,
