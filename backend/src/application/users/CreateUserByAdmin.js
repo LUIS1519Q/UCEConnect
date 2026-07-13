@@ -2,11 +2,12 @@ const crypto = require('crypto');
 const User = require('../../domain/users/User');
 
 class CreateUserByAdmin {
-  constructor(userRepo, forgotPassword, bcrypt, logger) {
+  constructor(userRepo, forgotPassword, bcrypt, logger, emailNotifier) {
     this.userRepo = userRepo;
     this.forgotPassword = forgotPassword;
     this.bcrypt = bcrypt;
     this.logger = logger;
+    this.emailNotifier = emailNotifier;
   }
 
   async execute({ firstName, lastName, email, role }) {
@@ -29,6 +30,7 @@ class CreateUserByAdmin {
     const user = User.create({ firstName, lastName, email, passwordHash, roleId, isVerified: true });
     const savedUser = await this.userRepo.save(user);
 
+    await this.emailNotifier.sendAdminWelcome(email, firstName);
     await this.forgotPassword.execute({ email });
 
     this.logger.info(`User created by admin: ${email} role=${role}`);
