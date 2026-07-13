@@ -63,6 +63,29 @@ class NodemailerEmailNotifier {
     });
   }
 
+  async sendAdminWelcome(email, firstName) {
+    await this.transporter.sendMail({
+      from: this.from,
+      to: email,
+      subject: 'Bienvenido a UCEConnect',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto;">
+          <div style="background-color: ${BRAND_COLOR}; color: #ffffff; padding: 24px; text-align: center; border-radius: 8px 8px 0 0;">
+            <h1 style="margin: 0; font-size: 20px;">UCEConnect</h1>
+            <p style="margin: 8px 0 0;">Bienvenido a la plataforma</p>
+          </div>
+          <div style="border: 1px solid #e0e0e0; border-top: none; padding: 24px; border-radius: 0 0 8px 8px; text-align: center;">
+            <p style="color: #333333; font-size: 15px;">Hola ${firstName}, tu cuenta en UCEConnect ha sido creada por un administrador.</p>
+            <p style="color: #333333; font-size: 15px;">Para establecer tu contraseña, usa el código de recuperación que te enviamos en un correo aparte.</p>
+            <p style="color: #333333; font-size: 15px;">Una vez que hayas establecido tu contraseña, puedes iniciar sesión en:</p>
+            <p style="font-size: 15px;"><a href="${process.env.FRONTEND_URL}" style="color: ${BRAND_COLOR};">${process.env.FRONTEND_URL}</a></p>
+            <p style="color: #666666; font-size: 13px;">Si no solicitaste esta cuenta, por favor contacta a tu administrador.</p>
+          </div>
+        </div>
+      `,
+    });
+  }
+
   async sendWelcome(email, name) {
     await this.transporter.sendMail({
       from: this.from,

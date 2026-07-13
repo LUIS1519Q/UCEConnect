@@ -12,6 +12,8 @@ on:
           - qa
           - prod
   push:
+    branches:
+      - QA
     tags:
       - 'v*'
 
