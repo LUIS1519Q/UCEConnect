@@ -11,6 +11,11 @@ on:
         options:
           - qa
           - prod
+  push:
+    branches:
+      - QA
+    tags:
+      - 'v*'
 
 jobs:
   build:
