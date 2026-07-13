@@ -16,7 +16,7 @@ const forgotPassword = new ForgotPassword(userRepo, emailNotifier);
 
 async function createUser(req, res) {
   try {
-    const user = await new CreateUserByAdmin(userRepo, forgotPassword, bcrypt, logger).execute({
+    const user = await new CreateUserByAdmin(userRepo, forgotPassword, bcrypt, logger, emailNotifier).execute({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
