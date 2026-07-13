@@ -11,6 +11,11 @@ on:
         options:
           - qa
           - prod
+  push:
+    branches:
+      - QA
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -51,7 +56,7 @@ jobs:
 
       - name: Sync Capacitor
         working-directory: frontend
-        run: npm run cap:sync
+        run: node_modules/.bin/cap sync android
 
       - name: Build Android APK
         working-directory: frontend/android
