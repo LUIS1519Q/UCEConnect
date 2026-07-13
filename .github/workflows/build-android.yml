@@ -11,6 +11,11 @@ on:
         options:
           - qa
           - prod
+  push:
+    branches:
+      - QA
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -49,9 +54,15 @@ jobs:
         env:
           VITE_API_URL: ${{ env.VITE_API_URL }}
 
+      - name: Debug - verify capacitor install
+        working-directory: frontend
+        run: |
+          npm ls @capacitor/cli || true
+          ls node_modules/.bin | grep cap || echo "NO CAP BINARY FOUND"
+
       - name: Sync Capacitor
         working-directory: frontend
-        run: npx --no-install cap sync android
+        run: npx cap sync android
 
       - name: Build Android APK
         working-directory: frontend/android
@@ -60,5 +71,5 @@ jobs:
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: uceconnect-${{ github.event.inputs.environment }}-debug.apk
+          name: uceconnect-${{ github.event.inputs.environment || 'qa' }}-debug.apk
           path: frontend/android/app/build/outputs/apk/debug/app-debug.apk
