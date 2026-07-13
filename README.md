@@ -1,91 +1,72 @@
 # UCEConnect
 
-[![Deploy QA](https://github.com/UCEConnect/UCEConnect/actions/workflows/deploy-qa.yml/badge.svg)](https://github.com/UCEConnect/UCEConnect/actions/workflows/deploy-qa.yml)
-[![Deploy PROD](https://github.com/UCEConnect/UCEConnect/actions/workflows/deploy-prod.yml/badge.svg)](https://github.com/UCEConnect/UCEConnect/actions/workflows/deploy-prod.yml)
-[![Release](https://img.shields.io/github/v/release/UCEConnect/UCEConnect)](https://github.com/UCEConnect/UCEConnect/releases)
-[![License](https://img.shields.io/badge/license-Academic-blue.svg)](#)
+> A web, Android, and Windows platform for reporting and tracking student incidents at Universidad Central del Ecuador.
 
-**Student Incident Management Platform — Universidad Central del Ecuador (FEUE-UCE)**
+## What is UCEConnect
 
-UCEConnect centralizes the reporting, tracking, and resolution of incidents within the university campus (infrastructure, security, student services, among others). It replaces informal, untracked incident reporting with a structured system featuring AI-assisted classification, multimedia evidence, real-time status tracking, and dedicated dashboards for students, managers, and university authorities — available as web, Android, and Windows applications.
+UCEConnect replaces informal, untracked incident reporting at UCE with a structured system: students report academic, administrative, infrastructure, or wellbeing incidents; managers and administrators track, classify, and resolve them through a shared dashboard. Incidents are auto-classified by AI (priority and category suggestion), support file evidence, and include a real-time conversation thread between student and manager once a case is in progress.
+
+## Team
+
+| Role | Member | Responsibilities |
+|---|---|---|
+| Backend Developer / Software Architect / Product Owner | Adrian Lumbi | Backend architecture, API, database, AI integration |
+| Frontend Developer / Scrum Master | Nayeli Guayas | React frontend, UI/UX, sprint coordination |
+| DevOps Engineer / Business Analyst / QA | Luis Paspuezán | CI/CD, deployment, requirements, quality assurance |
+
+Supervisor: Ing. Juan Pablo Guevara Gordillo
+Institution: Universidad Central del Ecuador — Programación Web 2026
 
 ---
 
 ## Tech Stack
 
-| Layer | Technologies |
+### Backend
+- Node.js 18 · Express 4.19
+- PostgreSQL via `pg` 8.12 (raw SQL, no ORM)
+- Zod 3.23 (request validation)
+- JSON Web Tokens (`jsonwebtoken` 9.0) · bcrypt 6.0
+- Socket.IO 4.8 (real-time chat and notifications)
+- Winston 3.19 (logging)
+- Nodemailer 9.0 (transactional email)
+- Cloudinary 2.4 (avatars, logos, incident attachments)
+- OpenRouter (Gemini model) via the `openai` SDK 4.56 — AI incident classification and monthly report summaries
+- `@azure/msal-node` 2.16 — Microsoft OAuth login
+- Helmet 7.1 · cors 2.8 · multer 2.2
+- exceljs 4.4 / pdfkit 0.19 — Excel and PDF report export
+- Jest 29.7 + Supertest 7.0 (unit and integration tests)
+
+### Frontend
+- React 19.2 · TypeScript 6.0 · Vite 8.0
+- TanStack React Query 5.101 (server state) · Zustand 5.0 (auth state, persisted)
+- React Router DOM 7.17 · React Hook Form 7.78 + Zod 4.4 (validation)
+- Axios 1.17 · Socket.IO client 4.8
+- Tailwind CSS 3.4 · Recharts 3.9 (dashboards) · Lucide React (icons)
+- Capacitor 7/8 (Android build) · Electron 41 + electron-builder (Windows installer)
+- Vitest 4.1 + Testing Library (unit tests)
+
+---
+
+## Architecture
+
+The backend follows **Domain-Driven Design** combined with **Hexagonal Architecture** (Ports and Adapters), organized in three layers:
+
+- **`domain/`** — pure business logic and repository interfaces, zero external dependencies.
+- **`application/`** — use cases that orchestrate the domain (e.g. `CreateIncident`, `LoginUser`, `SendObservation`).
+- **`infrastructure/`** — adapters: Express routes/controllers, PostgreSQL repositories, Socket.IO, and external services (Cloudinary, Nodemailer, Gemini, Microsoft).
+
+Four bounded contexts drive the domain model:
+
+| Context | Covers |
 |---|---|
-| Backend | NestJS · TypeScript · TypeORM/Prisma |
-| Web Frontend | React 18 · TypeScript · Vite |
-| Desktop Frontend (Admin/Managers) | Electron · electron-builder (NSIS) · same React codebase |
-| Mobile Frontend (Students) | Capacitor · same React codebase |
-| Database | PostgreSQL (Supabase) |
-| Media & Storage | Cloudinary |
-| AI Classification | OpenRouter API |
-| Infrastructure & Containers | Docker · Docker Compose · Nginx (reverse proxy) |
-| CI/CD | GitHub Actions · Docker Hub |
-| DNS & HTTPS | Cloudflare |
-| Deployment | AWS EC2 (Ubuntu 24.04) |
-| Project Management | Jira |
+| **Incidents** (core domain) | Incident lifecycle, categories, attachments, observations, internal notes |
+| **Users** | Registration, authentication, profile, faculties/careers, admin user management |
+| **Notifications** | Persisted notifications + real-time delivery over Socket.IO |
+| **Analytics** | Dashboard metrics and AI-summarized monthly reports (PDF/Excel) |
 
----
+A smaller **Settings** module (app metadata, FAQ, dynamic attachment policy) sits alongside these four as shared configuration, not a bounded context of its own.
 
-## System Architecture
-
-UCEConnect follows a **single shared frontend codebase** deployed across three targets (web, Android, Windows), backed by a decoupled NestJS API:
-
-```
-                        ┌────────────────────────┐
-                        │      Cloudflare          │
-                        │   DNS + HTTPS/SSL        │
-                        └───────────┬──────────────┘
-                                    │
-                         ┌──────────▼──────────┐
-                         │   Nginx (reverse     │
-                         │   proxy) — EC2       │
-                         └──────────┬──────────┘
-                                    │
-                  ┌─────────────────┼─────────────────┐
-                  │                                     │
-          ┌───────▼────────┐                  ┌────────▼────────┐
-          │  Frontend        │                  │  Backend         │
-          │  React + Vite    │──── REST API ───▶│  NestJS          │
-          │  (Docker)        │                  │  (Docker)        │
-          └───────┬──────────┘                  └────────┬────────┘
-                  │                                       │
-     ┌────────────┼────────────┐             ┌────────────┼────────────┐
-     │            │            │             │            │            │
-┌────▼───┐  ┌─────▼─────┐ ┌────▼────┐  ┌─────▼─────┐ ┌────▼────┐ ┌─────▼─────┐
-│Web      │  │Capacitor  │ │Electron │  │PostgreSQL │ │Cloudinary│ │OpenRouter │
-│(browser)│  │(Android)  │ │(Windows)│  │(Supabase) │ │(media)   │ │(AI)       │
-└─────────┘  └───────────┘ └─────────┘  └───────────┘ └──────────┘ └───────────┘
-```
-
-- Routing is conditional per platform: `BrowserRouter` for web/Capacitor, `MemoryRouter` for Electron (`file://` protocol).
-- Separate Supabase projects for QA and PROD; separate Cloudinary API keys per environment.
-- Backend and frontend are built and shipped as independent Docker images, versioned and pushed to Docker Hub.
-
----
-
-## Screenshots
-
-> _Reserved section for visual evidence of the three applications. Replace the links below with actual screenshots._
-
-### 🌐 Web
-
-<!-- ![Web - Login](docs/screenshots/web-login.png) -->
-<!-- ![Web - Dashboard](docs/screenshots/web-dashboard.png) -->
-<!-- ![Web - Create Incident](docs/screenshots/web-create-incident.png) -->
-
-### 📱 Mobile (Android — Capacitor)
-
-<!-- ![Mobile - Login](docs/screenshots/mobile-login.png) -->
-<!-- ![Mobile - Incident List](docs/screenshots/mobile-incidents.png) -->
-
-### 🖥️ Desktop (Windows — Electron)
-
-<!-- ![Desktop - Installer](docs/screenshots/desktop-installer.png) -->
-<!-- ![Desktop - Dashboard](docs/screenshots/desktop-dashboard.png) -->
+The frontend is a **single shared React codebase** deployed to three targets: the web build (Nginx), an Android APK (Capacitor), and a Windows installer (Electron) — routing switches between `BrowserRouter` and `MemoryRouter` depending on the target.
 
 ---
 
@@ -93,158 +74,105 @@ UCEConnect follows a **single shared frontend codebase** deployed across three t
 
 ```
 UCEConnect/
-├── .github/
-│   └── workflows/
-│       ├── deploy-qa.yml            # Build, push and automatic deploy to QA
-│       ├── deploy-prod.yml          # Build, push and manual deploy to PROD
-│       ├── manual-rollback-qa.yml   # Manual rollback by Docker tag (QA)
-│       ├── manual-rollback-prod.yml # Manual rollback by Docker tag (PROD)
-│       ├── manual-cleanup-qa.yml    # Old tag cleanup (QA)
-│       ├── manual-cleanup-prod.yml  # Old tag cleanup (PROD)
-│       ├── build-android.yml        # APK build (Capacitor, JDK 21, ubuntu-latest)
-│       └── build-electron.yml       # Windows installer build (Electron, windows-latest)
-│
-├── backend/                          # NestJS API
-├── frontend/                         # React + TS + Vite (base for web, Capacitor, Electron)
-├── docker-compose.yml                # Local development
-├── docker-compose.qa.yml             # QA environment
-├── docker-compose.prod.yml           # Production environment
-├── .env.example
-├── .gitignore
+├── .github/workflows/          # CI/CD pipelines (see CI/CD section)
+├── backend/
+│   ├── src/
+│   │   ├── domain/             # incidents, users, notifications, reports, categories, settings
+│   │   ├── application/        # use cases per context
+│   │   └── infrastructure/
+│   │       ├── db/             # PostgreSQL pool + SQL migrations
+│   │       ├── repositories/   # Postgres*Repo (implements domain interfaces)
+│   │       ├── services/       # Gemini, Cloudinary, Nodemailer, Microsoft, NotificationService
+│   │       ├── sockets/        # chatHandler.js (Socket.IO)
+│   │       └── http/           # routes, controllers, middlewares
+│   ├── docker-compose.local.yml
+│   └── Dockerfile.backend
+├── frontend/
+│   ├── src/
+│   │   ├── pages/               # auth, student, manager, admin, public, dev
+│   │   ├── hooks/, api/, store/, types/, schemas/
+│   │   ├── components/ui/       # atoms, molecules, organisms, templates
+│   │   └── router/              # AppRouter, ProtectedRoute
+│   └── Dockerfile
+├── docker-compose.yml           # generic local placeholder (see Getting Started)
+├── docker-compose.qa.yml        # QA — pulls images from Docker Hub, external Supabase DB
+├── docker-compose.prod.yml      # Production — same pattern as QA
 └── README.md
 ```
 
 ---
 
-## Environment Requirements
+## Environments
 
-- Docker & Docker Compose
-- Node.js 20+ (only for local development without Docker)
-- Supabase account or a PostgreSQL instance
-- Cloudinary account (API key/secret)
-- OpenRouter API key
+| Environment | Frontend | Backend | Database |
+|---|---|---|---|
+| Local | http://localhost:5173 (Vite dev server) | http://localhost:3000 | PostgreSQL in Docker (`backend/docker-compose.local.yml`) |
+| QA | https://uceconnectqa.programacionwebuce.net | same domain, `/api/v1` | Supabase (external) |
+| Production | https://uceconnectprod.programacionwebuce.net | same domain, `/api/v1` | Supabase (external) |
 
----
-
-## Quick Start Guide
-
-### Run the full environment with Docker
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/UCEConnect/UCEConnect.git
-cd UCEConnect
-
-# 2. Configure environment variables
-cp .env.example .env
-# fill in backend/.env and frontend/.env as needed
-
-# 3. Bring up all containers
-docker compose up -d --build
-```
-
-- Frontend: http://localhost:5173
-- Backend API: http://localhost:3000
-
-> ⚠️ Changing environment variables requires `docker compose up -d --force-recreate` — a `restart` does **not** reload `.env`. Vite variables (`VITE_API_URL`) are baked into the JS bundle at build time and cannot be changed at container runtime.
-
-### Individual component development
-
-See each subproject for standalone setup:
-- `backend/README.md`
-- `frontend/README.md`
-
-At minimum, a reachable PostgreSQL instance (Supabase) is required for the backend.
+QA and Production run on separate AWS EC2 instances behind Cloudflare DNS/HTTPS, each with its own Supabase project and Cloudinary credentials.
 
 ---
 
-## Environment Variables (.env)
+## Getting Started
+
+There is no `.env.example` in this repository — create `.env` files manually with the variables listed below.
 
 ### Backend
 
-| Variable | Description | Default |
-|---|---|---|
-| `PORT` | Backend listening port | `3000` |
-| `DATABASE_URL` | Supabase/PostgreSQL connection string | — |
-| `JWT_SECRET` | Secret key for signing JWTs | — |
-| `JWT_EXPIRATION` | JWT token duration | `15m` |
-| `CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name | `dxyqmmcvy` |
-| `CLOUDINARY_API_KEY` | Cloudinary API key (per environment) | — |
-| `CLOUDINARY_API_SECRET` | Cloudinary API secret (per environment) | — |
-| `OPENROUTER_API_KEY` | OpenRouter API key for AI classification | — |
-| `MICROSOFT_CLIENT_ID` | Azure AD client ID for OAuth | — |
-| `MICROSOFT_TENANT_ID` | Azure AD tenant ID | — |
-| `SENTRY_DSN` | Sentry DSN for error tracking | — |
+```bash
+cd backend
+# create backend/.env with the variables from the Environment Variables section
+
+npm install
+npm run docker:local   # starts PostgreSQL + the backend API via Docker (backend/docker-compose.local.yml)
+```
+
+The backend will be available at http://localhost:3000, with a health check at `/health`. Alternatively, run `npm run dev` (nodemon) against any reachable PostgreSQL instance, without Docker.
 
 ### Frontend
 
-| Variable | Description | Default |
-|---|---|---|
-| `VITE_API_URL` | Backend API base URL | `/api` |
-| `VITE_CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name for uploads | `dxyqmmcvy` |
-| `VITE_MICROSOFT_CLIENT_ID` | Azure client ID for the web app | — |
+```bash
+cd frontend
+# create frontend/.env — at minimum:
+# VITE_API_URL=http://localhost:3000
 
-> `.env` files are listed in `.gitignore` and must never be committed.
-
----
-
-## Branching and Deployment Flow
-
-```
-feature/UCE-XX-description ──► Develop (integration) ──► QA (testing) ──► main (production)
+npm install
+npm run dev
 ```
 
-| Branch | Purpose | Deployment |
+The frontend dev server runs at http://localhost:5173.
+
+> Vite variables (`VITE_API_URL`, `VITE_SOCKET_URL`) are baked into the JS bundle at build time — changing them requires a rebuild, not just a container restart.
+
+---
+
+## API
+
+**48 REST endpoints** across 9 route modules (`auth`, `incidents`, `notifications`, `dashboard`, `users`, `categories`, `reports`, `settings`, `faq`), plus 4 standalone endpoints (`/health`, `/api/v1/help`, `/api/v1/about`, `/api/v1/faculties`, `/api/v1/careers`) mounted directly in `server.js`, and a Socket.IO channel for real-time chat and notifications. See `backend/README.md` for the full endpoint list grouped by module. There is currently no Postman collection in the repository.
+
+---
+
+## CI/CD
+
+GitHub Actions workflows found in `.github/workflows/`:
+
+| Workflow | Trigger | What it does |
 |---|---|---|
-| `feature/UCE-XX-*` | Individual task development (Jira) | — |
-| `Develop` | Continuous team integration | — |
-| `QA` | Quality assurance / testing environment | AWS EC2 — automatic on merge |
-| `main` | Stable production branch | AWS EC2 — manual, requires PO approval |
+| `ci.yml` | Push to `main`/`develop`, PRs to `main` | Placeholder pipeline (checkout + Node setup only) — not yet running real lint/tests/build |
+| `deploy-qa.yml` | Push to `QA`, manual | Builds backend/frontend Docker images, pushes to Docker Hub (`qa`, `qa-YYYYMMDD-sha`), deploys to QA EC2 over SSH |
+| `deploy-prod.yml` | Push to `main` | Same pipeline as QA, tagged `prod`/`prod-YYYYMMDD-sha`, deploys to Production EC2 |
+| `manual-rollback-qa.yml` / `manual-rollback-prod.yml` | Manual (`workflow_dispatch`) | Re-pulls a given Docker image tag and redeploys it on the corresponding EC2 |
+| `manual-cleanup-qa.yml` / `manual-cleanup-prod.yml` | Manual (`workflow_dispatch`) | Prunes unused Docker images/volumes/containers on the corresponding EC2 to free disk space |
+| `build-android.yml` | Manual, QA/PROD selector | Builds the Capacitor Android debug APK and uploads it as a workflow artifact |
+| `build-electron.yml` | Manual, QA/PROD selector, or push tag `v*` | Builds the Windows NSIS installer via electron-builder and uploads it as a workflow artifact |
 
-**Mandatory requirements to approve Pull Requests:**
-- Backend: successful build and passing tests.
-- Frontend: no lint errors and a successful `npm run build`.
-- At least one approved review (Luis Paspuezán, DevOps/QA — sole merge approver).
-
----
-
-## CI/CD Automation (Pipeline)
-
-- **Push to `feature/*`:** triggers component-specific checks (build/lint) in isolation.
-- **Merge to `Develop`:** integration checks across the team's work.
-- **Merge to `QA`:** builds and publishes Docker images tagged `qa` and `qa-YYYYMMDD-sha`, deploys automatically to the QA EC2 instance (`deploy-qa.yml`).
-- **Merge to `main`:** builds production images, publishes them to Docker Hub (`prod`, `prod-YYYYMMDD-sha`, and the semantic version tag), creates the corresponding Git tag and GitHub Release, and requires manual PO approval before deploying to the PROD EC2 instance (`deploy-prod.yml`).
-- **Manual workflows:** `manual-rollback-qa/prod.yml` (rollback by Docker tag) and `manual-cleanup-qa/prod.yml` (old tag cleanup).
-- **On-demand builds:** `build-android.yml` (Capacitor APK) and `build-electron.yml` (Windows NSIS installer), both manually dispatched with a QA/PROD environment selector.
+Required Pull Request approval: at least one review from Luis Paspuezán (DevOps/QA), backend build/tests passing, frontend `npm run build` passing with no lint errors.
 
 ---
 
-## Versioning Policy
+## Versioning
 
-The project follows semantic versioning (`MAJOR.MINOR.PATCH`):
+Current version: **v1.0.0-dev**
 
-- **Patch** — small fixes/improvements (e.g. `1.0.0` → `1.0.1`)
-- **Minor** — new complete features (e.g. `1.0.0` → `1.1.0`)
-- **Major** — breaking changes or major deliveries (e.g. `1.0.0` → `2.0.0`)
-
----
-
-## Environments
-
-| Environment | URL | EC2 |
-|---|---|---|
-| QA | https://uceconnectqa.programacionwebuce.net | `44.196.226.27` |
-| PROD | https://uceconnectprod.programacionwebuce.net | `34.193.228.94` |
-
----
-
-## Project Authors
-
-| Name | Role | GitHub |
-|---|---|---|
-| Luis "Lucho" Paspuezán | DevOpsSec / SRE / QA / Business Analyst | @_(pendiente)_ |
-| Adrian Lumbi | Backend Engineer / Architect | [@Wadri02](https://github.com/Wadri02) |
-| Nayeli Guayas | Frontend Engineer / Scrum Master | [@guayasnayeli](https://github.com/guayasnayeli) |
-| Juan Pablo Guevara | Instructor / Product Owner | [@JuanGuevara90](https://github.com/JuanGuevara90) |
-
-Universidad Central del Ecuador — Web Programming, in partnership with FEUE
+Convention: the middle number is incremented per sprint (`v1.0.X-dev`); `v1.0.0` (without suffix) is reserved for the final delivery.
