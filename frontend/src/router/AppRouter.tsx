@@ -1,5 +1,8 @@
 import { BrowserRouter, MemoryRouter, Navigate, Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../constants/routes";
+import { setNavigate } from "../lib/navigationRef";
 
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -50,9 +53,20 @@ const ADMIN_ROLES: Role[] = ["admin"];
 const isElectron = window.navigator.userAgent.includes("Electron");
 const Router = isElectron ? MemoryRouter : BrowserRouter;
 
+ function NavigationRefSetter() {
+   const navigate = useNavigate();
+
+   useEffect(() => {
+     setNavigate(navigate);
+   }, [navigate]);
+
+   return null;
+ }
+
 function AppRouter() {
   return (
     <Router>
+      <NavigationRefSetter />
       <Routes>
         <Route
           path="*"
