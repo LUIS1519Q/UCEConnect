@@ -6,8 +6,8 @@ class DetectDuplicates {
 
   async execute({ title, userId }) {
     const [openResult, inProgressResult] = await Promise.all([
-      this.incidentRepo.findAll({ userId, status: 'open', page: 1, limit: 50 }),
-      this.incidentRepo.findAll({ userId, status: 'in_progress', page: 1, limit: 50 }),
+      this.incidentRepo.findAll({ createdBy: userId, status: 'open', page: 1, limit: 50, paginate: true }),
+      this.incidentRepo.findAll({ createdBy: userId, status: 'in_progress', page: 1, limit: 50, paginate: true }),
     ]);
 
     const active = [...openResult.data, ...inProgressResult.data];
@@ -23,7 +23,7 @@ class DetectDuplicates {
       .map(inc => ({ id: inc.id, title: inc.title, status: inc.status }));
 
     if (similar.length > 0) {
-      this.logger.warn(`Posible duplicado detectado para usuario ${userId}: IDs [${similar.map(s => s.id).join(', ')}]`);
+      this.logger.warn(`Possible duplicate detected for user ${userId}: IDs [${similar.map(s => s.id).join(', ')}]`);
     }
 
     return { isDuplicate: similar.length > 0, similar };

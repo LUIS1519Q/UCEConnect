@@ -7,26 +7,26 @@ class VerifyResetCode {
   }
 
   async execute({ email, code }) {
-    logger.info(`Intento de verificación de código de reset: ${email}`);
+    logger.info(`Reset code verification attempt: ${email}`);
 
     const resetCode = await this.userRepo.findResetCode(email);
     if (!resetCode) {
-      logger.warn(`Verificación de código de reset fallida — código no encontrado: ${email}`);
+      logger.warn(`Reset code verification failed — code not found: ${email}`);
       throw new Error('Recovery code not found.');
     }
 
     if (resetCode.used) {
-      logger.warn(`Verificación de código de reset fallida — código ya utilizado: ${email}`);
+      logger.warn(`Reset code verification failed — code already used: ${email}`);
       throw new Error('Verification code has already been used.');
     }
 
     if (new Date() > new Date(resetCode.expiresAt)) {
-      logger.warn(`Verificación de código de reset fallida — código expirado: ${email}`);
+      logger.warn(`Reset code verification failed — code expired: ${email}`);
       throw new Error('Verification code has expired.');
     }
 
     if (resetCode.code !== code) {
-      logger.warn(`Verificación de código de reset fallida — código incorrecto: ${email}`);
+      logger.warn(`Reset code verification failed — code incorrect: ${email}`);
       throw new Error('Invalid verification code.');
     }
 
@@ -36,9 +36,9 @@ class VerifyResetCode {
 
     await this.userRepo.markResetCodeAsUsed(email);
 
-    logger.info(`Verificación de código de reset exitosa para: ${email}`);
+    logger.info(`Reset code verification succeeded for: ${email}`);
 
-    return { message: 'Código verificado correctamente', resetToken };
+    return { message: 'Code verified successfully', resetToken };
   }
 }
 

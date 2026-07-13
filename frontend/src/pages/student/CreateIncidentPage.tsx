@@ -1,132 +1,414 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import DashboardLayout from "../../components/ui/templates/DashboardLayout";
+import { compressImages } from "../../utils/compressImage";
 
-function CreateIncidentPage() {
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("");
-  const [description, setDescription] = useState("");
+import {
+  useForm,
+  useWatch,
+} from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-  const handleSubmit = (
-    e: React.FormEvent
+import { AppLayout } from "../../components/ui/templates/AppLayout";
+
+import { Button } from "../../components/ui/atoms/Button";
+import { TextInput } from "../../components/ui/atoms/TextInput";
+import { Textarea } from "../../components/ui/atoms/Textarea";
+
+import { EvidenceSection } from "../../components/ui/organisms/EvidenceSection";
+
+import { SimilarIncidentSection } from "../../components/ui/organisms/SimilarIncidentSection";
+
+import { SimilarIncidentModal } from "../../components/ui/organisms/SimilarIncidentModal";
+
+import {
+  createIncidentSchema,
+  type CreateIncidentForm,
+} from "../../schemas/student/createIncidentSchema";
+
+import { useCreateIncident } from "../../hooks/useCreateIncident";
+import { useSimilarIncident } from "../../hooks/useSimilarIncident";
+import { useSimilarIncidentDetail } from "../../hooks/useSimilarIncidentDetail";
+import { useUnreadNotificationsCount } from "../../hooks/useUnreadNotificationsCount";
+
+import { ROUTES } from "../../constants/routes";
+
+import {
+  FilePlus2,
+  FileText,
+  User,
+  CircleHelp,
+  Info,
+  LogOut,
+} from "../../components/ui/icons";
+
+import { useLogout } from "../../hooks/useLogout";
+import { useAuthStore } from "../../store/authStore";
+
+export default function CreateIncidentPage() {
+
+  const navigate = useNavigate();
+
+  const { logout } = useLogout();
+
+  const user = useAuthStore(
+    (state) => state.user
+  );
+
+  const fileInputRef =
+    useRef<HTMLInputElement>(null);
+
+  const [selectedFiles, setSelectedFiles] =
+    useState<File[]>([]);
+
+  const [selectedIncidentId, setSelectedIncidentId] =
+    useState<number>();
+
+  const [isModalOpen, setModalOpen] =
+    useState(false);
+
+  const [dismissedIncidentId, setDismissedIncidentId] =
+    useState<number | null>(null);
+
+  const {
+    createIncidentAsync,
+    isPending,
+  } = useCreateIncident();
+
+  const {
+    findSimilarAsync,
+    data: similarIncidents,
+    isPending: isSearching,
+  } = useSimilarIncident();
+
+  const {
+    data: incidentDetail,
+    isLoading: isLoadingDetail,
+    isError: isErrorDetail,
+    refetch: refetchDetail,
+  } = useSimilarIncidentDetail(
+    selectedIncidentId
+  );
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    control,
+    formState: { errors },
+  } = useForm<CreateIncidentForm>({
+    resolver: zodResolver(createIncidentSchema) as never,
+    defaultValues: {
+      title: "",
+      description: "",
+      files: [],
+    },
+  });
+
+  const title = useWatch({
+    control,
+    name: "title",
+  });
+
+  const description = useWatch({
+    control,
+    name: "description",
+  });
+
+  useEffect(() => {
+    const trimmedTitle = title?.trim() ?? "";
+    const trimmedDescription =
+      description?.trim() ?? "";
+
+    if (
+      trimmedTitle.length < 5 ||
+      trimmedDescription.length < 10
+    ) {
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      findSimilarAsync({
+        title: trimmedTitle,
+        description: trimmedDescription,
+      });
+    }, 500);
+
+    return () => clearTimeout(timeout);
+
+  }, [
+    title,
+    description,
+    findSimilarAsync,
+  ]);
+
+  const handleFiles = async (
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    e.preventDefault();
 
-    console.log({
-      title,
-      category,
-      description,
+    const newFiles = Array.from(event.target.files ?? []);
+    const compressedFiles = await compressImages(newFiles);
+
+    const updatedFiles = [
+      ...selectedFiles,
+      ...compressedFiles,
+      ...newFiles,
+    ];
+
+    setSelectedFiles(updatedFiles);
+
+    setValue("files", updatedFiles, {
+      shouldValidate: true,
     });
 
-    alert(
-      "Incident submitted successfully."
-    );
+    event.target.value = "";
   };
 
+  const handleDrop = async (
+    event: React.DragEvent<HTMLDivElement>
+  ) => {
+    event.preventDefault();
+
+    const newFiles = Array.from(event.dataTransfer.files);
+    const compressedFiles = await compressImages(newFiles);
+
+    const updatedFiles = [
+      ...selectedFiles,
+      ...compressedFiles,
+    ];
+
+    setSelectedFiles(updatedFiles);
+
+    setValue("files", updatedFiles, {
+      shouldValidate: true,
+    });
+  };
+
+  const handleDragOver = (
+    event: React.DragEvent<HTMLDivElement>
+  ) => {
+    event.preventDefault();
+  };
+
+  const removeFile = (
+    fileToRemove: File
+  ) => {
+
+    const updated =
+      selectedFiles.filter(
+        (file) => file !== fileToRemove
+      );
+
+    setSelectedFiles(updated);
+
+    setValue("files", updated, {
+      shouldValidate: true,
+    });
+  };
+
+  const onSubmit = async (
+    data: CreateIncidentForm
+  ) => {
+    await createIncidentAsync(data);
+
+    navigate(ROUTES.student.myIncidents);
+  };
+
+  const firstSimilar = similarIncidents?.similarIncidents[0];
+
+  const unreadCount = useUnreadNotificationsCount();
+
   return (
-    <DashboardLayout title="Create Incident">
-      <div className="max-w-2xl rounded-xl bg-white p-6 shadow">
+
+    <AppLayout
+      title="Create Incident"
+      studentName={`${user?.firstName ?? ""} ${user?.lastName ?? ""}`}
+      notificationCount={unreadCount}
+      onProfileClick={() => navigate(ROUTES.student.profile)}
+      onNotificationsClick={() => navigate(ROUTES.student.notifications)}
+      primaryAction={{
+        label: "New Incident",
+        icon: FilePlus2,
+        active: true,
+      }}
+      sidebarItems={[
+        {
+          label: "My Incidents",
+          icon: FileText,
+          onClick: () => navigate(ROUTES.student.myIncidents),
+        },
+        {
+          label: "Profile",
+          icon: User,
+          onClick: () => navigate(ROUTES.student.profile),
+        },
+        {
+          label: "Help",
+          icon: CircleHelp,
+          onClick: () => navigate(ROUTES.student.help),
+        },
+        {
+          label: "About",
+          icon: Info,
+          onClick: () => navigate(ROUTES.student.about),
+        },
+      ]}
+      bottomItems={[
+        {
+          label: "Logout",
+          icon: LogOut,
+          onClick: logout,
+        },
+      ]}
+      mobileTabItems={[
+        { label: "My Incidents", icon: FileText, active: true, onClick: () => navigate(ROUTES.student.myIncidents) },
+        { label: "Profile", icon: User, onClick: () => navigate(ROUTES.student.profile) },
+      ]}
+      mobileMoreMenuItems={[
+        { label: "Help & FAQ", icon: CircleHelp, onClick: () => navigate(ROUTES.student.help) },
+        { label: "About UCEConnect", icon: Info, onClick: () => navigate(ROUTES.student.about) },
+        { label: "Logout", icon: LogOut, onClick: logout },
+      ]}
+    >
+      <div className="mx-auto w-full max-w-4xl">
+      <SimilarIncidentModal
+        open={isModalOpen}
+        isLoading={isLoadingDetail}
+        isError={isErrorDetail}
+        onRetry={refetchDetail}
+        incident={
+          incidentDetail?.incident
+            ? {
+                ticket: `INC-${incidentDetail.incident.id}`,
+                title: incidentDetail.incident.title,
+                date: incidentDetail.incident.updatedAt,
+                status: incidentDetail.incident.status,
+                resolution: incidentDetail.incident.statusReason ?? "No resolution yet.",
+              }
+            : null
+        }
+        onClose={() => setModalOpen(false)}
+      />
+
+      <div className="mx-auto w-full max-w-4xl">
 
         <form
-          onSubmit={handleSubmit}
-          className="space-y-4"
+          onSubmit={handleSubmit(onSubmit)}
+          className="
+            space-y-5
+            rounded-xl
+            bg-surface
+            p-5
+            shadow-sm
+            sm:p-6
+            lg:p-7
+            "
         >
 
           <div>
-            <label className="mb-1 block font-medium">
-              Category
-            </label>
-
-            <select
-              value={category}
-              onChange={(e) =>
-                setCategory(e.target.value)
-              }
-              className="w-full rounded-lg border p-3"
-            >
-              <option value="">
-                Select a category
-              </option>
-
-              <option value="ACADEMIC">
-                Academic
-              </option>
-
-              <option value="ADMINISTRATIVE">
-                Administrative
-              </option>
-
-              <option value="INFRASTRUCTURE">
-                Infrastructure
-              </option>
-
-              <option value="STUDENT_WELFARE">
-                Student Welfare
-              </option>
-
-              <option value="PLATFORM_SUPPORT">
-                Platform Support
-              </option>
-            </select>
-          </div>
-
-          <div>
-            <label className="mb-1 block font-medium">
+            <label className="mb-2 block font-medium">
               Title
             </label>
 
-            <input
-              type="text"
-              value={title}
-              onChange={(e) =>
-                setTitle(e.target.value)
-              }
+            <TextInput
               placeholder="Incident title"
-              className="w-full rounded-lg border p-3"
+              {...register("title")}
             />
+
+            {errors.title && (
+              <p className="mt-1 text-sm text-danger">
+                {errors.title.message}
+              </p>
+            )}
           </div>
 
           <div>
-            <label className="mb-1 block font-medium">
+            <label className="mb-2 block font-medium">
               Description
             </label>
 
-            <textarea
+            <Textarea
               rows={5}
-              value={description}
-              onChange={(e) =>
-                setDescription(
-                  e.target.value
-                )
+              placeholder="Describe the incident..."
+              {...register("description")}
+            />
+
+            {errors.description && (
+              <p className="mt-1 text-sm text-danger">
+                {errors.description.message}
+              </p>
+            )}
+          </div>
+
+          <SimilarIncidentSection
+            hasSearched={
+              title.trim().length >= 5 &&
+              description.trim().length >= 10
+            }
+            isLoading={isSearching}
+            incident={
+              firstSimilar &&
+              firstSimilar.id !== dismissedIncidentId
+                ? {
+                    id: firstSimilar.id,
+                    ticket: "Possible duplicate",
+                    title: firstSimilar.title,
+                    status: "Open",
+                  }
+                : undefined
+            }
+            onViewDetails={() => {
+              setSelectedIncidentId(firstSimilar!.id);
+              setModalOpen(true);
+            }}
+            onDismiss={() =>
+              setDismissedIncidentId(firstSimilar!.id)
+            }
+          />
+
+          <input
+            hidden
+            multiple
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFiles}
+          />
+
+          <EvidenceSection
+            files={selectedFiles.map((file) => ({
+              fileName: file.name,
+              fileSize: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
+              onRemove: () => removeFile(file),
+            }))}
+            onAddFile={() => fileInputRef.current?.click()}
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+          />
+
+          <div className="flex justify-end gap-4 pt-2">
+            <Button
+              variant="secondary"
+              onClick={() =>
+                navigate(ROUTES.student.myIncidents)
               }
-              placeholder="Describe the issue"
-              className="w-full rounded-lg border p-3"
-            />
+            >
+              Cancel
+            </Button>
+
+            <Button
+              type="submit"
+              disabled={isPending}
+            >
+              {isPending
+                ? "Creating..."
+                : "Create Incident"}
+            </Button>
           </div>
-
-          <div>
-            <label className="mb-1 block font-medium">
-              Evidence (Optional)
-            </label>
-
-            <input
-              type="file"
-              className="w-full rounded-lg border p-3"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="rounded-lg bg-blue-600 px-6 py-3 text-white"
-          >
-            Submit Incident
-          </button>
 
         </form>
 
       </div>
-    </DashboardLayout>
+      </div>
+    </AppLayout>
   );
 }
-
-export default CreateIncidentPage;

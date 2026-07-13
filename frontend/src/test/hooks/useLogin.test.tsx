@@ -118,7 +118,7 @@ describe("useLogin", () => {
       expect(state.refreshToken).toBe("refresh-token");
 
       expect(navigate).toHaveBeenCalledWith(
-        ROUTES.dashboard.student
+        ROUTES.student.myIncidents
       );
     });
   });

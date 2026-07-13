@@ -1,150 +1,159 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, MemoryRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ROUTES } from "../constants/routes";
+
+import ProtectedRoute from "./ProtectedRoute";
+
+import LandingPage from "../pages/public/LandingPage";
+
+import AuthShowcase from "../pages/dev/AuthShowcase";
+import StudentShowcase from "../pages/dev/StudentShowcase";
 
 import LoginPage from "../pages/auth/LoginPage";
 import RegisterPage from "../pages/auth/RegisterPage";
 import MicrosoftCallbackPage from "../pages/auth/MicrosoftCallbackPage";
 import VerifyEmailPage from "../pages/auth/VerifyCodePage";
 import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage";
-import StudentDashboard from "../pages/dashboard/StudentDashboard";
-import ManagerDashboard from "../pages/dashboard/ManagerDashboard";
-import AdminDashboard from "../pages/dashboard/AdminDashboard";
-import ProtectedRoute from "./ProtectedRoute";
 import ResetPasswordPage from "../pages/auth/ResetPasswordPage";
-import ProfilePage from "../pages/profile/ProfilePage";
-import EditProfilePage from "../pages/profile/EditProfilePage";
+
 import MyIncidentsPage from "../pages/student/MyIncidentsPage";
-import CreateIncidentPage from "../pages/incidents/CreateIncidentPage";
+import CreateIncidentPage from "../pages/student/CreateIncidentPage";
 import EditIncidentPage from "../pages/student/EditIncidentPage";
 import IncidentDetailPage from "../pages/student/IncidentDetailPage";
-import AISuggestionPage from "../pages/student/AISuggestionPage";
+import RespondToManagerRequestPage from "../pages/student/RespondToManagerRequestPage";
+import NotificationsPage from "../pages/student/NotificationPage";
+import ProfilePage from "../pages/student/ProfilePage";
+import HelpPage from "../pages/student/HelpPage";
+import AboutPage from "../pages/student/AboutPage";
+
+import ManagerDashboard from "../pages/manager/MangerDashboardPage";
 import ManagerIncidentsPage from "../pages/manager/ManagerIncidentsPage";
 import ManagerIncidentDetailPage from "../pages/manager/ManagerIncidentDetailPage";
-import DesignSystemPage from "../pages/dev/DesignSystemPage";
+import ManagerFeedbackPage from "../pages/manager/ManagerFeedbackPage";
+import ManagerNotificationsPage from "../pages/manager/ManagerNotificationsPage";
+import ManagerProfilePage from "../pages/manager/ManagerProfilePage";
+
+import AdminDashboard from "../pages/admin/AdminDashboardPage";
+import AdminIncidentsPage from "../pages/admin/AdminIncidentsPage";
+import AdminIncidentDetailPage from "../pages/admin/AdminIncidentsDetailPage";
+import AdminUsersPage from "../pages/admin/AdminUsersPage";
+import AdminCategoriesPage from "../pages/admin/AdminCategoriesPage";
+import AdminSettingsPage from "../pages/admin/AdminSettingsPage";
+import AdminNotificationsPage from "../pages/admin/AdminNotificationsPage";
+import AdminProfilePage from "../pages/admin/AdminProfilePage";
+
+import type { Role } from "../types/user";
+
+const STUDENT_ROLES: Role[] = ["student"];
+const MANAGER_ROLES: Role[] = ["manager"];
+const ADMIN_ROLES: Role[] = ["admin"];
+
+const isElectron = window.navigator.userAgent.includes("Electron");
+const Router = isElectron ? MemoryRouter : BrowserRouter;
 
 function AppRouter() {
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
         <Route
           path="*"
-          element={
-              <Navigate
-                  to={ROUTES.auth.login}
-                  replace
-              />
-          }
+          element={<Navigate to={ROUTES.public.home} replace />}
         />
+
+        <Route path={ROUTES.public.home} element={<LandingPage />} />
 
         {/*DESIGN*/}
 
-        <Route
-          path="/design-system"
-          element={<DesignSystemPage />}
-        />
+        <Route path="/auth-show-case" element={<AuthShowcase />} />
+        <Route path="/student-show-case" element={<StudentShowcase />} />
 
         {/*AUTH*/}
 
-        <Route
-          path={ROUTES.auth.login}
-          element={<LoginPage />}
-        />
-
-        <Route
-          path={ROUTES.auth.register}
-          element={<RegisterPage />}
-        />
-
-        <Route
-          path={ROUTES.auth.microsoftCallback}
-          element={<MicrosoftCallbackPage />}
-        />
-
-        <Route
-          path={ROUTES.auth.verifyCode}
-          element={<VerifyEmailPage />}
-        />
-
-        <Route
-          path={ROUTES.auth.forgotPassword}
-          element={<ForgotPasswordPage />}
-        />
-
-        <Route
-          path={ROUTES.auth.resetPassword}
-          element={<ResetPasswordPage />}
-        />
+        <Route path={ROUTES.auth.login} element={<LoginPage />} />
+        <Route path={ROUTES.auth.register} element={<RegisterPage />} />
+        <Route path={ROUTES.auth.microsoftCallback} element={<MicrosoftCallbackPage />} />
+        <Route path={ROUTES.auth.verifyCode} element={<VerifyEmailPage />} />
+        <Route path={ROUTES.auth.forgotPassword} element={<ForgotPasswordPage />} />
+        <Route path={ROUTES.auth.resetPassword} element={<ResetPasswordPage />} />
 
         {/*STUDENT*/}
 
         <Route
-          path={ROUTES.dashboard.student}
+          path={ROUTES.student.myIncidents}
           element={
-            <ProtectedRoute>
-              <StudentDashboard />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <ProfilePage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/profile/edit"
-          element={
-            <ProtectedRoute>
-              <EditProfilePage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/incidents/create"
-          element={
-            <ProtectedRoute>
-              <CreateIncidentPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/incidents"
-          element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={STUDENT_ROLES}>
               <MyIncidentsPage />
             </ProtectedRoute>
           }
         />
 
         <Route
-          path="/incidents/:id"
+          path={ROUTES.student.createIncident}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={STUDENT_ROLES}>
+              <CreateIncidentPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.student.incidentDetail}
+          element={
+            <ProtectedRoute allowedRoles={STUDENT_ROLES}>
               <IncidentDetailPage />
             </ProtectedRoute>
           }
         />
 
         <Route
-          path="/incidents/:id/edit"
+          path={ROUTES.student.editIncident}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={STUDENT_ROLES}>
               <EditIncidentPage />
             </ProtectedRoute>
           }
         />
 
         <Route
-          path="/incidents/ai-suggestion"
+          path={ROUTES.student.incidentConversation}
           element={
-            <ProtectedRoute>
-              <AISuggestionPage />
+            <ProtectedRoute allowedRoles={STUDENT_ROLES}>
+              <RespondToManagerRequestPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.student.notifications}
+          element={
+            <ProtectedRoute allowedRoles={STUDENT_ROLES}>
+              <NotificationsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.student.profile}
+          element={
+            <ProtectedRoute allowedRoles={STUDENT_ROLES}>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.student.about}
+          element={
+            <ProtectedRoute allowedRoles={STUDENT_ROLES}>
+              <AboutPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.student.help}
+          element={
+            <ProtectedRoute allowedRoles={STUDENT_ROLES}>
+              <HelpPage />
             </ProtectedRoute>
           }
         />
@@ -152,28 +161,55 @@ function AppRouter() {
         {/*MANAGER*/}
 
         <Route
-          path={ROUTES.dashboard.manager}
+          path={ROUTES.manager.dashboard}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={MANAGER_ROLES}>
               <ManagerDashboard />
             </ProtectedRoute>
           }
         />
 
         <Route
-          path="/manager/incidents"
+          path={ROUTES.manager.incidents}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={MANAGER_ROLES}>
               <ManagerIncidentsPage />
             </ProtectedRoute>
           }
         />
 
         <Route
-          path="/manager/incidents/:id"
+          path={ROUTES.manager.incidentDetail}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={MANAGER_ROLES}>
               <ManagerIncidentDetailPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.manager.incidentFeedback}
+          element={
+            <ProtectedRoute allowedRoles={MANAGER_ROLES}>
+              <ManagerFeedbackPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.manager.notifications}
+          element={
+            <ProtectedRoute allowedRoles={MANAGER_ROLES}>
+              <ManagerNotificationsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.manager.profile}
+          element={
+            <ProtectedRoute allowedRoles={MANAGER_ROLES}>
+              <ManagerProfilePage />
             </ProtectedRoute>
           }
         />
@@ -181,15 +217,79 @@ function AppRouter() {
         {/*ADMIN*/}
 
         <Route
-          path={ROUTES.dashboard.admin}
+          path={ROUTES.admin.dashboard}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={ADMIN_ROLES}>
               <AdminDashboard />
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path={ROUTES.admin.incidents}
+          element={
+            <ProtectedRoute allowedRoles={ADMIN_ROLES}>
+              <AdminIncidentsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.admin.incidentDetail}
+          element={
+            <ProtectedRoute allowedRoles={ADMIN_ROLES}>
+              <AdminIncidentDetailPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.admin.users}
+          element={
+            <ProtectedRoute allowedRoles={ADMIN_ROLES}>
+              <AdminUsersPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.admin.categories}
+          element={
+            <ProtectedRoute allowedRoles={ADMIN_ROLES}>
+              <AdminCategoriesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.admin.settings}
+          element={
+            <ProtectedRoute allowedRoles={ADMIN_ROLES}>
+              <AdminSettingsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.admin.notifications}
+          element={
+            <ProtectedRoute allowedRoles={ADMIN_ROLES}>
+              <AdminNotificationsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.admin.profile}
+          element={
+            <ProtectedRoute allowedRoles={ADMIN_ROLES}>
+              <AdminProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 }
 

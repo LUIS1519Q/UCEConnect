@@ -1,23 +1,17 @@
 const Incident = require('../../domain/incidents/Incident');
 
 class CreateIncident {
-  constructor(incidentRepo, classifyIncident, detectDuplicates) {
+  constructor(incidentRepo, classifyIncident, detectDuplicates, logger, notificationService = null, userRepo = null) {
     this.incidentRepo = incidentRepo;
     this.classifyIncident = classifyIncident || null;
     this.detectDuplicates = detectDuplicates || null;
+    this.logger = logger || null;
+    this.notificationService = notificationService;
+    this.userRepo = userRepo;
   }
 
-  async execute({ title, description, categoryId, createdBy }) {
-    const exists = await this.incidentRepo.categoryExists(categoryId);
-    if (!exists) {
-      throw new Error('La categoría especificada no existe');
-    }
-
-    const incident = Incident.create({ title, description, categoryId, createdBy });
-    const saved = await this.incidentRepo.create(incident);
-    await this.incidentRepo.saveHistory(saved.id, 'open', createdBy, 'Incidencia creada');
-
-    let classificationResult = { priority: 'medium', summary: null, aiClassified: false };
+  async execute({ title, description, createdBy }) {
+    let classificationResult = { priority: 'medium', summary: null, categoryId: null, aiClassified: false };
     let duplicateResult = { isDuplicate: false, similar: [] };
 
     if (this.classifyIncident) {
@@ -34,10 +28,50 @@ class CreateIncident {
       }
     }
 
+    let categoryId = null;
+    if (classificationResult.category) {
+      categoryId = await this.incidentRepo.findCategoryIdByName(classificationResult.category);
+    }
+
+    const incident = Incident.create({
+      title,
+      description,
+      categoryId,
+      createdBy,
+      priority: classificationResult.priority,
+      aiSummary: classificationResult.summary,
+    });
+    const saved = await this.incidentRepo.create(incident);
+    await this.incidentRepo.saveHistory(saved.id, 'open', createdBy, 'Incident created');
+
+    if (this.notificationService) {
+      await this.notificationService.notify({
+        userId: createdBy,
+        incidentId: saved.id,
+        ticket: saved.ticket,
+        type: 'incident_created',
+        title: 'Your incident was created successfully.',
+      });
+
+      if (this.userRepo) {
+        const managers = await this.userRepo.findByRole('manager');
+        const admins = await this.userRepo.findByRole('admin');
+        const staff = [...managers, ...admins];
+
+        for (const user of staff) {
+          await this.notificationService.notify({
+            userId: user.id,
+            incidentId: saved.id,
+            ticket: saved.ticket,
+            type: 'incident_created',
+            title: `New incident reported: ${saved.title}`,
+          });
+        }
+      }
+    }
+
     return {
       ...saved.toJSON(),
-      priority: classificationResult.priority || 'medium',
-      aiSummary: classificationResult.summary || null,
       aiClassified: classificationResult.aiClassified || false,
       duplicateWarning: duplicateResult.isDuplicate || false,
       similarIncidents: duplicateResult.similar || [],

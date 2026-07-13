@@ -1,16 +1,19 @@
 class ClassifyIncident {
-  constructor(classifier, logger) {
+  constructor(classifier, logger, categoryRepo) {
     this.classifier = classifier;
     this.logger = logger || { info: () => {}, warn: () => {}, error: () => {} };
+    this.categoryRepo = categoryRepo || null;
   }
 
   async execute({ title, description }) {
     try {
-      const result = await this.classifier.classify(title, description);
-      this.logger.info(`Incidencia clasificada por Gemini: priority=${result.priority}, category=${result.category}`);
+      const categories = this.categoryRepo ? await this.categoryRepo.findAll({ isActive: true }) : [];
+      const categoryNames = categories.map((category) => category.name);
+      const result = await this.classifier.classify(title, description, categoryNames);
+      this.logger.info(`Incident classified by Gemini: priority=${result.priority}, category=${result.category}`);
       return { ...result, aiClassified: true };
     } catch (err) {
-      this.logger.warn(`Fallback de clasificación activado: ${err.message}`);
+      this.logger.warn(`Classification fallback activated: ${err.message}`);
       const text = `${title} ${description}`.toLowerCase();
       let priority = 'low';
       if (['urgente', 'critico', 'bloqueado', 'no puedo'].some(k => text.includes(k))) {

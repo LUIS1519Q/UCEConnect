@@ -10,5 +10,14 @@ class IUserRepo {
   findResetCode(email) { throw new Error('Not implemented') }
   markResetCodeAsUsed(email) { throw new Error('Not implemented') }
   updatePassword(userId, passwordHash) { throw new Error('Not implemented') }
+  async findByRole(role) { throw new Error('Not implemented') }
+  async updateProfile(userId, data) { throw new Error('Not implemented') }
+  async updateAvatar(userId, avatarUrl) { throw new Error('Not implemented') }
+  async findFaculties() { throw new Error('Not implemented') }
+  async findCareersByFaculty(facultyId) { throw new Error('Not implemented') }
+  async findAllUsers({ role, isActive, search, page, limit }) { throw new Error('Not implemented') }
+  async updateRole(id, roleId) { throw new Error('Not implemented') }
+  async updateActiveStatus(id, isActive) { throw new Error('Not implemented') }
+  async findRoleIdByName(name) { throw new Error('Not implemented') }
 }
 module.exports = IUserRepo
