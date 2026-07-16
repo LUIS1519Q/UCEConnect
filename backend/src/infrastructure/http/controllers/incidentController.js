@@ -206,7 +206,7 @@ async function findSimilar(req, res) {
       description: req.body.description,
       userId: req.user.id,
     });
-    return res.status(200).json({ data: results });
+    return res.status(200).json({ similarIncidents: results });
   } catch (err) {
     logger.error(`Error in findSimilar: ${err.message}`);
     return res.status(500).json({ message: 'Internal server error.', errorCode: 'INTERNAL_ERROR' });
