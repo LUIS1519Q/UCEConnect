@@ -114,6 +114,7 @@ async function getProfile(req, res) {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
+        role: user.roleName,
         phone: user.phone,
         faculty: user.facultyName,
         career: user.careerName,
